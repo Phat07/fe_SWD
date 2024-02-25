@@ -4,7 +4,7 @@ import { useNavigate} from "react-router-dom";
 import { QRCodeSVG } from 'qrcode.react';
 import Header from "../Header";
 import Footer from "../Footer";
-function BasicExample() {
+function Payment() {
     const navigate = useNavigate();
     const paymentInfo = {
         customerName: 'Nguyễn Văn A',
@@ -57,4 +57,4 @@ function BasicExample() {
     );
   }
 
-export default BasicExample;
+export default Payment;

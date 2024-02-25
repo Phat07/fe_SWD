@@ -75,3 +75,94 @@
   box-shadow: 0px 10px 20px rgba(46, 44, 44, 0.2);
 }
 
+.sidebar-widget-title span.hight-light {
+  /* width: 50px; */
+  height: 3px;
+  background: #b41712;
+  border-radius: 5px;
+  display: block;
+  position: relative;
+  margin-top: 5px;
+}
+/* .input-with-icon {
+  position: relative;
+} */
+/* 
+.input-with-icon input {
+  padding-right: 30px; 
+} */
+.input-with-icon input[type="text"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 250px; /* Điều chỉnh độ rộng theo nhu cầu */
+  }
+
+/* .calendar-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+} */
+/* 
+
+
+.date-range .input-with-icon {
+  flex: 1;
+  margin-right: 10px;
+  width: 50px;
+} */
+
+.date-range {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-with-date {
+  width: 48%; /* Đặt chiều rộng mỗi div input là 48% để chúng chiếm 50% không gian */
+  position: relative;
+}
+
+.input-with-date:first-child {
+  margin-right: 4%; /* Tạo khoảng cách giữa các div input */
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.react-datepicker__input-container input {
+  width: 100%;
+  border-radius: 5px;
+  border: none; /* Loại bỏ viền */
+  border-bottom: 1px solid #ccc; /* Thêm viền gạch chân dưới */
+  outline: none; /* Loại bỏ đường viền xanh khi ô input được focus */
+}
+
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.custom-checkbox:hover {
+  background-color: #f0f0f0;
+}
+
+.custom-checkbox.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.custom-checkbox.active:hover {
+  background-color: #0056b3;
+}

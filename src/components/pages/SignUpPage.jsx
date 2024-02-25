@@ -1,15 +1,12 @@
 // Import thêm useState từ React
-import React, { useState } from "react";
-import { Form, Button, Modal, Container, Row, Col } from "react-bootstrap";
-import Header from "../Header";
-import Footer from "../Footer";
-import { FiMail, FiTrash2, FiEye, FiEyeOff } from "react-icons/fi"; // Import FiEye và FiEyeOff
-import { RiUserAddLine } from "react-icons/ri";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from "react";
+import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
-import "../../css/signUp.css";
+import { FiEye, FiEyeOff, FiMail, FiTrash2 } from "react-icons/fi"; // Import FiEye và FiEyeOff
 import { Link } from "react-router-dom";
+import "../../css/signUp.css";
 
 const SignUpPage = () => {
   const [validated, setValidated] = useState(false);
