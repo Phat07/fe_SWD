@@ -12,7 +12,7 @@ function BasicExample() {
         amount: '1,500,000 VND',
         transferContent: 'Thanh toan don hang 1234'
       };
-    const qrData = 'https://example.com/payment';
+    const qrData = 'https://me.momo.vn/MRIBTQtPfesBuWuEi7i5TE';
     return (
       <div className="app-container">
         <div className="header-container">
