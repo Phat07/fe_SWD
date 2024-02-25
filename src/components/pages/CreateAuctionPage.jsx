@@ -38,8 +38,9 @@ function CreateAuctionProductForm() {
         <div className="body-container">
           <div className="container" style={{ marginBottom: "20px" }}></div>
     <Container>
+        <h1>Tạo buổi đấu giá</h1>
       <Form onSubmit={handleSubmit}>
-        <Row>
+        <Row className="mb-4">
           <Col md={6}>
             <Card>
               <Card.Body>
@@ -63,6 +64,15 @@ function CreateAuctionProductForm() {
                   <Form.Label>Mô tả</Form.Label>
                   <Form.Control as="textarea" rows={3} placeholder="Mô tả sản phẩm" value={description} onChange={(e) => setDescription(e.target.value)} />
                 </Form.Group>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Thông Tin Auction</Card.Title>
                 <Form.Group className="mb-3">
                   <Form.Label>Giá khởi điểm</Form.Label>
                   <Form.Control type="number" placeholder="Giá khởi điểm" value={startingPrice} onChange={(e) => setStartingPrice(e.target.value)} />
