@@ -1,0 +1,66 @@
+.dropzone {
+  border: 2px dashed #cccccc;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.dropzone-content {
+  border: 2px dashed #cccccc;
+  padding: 20px;
+  position: relative;
+}
+
+.btn-upload {
+  margin-top: 10px;
+}
+
+.avatar-preview {
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+  object-fit: cover;
+}
+
+.btn-remove-avatar {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-wrapper img {
+  width: 100px; /* Định kích thước của hình ảnh */
+  height: auto;
+}
+
+.button-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.btn-remove-avatar {
+  width: 30px; /* Định kích thước của nút xóa */
+  height: 30px;
+}
+.verify-email-button {
+  background-color: #007bff; /* Màu nền */
+  color: #fff; /* Màu chữ */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.verify-email-button:hover {
+  background-color: #0056b3; /* Màu nền khi di chuột qua */
+}
+
+

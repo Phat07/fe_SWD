@@ -1,0 +1,21 @@
+/* styles.css */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header-container, .footer-container {
+  flex: 0 0 auto; /* Không co giãn, giữ kích thước ban đầu */
+}
+
+.body-container {
+  flex: 1;
+  overflow-y: auto; /* Sử dụng overflow để tạo thanh cuộn dọc khi nội dung bị đầy */
+  padding: 20px; /* Thêm một số lề để nội dung không dính sát vào mép */
+}
