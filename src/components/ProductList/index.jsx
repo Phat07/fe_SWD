@@ -151,7 +151,7 @@ const ProductList = () => {
       > */}
         {products.map((product) => (
           <div key={product.id} className="product-card-container" style={{marginRight:"10px"}}>
-            <Card.Title style={{ marginBottom: "0.2rem", textAlign: "center" }}>
+            <Card.Title style={{ marginBottom: "1rem", textAlign: "center" }}>
               <span className="timer-title">Thời gian đấu giá</span>
               <span style={{ fontWeight: "700" }}>20:31:26 22/03/2024</span>
             </Card.Title>
