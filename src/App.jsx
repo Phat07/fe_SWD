@@ -7,6 +7,7 @@ import SignUpPage from "./components/pages/SignUpPage";
 import AuctionPage from "./components/pages/AuctionPage";
 import Payment from "./components/pages/Payment";
 import RoomAuctionPage from "./components/pages/AuctionRoom/RoomAuctionPage"
+import DetailPage from "./components/pages/DetailPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/auction" element={<AuctionPage />} />
+        <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/room-auction" element={<RoomAuctionPage />} />
       </Routes>

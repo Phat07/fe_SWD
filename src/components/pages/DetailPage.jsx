@@ -4,12 +4,73 @@ import Footer from "../Footer";
 import { Link } from "react-router-dom";
 import { FaGavel } from "react-icons/fa";
 import "../../css/detail.css";
-import { Button } from "react-bootstrap";
+import { Button, Card, Carousel, Col } from "react-bootstrap";
 
 function DetailPage(props) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State để kiểm soát hiển thị popup
-
+  const auctionRooms = [
+    {
+      id: 1,
+      title: "Phòng 1",
+      description: "Mô tả phòng 1",
+      currentParticipants: 5,
+      productCode: "SP001",
+      duration: "30 phút",
+      startTime: "10:00 25/02/2024",
+      endTime: "10:30 25/02/2024",
+      images: [
+        "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
+    ]
+    },
+    {
+        id: 2,
+        title: "Phòng 2",
+        description: "Mô tả phòng 1",
+        currentParticipants: 5,
+        productCode: "SP002",
+        duration: "30 phút",
+        startTime: "10:00 25/02/2024",
+        endTime: "10:30 25/02/2024",
+        images: [
+          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
+      ]
+      },
+      {
+        id: 3,
+        title: "Phòng 3",
+        description: "Mô tả phòng 1",
+        currentParticipants: 5,
+        productCode: "SP003",
+        duration: "30 phút",
+        startTime: "10:00 25/02/2024",
+        endTime: "10:30 25/02/2024",
+        images: [
+          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
+      ]
+      },
+      {
+        id: 4,
+        title: "Phòng 4",
+        description: "Mô tả phòng 1",
+        currentParticipants: 5,
+        productCode: "SP004",
+        duration: "30 phút",
+        startTime: "10:00 25/02/2024",
+        endTime: "10:30 25/02/2024",
+        images: [
+          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
+      ]
+      }
+  ];
   const images = [
     "../../../public/assets/images/background/background1.jpg",
     "../../../public/assets/images/background/background2.jpg",
@@ -144,7 +205,7 @@ function DetailPage(props) {
                   }}
                 >
                   <FaGavel />
-                  <Link>
+                  <Link to={"/payment"}>
                     <Button
                       style={{ backgroundColor: "#B41712", border: "none" }}
                     >
@@ -188,9 +249,50 @@ function DetailPage(props) {
           </div>
         </div>
         <div className="col-lg-12" style={{ marginTop: "20px" }}>
-          <h3>Tài sản khác</h3>
+          <h3 style={{marginBottom:"25px",fontWeight:"800"}}>Tài sản khác</h3>
           <div className="row d-flex g-4">
-            
+              {auctionRooms
+                .map((room) => (
+                  <Col key={room.id} sm={12} md={3} className="mb-4">
+                    <Card>
+                      <Carousel>
+                        {room.images.map((image, index) => (
+                          <Carousel.Item key={index}>
+                            <img
+                              className="d-block w-100"
+                              src={image}
+                              alt={`Slide ${index + 1}`}
+                              style={{
+                                height: "200px",
+                                objectFit: "cover",
+                                width: "100%",
+                              }}
+                            />
+                          </Carousel.Item>
+                        ))}
+                      </Carousel>
+                      <Card.Body>
+                        <Card.Title>{room.title}</Card.Title>
+                        <Card.Text>{room.description}</Card.Text>
+                        <Card.Text>Mã sản phẩm: {room.productCode}</Card.Text>
+                        <Card.Text>
+                          Số người tham gia: {room.currentParticipants}
+                        </Card.Text>
+                        <Card.Text>
+                          Thời gian: {room.startTime} - {room.endTime} (
+                          {room.duration})
+                        </Card.Text>
+                        <Button
+                          variant="primary"
+                          onClick={() => handleJoin(room)}
+                        >
+                          Tham gia
+                        </Button>
+                        {/* <Button variant="primary">Tham gia</Button> */}
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
           </div>
         </div>
       </div>
