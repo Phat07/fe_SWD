@@ -394,6 +394,7 @@ function AuctionPage(props) {
                     } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
                   >
                     <Card
+                    className="card_auction"
                       style={{
                         width: `${viewMode === "mode2" ? "800px" : ""}`,
                       }}
