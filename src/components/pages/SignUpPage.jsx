@@ -7,6 +7,7 @@ import { useDropzone } from "react-dropzone";
 import { FiEye, FiEyeOff, FiMail, FiTrash2 } from "react-icons/fi"; // Import FiEye và FiEyeOff
 import { Link } from "react-router-dom";
 import "../../css/signUp.css";
+import * as faceapi from "face-api.js";
 
 const SignUpPage = () => {
   const [validated, setValidated] = useState(false);
@@ -19,35 +20,93 @@ const SignUpPage = () => {
     address: "",
     phone: "",
     avatar: [],
+    role: "", // Thêm trường cho trường chọn select
+    frontIdImage: [], // Thêm trường cho ảnh mặt trước căn cước công dân
+    backIdImage: [], // Thêm trường cho ảnh mặt sau căn cước công dân
   });
   const [emailVerified, setEmailVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để điều khiển hiển thị/masquerade password
+  // kiểm tra email trước khi truyền lên be
+  const [statusEmail, setStatusEmail] = useState("");
 
+  const validateEmail = (email) => {
+    // Sử dụng biểu thức chính quy để kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+
+  //   if (name === "confirmPassword") {
+  //     setPasswordMatch(value === formData.password);
+  //   }
+  // };
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    console.log("form", formData);
+    if (name === "avatar") {
+      setFormData({
+        ...formData,
+        avatar: [...formData.avatar, ...files],
+      });
+    } else if (name === "role") {
+      setFormData({
+        ...formData,
+        role: value,
+      });
+      // setRole(value);
+    } else if (name === "frontIdImage") {
+      setFormData({
+        ...formData,
+        frontIdImage: [...formData.avatar, ...files],
+      });
+      // setFrontIdImage(files[0]);
+    } else if (name === "backIdImage") {
+      setFormData({
+        ...formData,
+        backIdImage: [...formData.avatar, ...files],
+      });
+      // setBackIdImage(files[0]);
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
 
     if (name === "confirmPassword") {
       setPasswordMatch(value === formData.password);
     }
   };
-
-  const handleSubmit = (e) => {
+  const [facesDetected, setFacesDetected] = useState(0);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
 
-    if (form.checkValidity() === false) {
-      e.stopPropagation();
-    } else if (!passwordMatch) {
-      alert("Password and Confirm Password do not match");
-    } else {
-      setShowOTPModal(true);
+    const image = formData?.frontIdImage[0];
+    console.log("image", image);
+    const imgEl = document.createElement("img");
+    imgEl.src = URL.createObjectURL(image);
+
+    try {
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+      ]);
+      console.log("test1");
+      const detections = await faceapi
+        .detectAllFaces(imgEl, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptors();
+
+      setFacesDetected(detections.length);
+    } catch (error) {
+      console.error("Error loading models:", error);
+      // Handle the error, such as displaying an error message to the user
     }
-
-    setValidated(true);
   };
 
+  console.log("data", facesDetected);
   const handleOTPVerification = () => {
     setEmailVerified(true);
     setShowOTPModal(false);
@@ -56,7 +115,15 @@ const SignUpPage = () => {
   };
 
   const handleEmailVerification = () => {
-    setShowOTPModal(true);
+    if (validateEmail(formData?.email) === false) {
+      console.log("aaaa");
+      setStatusEmail(false);
+      setShowOTPModal(true);
+    } else if (validateEmail(formData?.email) === true) {
+      setStatusEmail(true);
+      setShowOTPModal(true);
+    }
+    console.log("bbb", validateEmail(formData?.email));
   };
 
   const handleRemoveAvatar = (index) => {
@@ -64,8 +131,41 @@ const SignUpPage = () => {
     newAvatars.splice(index, 1);
     setFormData({ ...formData, avatar: newAvatars });
   };
+  const handleRemoveFrontIdImage = (index) => {
+    setFormData((prevFormData) => {
+      const newFrontIdImageList = [...prevFormData.frontIdImage];
+      newFrontIdImageList.splice(index, 1);
+      return {
+        ...prevFormData,
+        frontIdImage: newFrontIdImageList,
+      };
+    });
+  };
 
-  const { getRootProps, getInputProps } = useDropzone({
+  // Hàm xóa hình ảnh khỏi danh sách backIdImage
+  const handleRemoveBackIdImage = (index) => {
+    setFormData((prevFormData) => {
+      const newBackIdImageList = [...prevFormData.backIdImage];
+      newBackIdImageList.splice(index, 1);
+      return {
+        ...prevFormData,
+        backIdImage: newBackIdImageList,
+      };
+    });
+  };
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   accept: "image/*",
+  //   onDrop: (acceptedFiles) => {
+  //     setFormData({
+  //       ...formData,
+  //       avatar: [...formData.avatar, ...acceptedFiles],
+  //     });
+  //   },
+  // });
+  const {
+    getRootProps: getAvatarRootProps,
+    getInputProps: getAvatarInputProps,
+  } = useDropzone({
     accept: "image/*",
     onDrop: (acceptedFiles) => {
       setFormData({
@@ -75,10 +175,35 @@ const SignUpPage = () => {
     },
   });
 
+  const {
+    getRootProps: getFrontIdRootProps,
+    getInputProps: getFrontIdInputProps,
+  } = useDropzone({
+    accept: "image/*",
+    onDrop: (acceptedFiles) => {
+      setFormData({
+        ...formData,
+        frontIdImage: [...formData.frontIdImage, ...acceptedFiles],
+      });
+    },
+  });
+
+  const {
+    getRootProps: getBackIdRootProps,
+    getInputProps: getBackIdInputProps,
+  } = useDropzone({
+    accept: "image/*",
+    onDrop: (acceptedFiles) => {
+      setFormData({
+        ...formData,
+        backIdImage: [...formData.backIdImage, ...acceptedFiles],
+      });
+    },
+  });
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword); // Đảo ngược trạng thái hiển thị/masquerade password
   };
-
+  console.log("test", formData);
   return (
     <>
       {/* <Header /> */}
@@ -88,7 +213,16 @@ const SignUpPage = () => {
             <h2>Register an account</h2>
             <p>
               Do you already have an account ?{" "}
-              <Link to={"/login"}>Go to Login</Link>
+              <Link
+                to={"/login"}
+                style={{
+                  textDecoration: "none",
+                  border: "1px solid #007BFF",
+                  borderRadius: "10px",
+                }}
+              >
+                Go to Login
+              </Link>
             </p>
           </Col>
         </Row>
@@ -206,6 +340,22 @@ const SignUpPage = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
+                <Form.Group controlId="role">
+                  <Form.Label>Role</Form.Label>
+                  <Form.Control
+                    as="select"
+                    required
+                    name="role"
+                    value={formData?.role}
+                    onChange={handleChange}
+                    disabled={!emailVerified}
+                  >
+                    <option value="">Select Role</option>
+                    <option value="customer">Customer</option>
+                    <option value="productOwner">Product Owner</option>
+                  </Form.Control>
+                </Form.Group>
+
                 <Form.Group controlId="address">
                   <Form.Label>Address</Form.Label>
                   <Form.Control
@@ -239,8 +389,8 @@ const SignUpPage = () => {
 
                 <Form.Group controlId="avatar">
                   <Form.Label>Avatar</Form.Label>
-                  <div {...getRootProps()} className="dropzone">
-                    <input {...getInputProps()} />
+                  <div {...getAvatarRootProps()} className="dropzone">
+                    <input {...getAvatarInputProps()} />
                     <div className="dropzone-content">
                       {formData.avatar.map((avatar, index) => (
                         <div key={index} className="avatar-wrapper">
@@ -275,9 +425,86 @@ const SignUpPage = () => {
                       )}
                     </div>
                   </div>
-                  <Form.Control.Feedback type="invalid">
-                    Please upload your avatar.
-                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="frontIdImage">
+                  <Form.Label>Front ID Image</Form.Label>
+                  <div {...getFrontIdRootProps()} className="dropzone">
+                    <input {...getFrontIdInputProps()} />
+                    <div className="dropzone-content">
+                      {formData.frontIdImage.map((image, index) => (
+                        <div key={index} className="avatar-wrapper">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt="Front ID Image"
+                            className="avatar-preview"
+                          />
+                          <div className="button-wrapper">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveFrontIdImage(index)}
+                              className="btn-remove-avatar"
+                            >
+                              <FiTrash2 />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      {formData.frontIdImage.length === 0 && (
+                        <>
+                          <p>
+                            Drag 'n' drop some files here, or click to select
+                            files
+                          </p>
+                          <Button variant="primary" className="btn-upload">
+                            {" "}
+                            {/* Disable if email is not verified */}
+                            Upload Image
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </Form.Group>
+
+                <Form.Group controlId="backIdImage">
+                  <Form.Label>Back ID Image</Form.Label>
+                  <div {...getBackIdRootProps()} className="dropzone">
+                    <input {...getBackIdInputProps()} />
+                    <div className="dropzone-content">
+                      {formData.backIdImage.map((image, index) => (
+                        <div key={index} className="avatar-wrapper">
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt="Back ID Image"
+                            className="avatar-preview"
+                          />
+                          <div className="button-wrapper">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveBackIdImage(index)}
+                              className="btn-remove-avatar"
+                            >
+                              <FiTrash2 />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      {formData.backIdImage.length === 0 && (
+                        <>
+                          <p>
+                            Drag 'n' drop some files here, or click to select
+                            files
+                          </p>
+                          <Button variant="primary" className="btn-upload">
+                            {" "}
+                            {/* Disable if email is not verified */}
+                            Upload Image
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </Form.Group>
 
                 <div className="text-center">
@@ -307,19 +534,30 @@ const SignUpPage = () => {
           <Modal.Title>Email Verification</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            An OTP has been sent to your email. Please verify your email
-            address.
-          </p>
+          {statusEmail === false ? (
+            <p>Email invalidate</p>
+          ) : (
+            <p>
+              An OTP has been sent to your email. Please verify your email
+              address.
+              <br />
+              <input className="otp" placeholder="Nhập OTP" />
+            </p>
+          )}
+
           {/* Your OTP verification input and logic can be implemented here */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowOTPModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleOTPVerification}>
-            Verify
-          </Button>
+          {statusEmail === false ? (
+            <></>
+          ) : (
+            <Button variant="primary" onClick={handleOTPVerification}>
+              Verify
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
 

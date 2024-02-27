@@ -63,4 +63,26 @@
   background-color: #0056b3; /* Màu nền khi di chuột qua */
 }
 
+/* CSS cho input */
+input.otp {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+  margin-top: 10px;
+}
+
+/* CSS cho hover */
+input.otp:hover {
+  border-color: #666;
+}
+
+/* CSS cho khi focus */
+input.otp:focus {
+  outline: none;
+  border-color: #333;
+}
+
+
 
