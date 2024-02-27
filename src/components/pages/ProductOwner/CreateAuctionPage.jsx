@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import Header from "../Header";
-import Footer from "../Footer";
+import { useNavigate } from "react-router-dom";
+import Header from "../../Header";
+import Footer from "../../Footer";
 function CreateAuctionProductForm() {
   // State for form fields
   const [productName, setProductName] = useState('');
@@ -10,6 +11,7 @@ function CreateAuctionProductForm() {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [productImage, setProductImage] = useState(null);
+  const navigate = useNavigate();
 
   // Handle form submit
   const handleSubmit = (e) => {
@@ -85,11 +87,16 @@ function CreateAuctionProductForm() {
                   <Form.Label>Thời gian kết thúc</Form.Label>
                   <Form.Control type="datetime-local" defaultValue={defaultEndTime} onChange={(e) => setEndTime(e.target.value)} />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                  Tạo Sản Phẩm
-                </Button>
               </Card.Body>
             </Card>
+            <Col xs="auto" className='mt-2'>              
+                <Button variant="primary" type="submit" className="me-2">
+                  Create Auction
+                </Button>
+                <Button variant="danger" type="submit" onClick={() => navigate(-1)}>
+                  Cancel
+                </Button>
+              </Col>
           </Col>
         </Row>
       </Form>
