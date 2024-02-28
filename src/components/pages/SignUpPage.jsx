@@ -83,7 +83,6 @@ const SignUpPage = () => {
     e.preventDefault();
 
     const image = formData?.frontIdImage[0];
-    console.log("image", image);
     const imgEl = document.createElement("img");
     imgEl.src = URL.createObjectURL(image);
 
