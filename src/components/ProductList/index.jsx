@@ -155,7 +155,7 @@ const ProductList = () => {
               <span className="timer-title">Thời gian đấu giá</span>
               <span style={{ fontWeight: "700" }}>20:31:26 22/03/2024</span>
             </Card.Title>
-            <Card className="mb-3 product-card">
+            <Card className="mb-3 card_product">
               <Card.Img
                 className="product-image"
                 variant="top"

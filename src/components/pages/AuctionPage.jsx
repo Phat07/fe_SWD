@@ -3,9 +3,11 @@ import Header from "../Header";
 import Footer from "../Footer";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import "../../css/auction.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, Pagination } from "react-bootstrap";
 // import ReactPaginate from 'react-paginate';
-
+import { FaCalendarAlt } from "react-icons/fa";
 function AuctionPage(props) {
   const location = useLocation();
   const [search] = useSearchParams();
@@ -133,8 +135,15 @@ function AuctionPage(props) {
       image: "../../../public/assets/images/background/background3.jpg",
     },
   ];
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState("mode1"); // State để lưu trữ chế độ hiển thị
+  const [selectedValue, setSelectedValue] = useState("all");
 
+  const handleSelect = (value) => {
+    setSelectedValue(value);
+    // Perform additional actions as needed
+  };
   const toggleViewMode = () => {
     setViewMode(viewMode === "mode1" ? "mode2" : "mode1"); // Chuyển đổi giữa hai chế độ hiển thị
   };
@@ -163,7 +172,7 @@ function AuctionPage(props) {
               borderBottom: "1px solid #E0E0E0",
               backgroundImage:
                 "url('../../../public/assets/images/background/auction.png')",
-              backgroundPosition: "right",
+              backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               backgroundSize: "contain",
             }}
@@ -200,14 +209,146 @@ function AuctionPage(props) {
             <div className="col-lg-3 col-md-4 sidebar-content">
               <div className="blog-widget-item fadeInUp">
                 <div className="search-area">
-                  <div className="sidebar-widget-title">Tìm kiếm</div>
-                  <div className="blog-widget-body">form</div>
+                  <div className="sidebar-widget-title">
+                    <div className="sidebar-widget-title-text">
+                      <h4>Tìm Kiếm</h4>
+                      <span className="hight-light"></span>
+                    </div>
+                    <div className="sidebar-widget-title-tools"></div>
+                  </div>
+                  <div
+                    className="blog-widget-body"
+                    style={{ position: "relative" }}
+                  >
+                    <div
+                      className="input-with-icon"
+                      style={{
+                        marginBottom: "20px",
+                        // position: "absolute",
+                        // width: "70%",
+                      }}
+                    >
+                      <input type="text" placeholder="Nhập từ khóa..." />
+                      {/* <FaCalendarAlt className="calendar-icon" /> */}
+                    </div>
+                    <div class="date-range">
+                      <div class="input-with-date">
+                        {/* <span>Từ ngày</span> */}
+                        <DatePicker
+                          selected={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          selectsStart
+                          startDate={startDate}
+                          endDate={endDate}
+                          placeholderText="Từ ngày"
+                        />
+                        <FaCalendarAlt className="calendar-icon" />
+                      </div>
+                      <div class="input-with-date">
+                        <DatePicker
+                          selected={endDate}
+                          onChange={(date) => setEndDate(date)}
+                          selectsEnd
+                          startDate={startDate}
+                          endDate={endDate}
+                          minDate={startDate}
+                          placeholderText="Đến ngày"
+                        />
+                        <FaCalendarAlt className="calendar-icon" />
+                      </div>
+                    </div>
+                    <Button
+                      style={{
+                        marginTop: "20px",
+                        backgroundColor: "#B41712",
+                        border: "none",
+                        fontWeight: "700",
+                        fontSize: "900",
+                        width: "70px",
+                      }}
+                    >
+                      LỌC
+                    </Button>
+                  </div>
                 </div>
               </div>
               <aside className="widget">
                 <div className="blog-widget-item fadeInUp">
                   <div className="search-area">
-                    <div className="sidebar-widget-title">Tìm kiếm</div>
+                    <div className="sidebar-widget-title">
+                      <div className="sidebar-widget-title-text">
+                        <h4>Trạng thái tài sản</h4>
+                        <span className="hight-light"></span>
+                      </div>
+                      <div className="sidebar-widget-title-tools"></div>
+                    </div>
+                    <div className="blog-widget-body">
+                      <label
+                        className={`custom-checkbox ${
+                          selectedValue === "all" && "active"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value="all"
+                          checked={selectedValue === "all"}
+                          onChange={() => handleSelect("all")}
+                        />
+                        Tất cả
+                      </label>
+                      <label
+                        className={`custom-checkbox ${
+                          selectedValue === "upcoming" && "active"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value="upcoming"
+                          checked={selectedValue === "upcoming"}
+                          onChange={() => handleSelect("upcoming")}
+                        />
+                        Sắp diễn ra
+                      </label>
+                      <label
+                        className={`custom-checkbox ${
+                          selectedValue === "ongoing" && "active"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value="ongoing"
+                          checked={selectedValue === "ongoing"}
+                          onChange={() => handleSelect("ongoing")}
+                        />
+                        Đang diễn ra
+                      </label>
+                      <label
+                        className={`custom-checkbox ${
+                          selectedValue === "finished" && "active"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          value="finished"
+                          checked={selectedValue === "finished"}
+                          onChange={() => handleSelect("finished")}
+                        />
+                        Đã kết thúc
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+              {/* <aside className="widget">
+                <div className="blog-widget-item fadeInUp">
+                  <div className="search-area">
+                    <div className="sidebar-widget-title">
+                      <div className="sidebar-widget-title-text">
+                        <h4>Tìm Kiếm</h4>
+                        <span className="hight-light"></span>
+                      </div>
+                      <div className="sidebar-widget-title-tools"></div>
+                    </div>
                     <div className="blog-widget-body">form</div>
                   </div>
                 </div>
@@ -215,21 +356,22 @@ function AuctionPage(props) {
               <aside className="widget">
                 <div className="blog-widget-item fadeInUp">
                   <div className="search-area">
-                    <div className="sidebar-widget-title">Tìm kiếm</div>
+                    <div className="sidebar-widget-title">
+                      <div className="sidebar-widget-title-text">
+                        <h4>Tìm Kiếm</h4>
+                        <span className="hight-light"></span>
+                      </div>
+                      <div className="sidebar-widget-title-tools"></div>
+                    </div>
                     <div className="blog-widget-body">form</div>
                   </div>
                 </div>
-              </aside>
-              <aside className="widget">
-                <div className="blog-widget-item fadeInUp">
-                  <div className="search-area">
-                    <div className="sidebar-widget-title">Tìm kiếm</div>
-                    <div className="blog-widget-body">form</div>
-                  </div>
-                </div>
-              </aside>
+              </aside> */}
             </div>
-            <div className="col-lg-9 col-md-8" style={{ position: "relative" }}>
+            <div
+              className="col-lg-9 col-md-8"
+              style={{ position: "relative", marginBottom: "1px" }}
+            >
               <div className="view-list">
                 <Button onClick={toggleViewMode}>
                   {viewMode === "mode1" ? "Chế độ 1" : "Chế độ 2"}
@@ -252,6 +394,7 @@ function AuctionPage(props) {
                     } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
                   >
                     <Card
+                    className="card_auction"
                       style={{
                         width: `${viewMode === "mode2" ? "800px" : ""}`,
                       }}
@@ -274,6 +417,9 @@ function AuctionPage(props) {
                           <Card.Body>
                             <Card.Title>{card.title}</Card.Title>
                             <Card.Text>{card.content}</Card.Text>
+                            <Link to={`/detail/${card.title}`}>
+                              <Button>Chi tiết</Button>
+                            </Link>
                           </Card.Body>
                         </div>
                       </div>
@@ -285,8 +431,9 @@ function AuctionPage(props) {
                 className="row"
                 style={{
                   position: "absolute",
-                  bottom: `${viewMode === "mode2" ? "0%" : "0%"}`,
+                  bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
                   left: "35%",
+                  // marginTop:"20px"
                 }}
               >
                 <Pagination>
@@ -307,7 +454,12 @@ function AuctionPage(props) {
           </div>
         </div>
       </div>
-      <div className="footer-container">
+      <div
+        className="footer-container"
+        style={{
+          marginTop: `${viewMode === "mode2" ? "" : "75px"}`,
+        }}
+      >
         <Footer />
       </div>
     </div>

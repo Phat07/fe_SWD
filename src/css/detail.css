@@ -1,0 +1,126 @@
+.gallery-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.main-image img {
+  width: 100%;
+  height: auto;
+  max-height: 400px; /* Example height */
+}
+
+.thumbnail-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px; /* Example margin */
+}
+
+.thumbnail-container img {
+  width: 100px; /* Example width */
+  height: auto;
+  cursor: pointer;
+  margin-bottom: 10px; /* Example margin */
+}
+
+.selected-thumbnail {
+  border: 3px solid blue; /* Example border */
+}
+.popup-container {
+  position: fixed;
+  top: 25%;
+  left: 25%;
+  right: 25%;
+  transform: translate(-25%, -25%);
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền đậm */
+  width: 50%; /* Chiều rộng của popup */
+  /* max-width: 100px; 
+  max-height: 100px; */
+  height: 50%;
+  padding: 20px; /* Khoảng cách bên trong popup */
+  z-index: 9999; /* Đảm bảo popup hiển thị trên cùng */
+}
+
+.popup-content {
+  position: relative;
+}
+.popup-content img {
+  width: 600px;
+  height: 300px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #b41712;
+  background-color: #fff;
+  font-size: 20px;
+  border-radius: 50%;
+}
+.para {
+  margin-bottom: 15px !important;
+  font-size: 16px;
+  font-weight: 400;
+  color: #696969;
+  font-family: Montserrat;
+  line-height: 28px;
+}
+.timestamp-div {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  -webkit-box-shadow: 0 0 25px rgb(0 0 0 / 10%);
+}
+.register-form {
+  border: 1px solid #e0e0e0;
+  margin-top: 20px;
+  box-shadow: 5px 2px 30px rgb(0 0 0 / 6%);
+  border-radius: 5px;
+  background: #fff;
+  padding: 15px;
+}
+.right-info-text {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: right;
+  color: #b41712;
+  font-weight: bold;
+}
+.left-infor-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #696969;
+  font-family: Montserrat;
+  text-align: left;
+}
+.info-ap {
+  font-family: "Inter";
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+.ul {
+  cursor: pointer;
+}
+.ul div {
+  width: 400px;
+  height: 50px;
+  margin: 20px;
+  background-color: #fff;
+  text-align: center;
+  padding-top: 10px;
+  font-size: large;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.ul .active {
+  color: white;
+  background-color: #B41712;
+  /* Các thuộc tính CSS khác bạn muốn áp dụng khi div được kích hoạt */
+}
