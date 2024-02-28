@@ -23,7 +23,16 @@ const LoginPage = () => {
             <h2 className="mb-4">Login to orchid auction </h2>
             <p>
               Do not have an account?{" "}
-              <Link to={"/signup"}>Create an account here</Link>
+              <Link
+                to={"/signup"}
+                style={{
+                  textDecoration: "none",
+                  border: "1px solid #007BFF",
+                  borderRadius: "10px",
+                }}
+              >
+                Create an account here
+              </Link>
             </p>
             <p
               style={{
@@ -39,10 +48,11 @@ const LoginPage = () => {
               {/* <Row> */}
               <Col>
                 <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>Username</Form.Label>
                   <Form.Control
-                    type="email"
-                    placeholder="Enter email"
+                    type="text"
+                    name="userName"
+                    placeholder="Enter username"
                     style={{ width: "500px" }}
                   />
                 </Form.Group>
@@ -52,6 +62,7 @@ const LoginPage = () => {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
+                    name="password"
                     placeholder="Password"
                     style={{ width: "500px" }}
                   />
