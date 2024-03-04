@@ -8,11 +8,13 @@ import AuctionPage from "./components/pages/AuctionPage";
 import Payment from "./components/pages/Payment";
 import RoomAuctionPage from "./components/pages/AuctionRoom/RoomAuctionPage";
 import DetailPage from "./components/pages/DetailPage";
-import CreateAuctionProductForm from "./components/pages/ProductOwner/CreateAuctionPage";
+import CreateAuctionProductForm from "./components/pages/AuctionOwner/CreateAuctionPage";
 import PaidItem from "./components/pages/PaidItem";
-import Auction from "./components/pages/ProductOwner/Auction";
-import AuctionDetail from "./components/pages/ProductOwner/AutionDetail";
+import Auction from "./components/pages/AuctionOwner/Auction";
+import AuctionDetail from "./components/pages/AuctionOwner/AutionDetail";
 import Profile from "./components/Profile";
+import CreateProductForm from "./components/pages/ProductOwner/CreateProduct";
+import Product from "./components/pages/ProductOwner/ProductList";
 
 function App() {
   return (
@@ -25,8 +27,10 @@ function App() {
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/room-auction" element={<RoomAuctionPage />} />
+        <Route path="/create-product" element={<CreateProductForm />} />
         <Route path="/create-auction" element={<CreateAuctionProductForm />} />
         <Route path="/manage-auction" element={<Auction />} />
+        <Route path="/manage-product" element={<Product />} />
         <Route path="/auction-detail/:auctionId" element={<AuctionDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />
         <Route path="profile" element={<Profile />} />
