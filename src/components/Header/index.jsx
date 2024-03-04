@@ -54,20 +54,6 @@ const Header = () => {
   };
   return (
     <div style={{ position: "relative" }}>
-      <div
-      // style={{
-      //   position: "absolute",
-      //   top: 0,
-      //   left: 0,
-      //   width: "100%",
-      //   height: "100%",
-      //   backgroundImage: `url(../../../public/assets/images/background/background4.jpg)`,
-      //   backgroundSize: "cover",
-      //   backgroundRepeat: "no-repeat",
-      //   backgroundPosition: "center",
-      //   zIndex: -1,
-      // }}
-      ></div>
       <header style={{ padding: "20px", zIndex: 1 }}>
         <Container fluid>
           <Row>

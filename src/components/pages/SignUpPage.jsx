@@ -8,6 +8,9 @@ import { FiEye, FiEyeOff, FiMail, FiTrash2 } from "react-icons/fi"; // Import Fi
 import { Link } from "react-router-dom";
 import "../../css/signUp.css";
 import * as faceapi from "face-api.js";
+import * as tf from "@tensorflow/tfjs";
+import * as blazeface from "@tensorflow-models/blazeface";
+import { load } from "@tensorflow-models/blazeface";
 
 const SignUpPage = () => {
   const [validated, setValidated] = useState(false);
@@ -27,6 +30,9 @@ const SignUpPage = () => {
   const [emailVerified, setEmailVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để điều khiển hiển thị/masquerade password
+
+  const [otp, setOtp] = useState("");
+  console.log("otp", otp);
   // kiểm tra email trước khi truyền lên be
   const [statusEmail, setStatusEmail] = useState("");
 
@@ -78,35 +84,38 @@ const SignUpPage = () => {
       setPasswordMatch(value === formData.password);
     }
   };
-  const [facesDetected, setFacesDetected] = useState(0);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const image = formData?.frontIdImage[0];
-    console.log("image", image);
-    const imgEl = document.createElement("img");
-    imgEl.src = URL.createObjectURL(image);
 
-    try {
-      await Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-        faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-        faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-      ]);
-      console.log("test1");
-      const detections = await faceapi
-        .detectAllFaces(imgEl, new faceapi.TinyFaceDetectorOptions())
-        .withFaceLandmarks()
-        .withFaceDescriptors();
-
-      setFacesDetected(detections.length);
-    } catch (error) {
-      console.error("Error loading models:", error);
-      // Handle the error, such as displaying an error message to the user
+    // Kiểm tra xem image có tồn tại không
+    if (!image) {
+      console.error("Không tìm thấy hình ảnh");
+      return;
     }
-  };
 
-  console.log("data", facesDetected);
+    // Tải mô hình Blazeface
+    const model = await blazeface.load();
+
+    // Tải hình ảnh và nhận diện khuôn mặt
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(image);
+    img.onload = async () => {
+      console.log("test00");
+      const predictions = await model.estimateFaces(img);
+
+      // Kiểm tra xem có khuôn mặt trong hình ảnh không
+      if (predictions.length === 0) {
+        console.error("Trong hình ảnh không có mặt người");
+        // Thực hiện các hành động xử lý khi không có mặt người trong hình ảnh
+      } else {
+        // Có mặt người trong hình ảnh, thực hiện các hành động tiếp theo
+        // Ví dụ: gửi hình ảnh lên server, hoặc thực hiện các xử lý khác
+      }
+    };
+  };
+// xử lý email không hợp lệ thì sẽ thông báo lỗi ra và không cho thực hiện bước tiếp theo
   const handleOTPVerification = () => {
     setEmailVerified(true);
     setShowOTPModal(false);
@@ -428,7 +437,9 @@ const SignUpPage = () => {
                 </Form.Group>
 
                 <Form.Group controlId="frontIdImage">
-                  <Form.Label>Front ID Image</Form.Label>
+                  <Form.Label>
+                    The front of the citizen identification card
+                  </Form.Label>
                   <div {...getFrontIdRootProps()} className="dropzone">
                     <input {...getFrontIdInputProps()} />
                     <div className="dropzone-content">
@@ -468,7 +479,7 @@ const SignUpPage = () => {
                 </Form.Group>
 
                 <Form.Group controlId="backIdImage">
-                  <Form.Label>Back ID Image</Form.Label>
+                  <Form.Label>Back of citizen identification card</Form.Label>
                   <div {...getBackIdRootProps()} className="dropzone">
                     <input {...getBackIdInputProps()} />
                     <div className="dropzone-content">
@@ -541,7 +552,11 @@ const SignUpPage = () => {
               An OTP has been sent to your email. Please verify your email
               address.
               <br />
-              <input className="otp" placeholder="Nhập OTP" />
+              <input
+                className="otp"
+                placeholder="Nhập OTP"
+                onChange={(e) => setOtp(e.target.value)}
+              />
             </p>
           )}
 

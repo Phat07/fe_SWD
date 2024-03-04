@@ -1,8 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { UserServices } from "../../services/userServices";
+import { actUserLogin } from "../../store/user/action";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    // rememberMe: false,
+  });
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user",user);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const val = type === "checkbox" ? checked : value;
+    setFormData({ ...formData, [name]: val });
+  };
+  const dispatch= useDispatch()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    UserServices.loginUser(formData)
+      .then((resFetchMe) => {
+        console.log("resFetchMe", resFetchMe);
+        const token = resFetchMe.data.token;
+        const currentUser = resFetchMe.data.user;
+        const role = resFetchMe.data.user.title;
+        UserServices.fetchMe(token)
+          .then((res) => {
+            dispatch(actUserLogin(currentUser, token, role));
+            // toast.success(
+            //   `Bạn đã đăng nhập với role ${role}. Chào mừng đã vào cổng`
+            // );
+            navigate("/");
+          })
+          .catch((err) => alert("Login or password failed"));
+      })
+      .catch((error) => {
+        if (error.response) {
+          toast.error("Server error:", error.response.data);
+        } else if (error.request) {
+          toast.error("Network error:", error.request);
+        } else {
+          toast.error("Error:", error.message);
+        }
+      });
+  };
+
   return (
     <Container fluid>
       <Row
@@ -44,16 +93,17 @@ const LoginPage = () => {
             >
               Or
             </p>
-            <Form>
-              {/* <Row> */}
+            <Form onSubmit={handleSubmit}>
               <Col>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Username</Form.Label>
                   <Form.Control
                     type="text"
-                    name="userName"
+                    name="username"
                     placeholder="Enter username"
                     style={{ width: "500px" }}
+                    value={formData.userName}
+                    onChange={handleChange}
                   />
                 </Form.Group>
               </Col>
@@ -65,14 +115,20 @@ const LoginPage = () => {
                     name="password"
                     placeholder="Password"
                     style={{ width: "500px" }}
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </Form.Group>
               </Col>
-              {/* </Row> */}
-
-              <Form.Group controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Remember me" />
-              </Form.Group>
+              {/* <Form.Group controlId="formBasicCheckbox">
+                <Form.Check
+                  type="checkbox"
+                  label="Remember me"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                />
+              </Form.Group> */}
 
               <Button
                 variant="primary"
