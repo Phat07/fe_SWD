@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { FaTrash } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { ProductServices } from "../../../services/productServices";
+import { actProductPostAsync } from "../../../store/product/action";
 function CreateProductForm() {
   // State for form fields
   const [productName, setProductName] = useState("");
@@ -13,18 +16,38 @@ function CreateProductForm() {
   const [productVideos, setProductVideos] = useState([]); // Lưu trữ nhiều video
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
   // Handle form submit
+  const token = localStorage.getItem("ACCESS_TOKEN");
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic to handle form submission
-    console.log({
-      productName,
-      description,
-      startingPrice,
-      productImages,
-      productVideos, // Include video in submission log for demonstration
-    });
-    // Ideally, here you would send the data to your backend or state management store
+    let imageData = []; // Khởi tạo imageData là một mảng
+    let videoData = null; // Khởi tạo videoData là null
+
+    // Lấy đường dẫn của hình ảnh từ mảng productImages, nếu có
+    if (productImages.length > 0) {
+      imageData = productImages.map((image) => image.url);
+    }
+
+    // Lấy đường dẫn của video từ đối tượng đầu tiên trong mảng productVideos, nếu có
+    if (productVideos.length > 0) {
+      videoData = productVideos[0].url;
+    }
+    let data = {
+      name: productName,
+      image: imageData,
+      video: videoData,
+      description: description,
+      price: startingPrice,
+    };
+    dispatch(actProductPostAsync(data, token));
+    setProductName("");
+    setDescription("");
+    setStartingPrice("");
+    setProductImages([]);
+    setProductVideos([]);
+    navigate("/manage-product");
   };
 
   // Calculate default start and end times for auction

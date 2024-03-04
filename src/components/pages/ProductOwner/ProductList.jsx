@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import ModalConfirmDeleteProduct from "./ModalConfirmDeleteProduct"; // Make sure this is adapted to use React Bootstrap as well
 import Header from "../../Header";
@@ -7,16 +7,23 @@ import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { actProductGetAsync } from "../../../store/product/action";
 
 function Product() {
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState({});
-  const [data, setData] = useState([
-    { id: 1, name: "Product 1", status: "chua dau gia" },
-    { id: 2, name: "Product 2", status: "da dau gia" },
-    // Add more sample data here
-  ]);
-
+  // const [data, setData] = useState([
+  //   { id: 1, name: "Product 1", status: "chua dau gia" },
+  //   { id: 2, name: "Product 2", status: "da dau gia" },
+  //   // Add more sample data here
+  // ]);
+  const products = useSelector((state) => state.PRODUCT.products);
+  console.log("products", products);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actProductGetAsync());
+  }, []);
   const navigate = useNavigate();
 
   const handleDelete = (auction) => {
@@ -41,7 +48,7 @@ function Product() {
           <Col xs={12}>
             <Card className="mb-4">
               <Card.Header>
-                <strong>Auction</strong>
+                <strong>Product</strong>
               </Card.Header>
               <Card.Body>
                 <div className="d-flex justify-content-between align-items-center">
@@ -80,40 +87,52 @@ function Product() {
                         <th>Name</th>
                         <th>Status</th>
                         <th>Actions</th>
+                        <th>Auction</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.id}</td>
-                          <td>{item.name}</td>
-                          <td>
-                            {item.status === "da dau gia" ? (
-                              <Badge bg="success">da dau gia</Badge>
-                            ) : (
-                              <Badge bg="warning">chua dau gia</Badge>
-                            )}
-                          </td>
-                          <td>
-                            {handleDetailAuction && (
+                      {products &&
+                        products?.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>
+                              {item.status === false ? (
+                                <Badge bg="warning">chua dau gia</Badge>
+                              ) : (
+                                <Badge bg="success">da dau gia</Badge>
+                              )}
+                            </td>
+                            <td>
+                              {handleDetailAuction && (
+                                <Button
+                                  variant="success"
+                                  onClick={() => handleDetailAuction(item)}
+                                >
+                                  Detail
+                                </Button>
+                              )}{" "}
+                              {handleDelete && (
+                                <Button
+                                  variant="danger"
+                                  onClick={() => handleDelete(item)}
+                                >
+                                  Delete
+                                </Button>
+                              )}
+                              </td>
+                              <td>
                               <Button
                                 variant="success"
-                                onClick={() => handleDetailAuction(item)}
+                                onClick={() =>
+                                  navigate(`/create-auction/${item._id}`)
+                                }
                               >
-                                Detail
+                                Create Auction
                               </Button>
-                            )}{" "}
-                            {handleDelete && (
-                              <Button
-                                variant="danger"
-                                onClick={() => handleDelete(item)}
-                              >
-                                Delete
-                              </Button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </Table>
                 </Row>
