@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Modal, Button } from 'react-bootstrap';
 import ModalConfirmDelete from "./ModalConfirmDelete"; // Make sure this is adapted to use React Bootstrap as well
 import TableAution from "./TableAution";
@@ -6,6 +6,9 @@ import ChangeTabAution from "./ChangeTabAution"; // This might need adjustments 
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { actAuctionGetAsync } from "../../../store/auction/action";
 
 function Auction() {
   const [showDelete, setShowDelete] = useState(false);
@@ -32,7 +35,14 @@ function Auction() {
     // Thêm dữ liệu mẫu khác tại đây
   ]);
   // Define other data arrays similarly
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
+  const auctions = useSelector((state) => state.AUCTION.auctions);
+  console.log("auctions", auctions);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actAuctionGetAsync(token));
+  }, []);
   const navigate = useNavigate();
 
   const handleDelete = (auction) => {

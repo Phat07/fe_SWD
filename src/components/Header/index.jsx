@@ -6,30 +6,24 @@ import "../../css/header.css";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [backgroundIndex, setBackgroundIndex] = React.useState(0);
+
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-  React.useEffect(() => {
-    const interval = setInterval(changeBackground, 5000); // Change background every 5 seconds
-    return () => clearInterval(interval);
-  }, [backgroundIndex]);
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  console.log("aaaa");
+  // React.useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentTime(new Date());
+  //   }, 1000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const changeBackground = () => {
-    setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
-  };
 
   const formatDate = (date) => {
     const options = {
