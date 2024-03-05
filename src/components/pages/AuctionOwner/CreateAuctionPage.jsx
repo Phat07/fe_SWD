@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { actAuctionPostAsync } from "../../../store/auction/action";
+import moment from "moment/moment";
 function CreateAuctionProductForm() {
   // State for form fields
   const [auctionInfo, setAuctionInfo] = useState("");
@@ -31,10 +32,11 @@ function CreateAuctionProductForm() {
   // auctioning
   // auctioned
 
-  
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+   
     // Logic to handle form submission
     let data = {
       minimum_price_step: stepPrice,
