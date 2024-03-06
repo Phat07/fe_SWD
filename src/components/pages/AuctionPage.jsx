@@ -5,7 +5,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import "../../css/auction.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Card, Pagination } from "react-bootstrap";
+import { Button, Card, Container, Pagination } from "react-bootstrap";
 // import ReactPaginate from 'react-paginate';
 import { FaCalendarAlt } from "react-icons/fa";
 function AuctionPage(props) {
@@ -159,26 +159,27 @@ function AuctionPage(props) {
   // Hàm chuyển trang
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
-    <div className="app-container">
-      <div className="header-container">
+    <Container className="mb-3">
+      <div className="app-container">
+        {/* <div className="header-container">
         <Header />
-      </div>
-      <div className="body-container">
-        <div className="container" style={{ marginBottom: "20px" }}>
-          <div
-            style={{
-              paddingTop: "32px",
-              paddingBottom: "26px",
-              borderBottom: "1px solid #E0E0E0",
-              backgroundImage:
-                "url('../../../public/assets/images/background/auction.png')",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "contain",
-            }}
-          >
-            <h2 className="current-page">Danh sách cuộc đấu giá</h2>
-            <div className="link-redirect" style={{ marginTop: "20px" }}>
+      </div> */}
+        <div className="body-container">
+          <div className="container" style={{ marginBottom: "20px" }}>
+            <div
+              style={{
+                paddingTop: "32px",
+                paddingBottom: "26px",
+                borderBottom: "1px solid #E0E0E0",
+                backgroundImage:
+                  "url('../../../public/assets/images/background/auction.png')",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+              }}
+            >
+              <h2 className="current-page">Danh sách cuộc đấu giá</h2>
+              {/* <div className="link-redirect" style={{ marginTop: "20px" }}>
               <Link
                 className="page-index"
                 style={{
@@ -459,8 +460,9 @@ function AuctionPage(props) {
         }}
       >
         <Footer />
+      </div> */}
       </div>
-    </div>
+    </Container>
   );
 }
 

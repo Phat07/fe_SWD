@@ -2,13 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import socketIOClient from 'socket.io-client';
+import socketIOClient from "socket.io-client";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { actAuctionPostAsync } from "../../../store/auction/action";
 import moment from "moment/moment";
 function CreateAuctionProductForm() {
   // State for form fields
+
+  // function formatPrice(value) {
+  //   // Xóa tất cả ký tự không phải số và chuyển đổi sang số nguyên
+  //   let number = parseInt(value.replace(/\D/g, ""), 10);
+
+  //   // Kiểm tra nếu không phải là số thì trả về chuỗi rỗng
+  //   if (isNaN(number)) {
+  //     return "";
+  //   }
+
+  //   // Format số theo dạng có dấu chấm phân cách hàng nghìn
+  //   let formattedNumber = number.toLocaleString();
+
+  //   // Trả về giá trị đã format và thêm "đ" vào cuối
+  //   return `${formattedNumber}đ`;
+  // }
+
+  // function unformatPrice(formattedValue) {
+  //   // Loại bỏ ký tự "đ" và dấu chấm phân cách hàng nghìn
+  //   let numberString = formattedValue.replace(/đ/g, "").replace(/\./g, "");
+
+  //   // Chuyển đổi chuỗi thành số
+  //   let number = parseInt(numberString, 10);
+
+  //   // Kiểm tra nếu kết quả là NaN thì trả về 0 hoặc trả về số
+  //   return isNaN(number) ? 0 : number;
+  // }
+
   const [auctionInfo, setAuctionInfo] = useState("");
   const [stepPrice, setStepPrice] = useState("");
   const [regitrationStartTime, setRegitrationStartTime] = useState("");
@@ -35,8 +63,7 @@ function CreateAuctionProductForm() {
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-   
+
     // Logic to handle form submission
     let data = {
       minimum_price_step: stepPrice,
@@ -106,6 +133,33 @@ function CreateAuctionProductForm() {
                         placeholder="Thông tin đấu giá"
                         value={auctionInfo}
                         onChange={(e) => setAuctionInfo(e.target.value)}
+                      />
+                    </Form.Group>
+                    {/* <Form.Group className="mb-3">
+                      <Form.Label>Giá khởi điểm</Form.Label>
+                      <Form.Control
+                        type="text" // Sử dụng type="text" để cho phép format
+                        placeholder="Giá khởi điểm"
+                        value={formattedStartingPrice}
+                        onChange={handleStartingPriceChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Bước giá tối thiểu</Form.Label>
+                      <Form.Control
+                        type="text" // Tương tự như trên
+                        placeholder="Minimun Price Step"
+                        value={formattedStepPrice}
+                        onChange={handleStepPriceChange}
+                      />
+                    </Form.Group> */}
+                    <Form.Group className="mb-3">
+                      <Form.Label>Giá khởi điểm</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Giá khởi điểm"
+                        value={startingPrice}
+                        onChange={(e) => setStartingPrice(e.target.value)}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">
