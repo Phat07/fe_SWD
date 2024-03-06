@@ -41,7 +41,7 @@ const AccountInfo = () => {
 
   return (
     <Container>
-      <Row className="mt-3 mb-3">
+      <Row className="mb-3">
         {/* Card bên phải */}
         <Col md={4}>
           <Card>

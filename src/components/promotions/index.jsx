@@ -34,7 +34,7 @@ function Promotions() {
         color: "white",
       }}
     >
-      <h5 style={{ textAlign: "center", paddingTop: "10px" }}>
+      <h5 style={{ textAlign: "center", paddingTop: "15px" }}>
         {messages[currentMessageIndex]}
       </h5>
     </div>

@@ -5,7 +5,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import "../../css/auction.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Card, Pagination } from "react-bootstrap";
+import { Button, Card, Container, Pagination } from "react-bootstrap";
 // import ReactPaginate from 'react-paginate';
 import { FaCalendarAlt } from "react-icons/fa";
 function AuctionPage(props) {
@@ -159,26 +159,27 @@ function AuctionPage(props) {
   // Hàm chuyển trang
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
-    <div className="app-container">
-      <div className="header-container">
+    <Container className="mb-3">
+      <div className="app-container">
+        {/* <div className="header-container">
         <Header />
-      </div>
-      <div className="body-container">
-        <div className="container" style={{ marginBottom: "20px" }}>
-          <div
-            style={{
-              paddingTop: "32px",
-              paddingBottom: "26px",
-              borderBottom: "1px solid #E0E0E0",
-              backgroundImage:
-                "url('../../../public/assets/images/background/auction.png')",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "contain",
-            }}
-          >
-            <h2 className="current-page">Danh sách cuộc đấu giá</h2>
-            <div className="link-redirect" style={{ marginTop: "20px" }}>
+      </div> */}
+        <div className="body-container">
+          <div className="container" style={{ marginBottom: "20px" }}>
+            <div
+              style={{
+                paddingTop: "32px",
+                paddingBottom: "26px",
+                borderBottom: "1px solid #E0E0E0",
+                backgroundImage:
+                  "url('../../../public/assets/images/background/auction.png')",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+              }}
+            >
+              <h2 className="current-page">Danh sách cuộc đấu giá</h2>
+              {/* <div className="link-redirect" style={{ marginTop: "20px" }}>
               <Link
                 className="page-index"
                 style={{
@@ -201,145 +202,145 @@ function AuctionPage(props) {
               >
                 Cuộc đấu giá
               </span>
+            </div> */}
             </div>
           </div>
-        </div>
-        <div className="container">
-          <div className="row high-padding">
-            <div className="col-lg-3 col-md-4 sidebar-content">
-              <div className="blog-widget-item fadeInUp">
-                <div className="search-area">
-                  <div className="sidebar-widget-title">
-                    <div className="sidebar-widget-title-text">
-                      <h4>Tìm Kiếm</h4>
-                      <span className="hight-light"></span>
-                    </div>
-                    <div className="sidebar-widget-title-tools"></div>
-                  </div>
-                  <div
-                    className="blog-widget-body"
-                    style={{ position: "relative" }}
-                  >
-                    <div
-                      className="input-with-icon"
-                      style={{
-                        marginBottom: "20px",
-                        // position: "absolute",
-                        // width: "70%",
-                      }}
-                    >
-                      <input type="text" placeholder="Nhập từ khóa..." />
-                      {/* <FaCalendarAlt className="calendar-icon" /> */}
-                    </div>
-                    <div class="date-range">
-                      <div class="input-with-date">
-                        {/* <span>Từ ngày</span> */}
-                        <DatePicker
-                          selected={startDate}
-                          onChange={(date) => setStartDate(date)}
-                          selectsStart
-                          startDate={startDate}
-                          endDate={endDate}
-                          placeholderText="Từ ngày"
-                        />
-                        <FaCalendarAlt className="calendar-icon" />
-                      </div>
-                      <div class="input-with-date">
-                        <DatePicker
-                          selected={endDate}
-                          onChange={(date) => setEndDate(date)}
-                          selectsEnd
-                          startDate={startDate}
-                          endDate={endDate}
-                          minDate={startDate}
-                          placeholderText="Đến ngày"
-                        />
-                        <FaCalendarAlt className="calendar-icon" />
-                      </div>
-                    </div>
-                    <Button
-                      style={{
-                        marginTop: "20px",
-                        backgroundColor: "#B41712",
-                        border: "none",
-                        fontWeight: "700",
-                        fontSize: "900",
-                        width: "70px",
-                      }}
-                    >
-                      LỌC
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <aside className="widget">
+          <div className="container">
+            <div className="row high-padding">
+              <div className="col-lg-3 col-md-4 sidebar-content">
                 <div className="blog-widget-item fadeInUp">
                   <div className="search-area">
                     <div className="sidebar-widget-title">
                       <div className="sidebar-widget-title-text">
-                        <h4>Trạng thái tài sản</h4>
+                        <h4>Tìm Kiếm</h4>
                         <span className="hight-light"></span>
                       </div>
                       <div className="sidebar-widget-title-tools"></div>
                     </div>
-                    <div className="blog-widget-body">
-                      <label
-                        className={`custom-checkbox ${
-                          selectedValue === "all" && "active"
-                        }`}
+                    <div
+                      className="blog-widget-body"
+                      style={{ position: "relative" }}
+                    >
+                      <div
+                        className="input-with-icon"
+                        style={{
+                          marginBottom: "20px",
+                          // position: "absolute",
+                          // width: "70%",
+                        }}
                       >
-                        <input
-                          type="checkbox"
-                          value="all"
-                          checked={selectedValue === "all"}
-                          onChange={() => handleSelect("all")}
-                        />
-                        Tất cả
-                      </label>
-                      <label
-                        className={`custom-checkbox ${
-                          selectedValue === "upcoming" && "active"
-                        }`}
+                        <input type="text" placeholder="Nhập từ khóa..." />
+                        {/* <FaCalendarAlt className="calendar-icon" /> */}
+                      </div>
+                      <div class="date-range">
+                        <div class="input-with-date">
+                          {/* <span>Từ ngày</span> */}
+                          <DatePicker
+                            selected={startDate}
+                            onChange={(date) => setStartDate(date)}
+                            selectsStart
+                            startDate={startDate}
+                            endDate={endDate}
+                            placeholderText="Từ ngày"
+                          />
+                          <FaCalendarAlt className="calendar-icon" />
+                        </div>
+                        <div class="input-with-date">
+                          <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            placeholderText="Đến ngày"
+                          />
+                          <FaCalendarAlt className="calendar-icon" />
+                        </div>
+                      </div>
+                      <Button
+                        style={{
+                          marginTop: "20px",
+                          backgroundColor: "#B41712",
+                          border: "none",
+                          fontWeight: "700",
+                          fontSize: "900",
+                          width: "70px",
+                        }}
                       >
-                        <input
-                          type="checkbox"
-                          value="upcoming"
-                          checked={selectedValue === "upcoming"}
-                          onChange={() => handleSelect("upcoming")}
-                        />
-                        Sắp diễn ra
-                      </label>
-                      <label
-                        className={`custom-checkbox ${
-                          selectedValue === "ongoing" && "active"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          value="ongoing"
-                          checked={selectedValue === "ongoing"}
-                          onChange={() => handleSelect("ongoing")}
-                        />
-                        Đang diễn ra
-                      </label>
-                      <label
-                        className={`custom-checkbox ${
-                          selectedValue === "finished" && "active"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          value="finished"
-                          checked={selectedValue === "finished"}
-                          onChange={() => handleSelect("finished")}
-                        />
-                        Đã kết thúc
-                      </label>
+                        LỌC
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </aside>
-              {/* <aside className="widget">
+                <aside className="widget">
+                  <div className="blog-widget-item fadeInUp">
+                    <div className="search-area">
+                      <div className="sidebar-widget-title">
+                        <div className="sidebar-widget-title-text">
+                          <h4>Trạng thái tài sản</h4>
+                          <span className="hight-light"></span>
+                        </div>
+                        <div className="sidebar-widget-title-tools"></div>
+                      </div>
+                      <div className="blog-widget-body">
+                        <label
+                          className={`custom-checkbox ${
+                            selectedValue === "all" && "active"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value="all"
+                            checked={selectedValue === "all"}
+                            onChange={() => handleSelect("all")}
+                          />
+                          Tất cả
+                        </label>
+                        <label
+                          className={`custom-checkbox ${
+                            selectedValue === "upcoming" && "active"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value="upcoming"
+                            checked={selectedValue === "upcoming"}
+                            onChange={() => handleSelect("upcoming")}
+                          />
+                          Sắp diễn ra
+                        </label>
+                        <label
+                          className={`custom-checkbox ${
+                            selectedValue === "ongoing" && "active"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value="ongoing"
+                            checked={selectedValue === "ongoing"}
+                            onChange={() => handleSelect("ongoing")}
+                          />
+                          Đang diễn ra
+                        </label>
+                        <label
+                          className={`custom-checkbox ${
+                            selectedValue === "finished" && "active"
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value="finished"
+                            checked={selectedValue === "finished"}
+                            onChange={() => handleSelect("finished")}
+                          />
+                          Đã kết thúc
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+                {/* <aside className="widget">
                 <div className="blog-widget-item fadeInUp">
                   <div className="search-area">
                     <div className="sidebar-widget-title">
@@ -367,102 +368,103 @@ function AuctionPage(props) {
                   </div>
                 </div>
               </aside> */}
-            </div>
-            <div
-              className="col-lg-9 col-md-8"
-              style={{ position: "relative", marginBottom: "1px" }}
-            >
-              <div className="view-list">
-                <Button onClick={toggleViewMode}>
-                  {viewMode === "mode1" ? "Chế độ 1" : "Chế độ 2"}
-                </Button>
               </div>
               <div
-                className={`row gy-4 mb-60 d-flex list-item ${
-                  viewMode === "mode2" ? "flex-column" : ""
-                }`}
-                style={{
-                  marginBottom: `${viewMode === "mode2" ? "70px" : ""}`,
-                }}
+                className="col-lg-9 col-md-8"
+                style={{ position: "relative", marginBottom: "1px" }}
               >
-                {/* Hiển thị danh sách sản phẩm */}
-                {currentCards.map((card) => (
-                  <div
-                    key={card.id}
-                    className={` ${
-                      viewMode === "mode2" ? "col-lg-3" : "col-lg-3"
-                    } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
-                  >
-                    <Card
-                    className="card_auction"
-                      style={{
-                        width: `${viewMode === "mode2" ? "800px" : ""}`,
-                      }}
+                <div className="view-list">
+                  <Button onClick={toggleViewMode}>
+                    {viewMode === "mode1" ? "Chế độ 1" : "Chế độ 2"}
+                  </Button>
+                </div>
+                <div
+                  className={`row gy-4 mb-60 d-flex list-item ${
+                    viewMode === "mode2" ? "flex-column" : ""
+                  }`}
+                  style={{
+                    marginBottom: `${viewMode === "mode2" ? "70px" : ""}`,
+                  }}
+                >
+                  {/* Hiển thị danh sách sản phẩm */}
+                  {currentCards.map((card) => (
+                    <div
+                      key={card.id}
+                      className={` ${
+                        viewMode === "mode2" ? "col-lg-3" : "col-lg-3"
+                      } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
                     >
-                      <div
+                      <Card
+                        className="card_auction"
                         style={{
-                          display: `${viewMode === "mode2" ? "flex" : ""}`,
+                          width: `${viewMode === "mode2" ? "800px" : ""}`,
                         }}
                       >
-                        <div>
-                          <Card.Img
-                            variant="top"
-                            src={card.image}
-                            style={{
-                              width: `${viewMode === "mode2" ? "200px" : ""}`,
-                            }}
-                          />
+                        <div
+                          style={{
+                            display: `${viewMode === "mode2" ? "flex" : ""}`,
+                          }}
+                        >
+                          <div>
+                            <Card.Img
+                              variant="top"
+                              src={card.image}
+                              style={{
+                                width: `${viewMode === "mode2" ? "200px" : ""}`,
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <Card.Body>
+                              <Card.Title>{card.title}</Card.Title>
+                              <Card.Text>{card.content}</Card.Text>
+                              <Link to={`/detail/${card.title}`}>
+                                <Button>Chi tiết</Button>
+                              </Link>
+                            </Card.Body>
+                          </div>
                         </div>
-                        <div>
-                          <Card.Body>
-                            <Card.Title>{card.title}</Card.Title>
-                            <Card.Text>{card.content}</Card.Text>
-                            <Link to={`/detail/${card.title}`}>
-                              <Button>Chi tiết</Button>
-                            </Link>
-                          </Card.Body>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                ))}
-              </div>
-              <div
-                className="row"
-                style={{
-                  position: "absolute",
-                  bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
-                  left: "35%",
-                  // marginTop:"20px"
-                }}
-              >
-                <Pagination>
-                  {Array.from({
-                    length: Math.ceil(data.length / cardsPerPage),
-                  }).map((item, index) => (
-                    <Pagination.Item
-                      key={index}
-                      active={index + 1 === currentPage}
-                      onClick={() => paginate(index + 1)}
-                    >
-                      {index + 1}
-                    </Pagination.Item>
+                      </Card>
+                    </div>
                   ))}
-                </Pagination>
+                </div>
+                <div
+                  className="row"
+                  style={{
+                    position: "absolute",
+                    bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
+                    left: "35%",
+                    // marginTop:"20px"
+                  }}
+                >
+                  <Pagination>
+                    {Array.from({
+                      length: Math.ceil(data.length / cardsPerPage),
+                    }).map((item, index) => (
+                      <Pagination.Item
+                        key={index}
+                        active={index + 1 === currentPage}
+                        onClick={() => paginate(index + 1)}
+                      >
+                        {index + 1}
+                      </Pagination.Item>
+                    ))}
+                  </Pagination>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
+        {/* <div
         className="footer-container"
         style={{
           marginTop: `${viewMode === "mode2" ? "" : "75px"}`,
         }}
       >
         <Footer />
+      </div> */}
       </div>
-    </div>
+    </Container>
   );
 }
 

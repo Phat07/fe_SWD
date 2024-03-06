@@ -3,6 +3,7 @@ import React from "react";
 import Banner from "../banner";
 import Promotions from "../promotions";
 import ProductList from "../ProductList";
+import AuctionPage from "../pages/AuctionPage";
 
 const Body = () => {
   return (
@@ -10,6 +11,7 @@ const Body = () => {
       <Banner />
       <Promotions />
       <ProductList />
+      <AuctionPage />
     </div>
   );
 };

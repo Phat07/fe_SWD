@@ -5,10 +5,54 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 function CreateAuctionProductForm() {
   // State for form fields
+
+  // function formatPrice(value) {
+  //   // Xóa tất cả ký tự không phải số và chuyển đổi sang số nguyên
+  //   let number = parseInt(value.replace(/\D/g, ""), 10);
+
+  //   // Kiểm tra nếu không phải là số thì trả về chuỗi rỗng
+  //   if (isNaN(number)) {
+  //     return "";
+  //   }
+
+  //   // Format số theo dạng có dấu chấm phân cách hàng nghìn
+  //   let formattedNumber = number.toLocaleString();
+
+  //   // Trả về giá trị đã format và thêm "đ" vào cuối
+  //   return `${formattedNumber}đ`;
+  // }
+
+  // function unformatPrice(formattedValue) {
+  //   // Loại bỏ ký tự "đ" và dấu chấm phân cách hàng nghìn
+  //   let numberString = formattedValue.replace(/đ/g, "").replace(/\./g, "");
+
+  //   // Chuyển đổi chuỗi thành số
+  //   let number = parseInt(numberString, 10);
+
+  //   // Kiểm tra nếu kết quả là NaN thì trả về 0 hoặc trả về số
+  //   return isNaN(number) ? 0 : number;
+  // }
+
   const [auctionInfo, setAuctionInfo] = useState("");
   const [stepPrice, setStepPrice] = useState("");
+  const [startingPrice, setStartingPrice] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  // const [formattedStartingPrice, setFormattedStartingPrice] = useState("");
+  // const [formattedStepPrice, setFormattedStepPrice] = useState("");
+
+  // const handleStartingPriceChange = (e) => {
+  //   const unformattedValue = unformatPrice(e.target.value); // Chuyển đổi giá trị nhập vào sang số
+  //   setStartingPrice(unformattedValue); // Cập nhật state của giá trị số
+  //   setFormattedStartingPrice(formatPrice(unformattedValue.toString())); // Cập nhật state của giá trị được format để hiển thị
+  //   console.log("Start: ", startingPrice);
+  // };
+
+  // const handleStepPriceChange = (e) => {
+  //   const value = e.target.value;
+  //   setStepPrice(value); // Tương tự như trên
+  //   setFormattedStepPrice(formatPrice(value));
+  // };
 
   const navigate = useNavigate();
 
@@ -65,6 +109,33 @@ function CreateAuctionProductForm() {
                         placeholder="Thông tin đấu giá"
                         value={auctionInfo}
                         onChange={(e) => setAuctionInfo(e.target.value)}
+                      />
+                    </Form.Group>
+                    {/* <Form.Group className="mb-3">
+                      <Form.Label>Giá khởi điểm</Form.Label>
+                      <Form.Control
+                        type="text" // Sử dụng type="text" để cho phép format
+                        placeholder="Giá khởi điểm"
+                        value={formattedStartingPrice}
+                        onChange={handleStartingPriceChange}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Bước giá tối thiểu</Form.Label>
+                      <Form.Control
+                        type="text" // Tương tự như trên
+                        placeholder="Minimun Price Step"
+                        value={formattedStepPrice}
+                        onChange={handleStepPriceChange}
+                      />
+                    </Form.Group> */}
+                    <Form.Group className="mb-3">
+                      <Form.Label>Giá khởi điểm</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Giá khởi điểm"
+                        value={startingPrice}
+                        onChange={(e) => setStartingPrice(e.target.value)}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">

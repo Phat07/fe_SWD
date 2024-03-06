@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { Navbar, Nav, Container, Row, Col, Button } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Row,
+  Col,
+  Button,
+  Image,
+} from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/header.css";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
@@ -10,26 +19,28 @@ const Header = () => {
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
   const navigate = useNavigate();
-  React.useEffect(() => {
-    const interval = setInterval(changeBackground, 5000); // Change background every 5 seconds
-    return () => clearInterval(interval);
-  }, [backgroundIndex]);
+  // React.useEffect(() => {
+  //   const interval = setInterval(changeBackground, 5000); // Change background every 5 seconds
+  //   return () => clearInterval(interval);
+  // }, [backgroundIndex]);
 
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  // React.useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentTime(new Date());
+  //   }, 1000);
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const changeBackground = () => {
-    setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
-  };
+  // const changeBackground = () => {
+  //   setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
+  // };
 
   const formatDate = (date) => {
     const options = {
@@ -150,14 +161,28 @@ const Header = () => {
                   Login
                 </Button>
               </Link> */}
-              <a href="/login">
-                <button
-                  className="login-button-red"
-                  style={{ fontWeight: "500" }}
-                >
-                  Login
-                </button>
-              </a>
+              {user ? (
+                <>
+                  <Image
+                    src={user.image}
+                    alt="Orchid"
+                    style={{ width: "50%", height: "auto" }}
+                    roundedCircle
+                    onClick={() => navigate(`/profile`)}
+                  />
+                </>
+              ) : (
+                <>
+                  <a href="/login">
+                    <button
+                      className="login-button-red"
+                      style={{ fontWeight: "500" }}
+                    >
+                      Login
+                    </button>
+                  </a>
+                </>
+              )}
             </Col>
           </Row>
         </Container>

@@ -11,7 +11,6 @@ function CreateProductForm() {
   // State for form fields
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
-  const [startingPrice, setStartingPrice] = useState("");
   const [productImages, setProductImages] = useState([]); // Lưu trữ nhiều ảnh
   const [productVideos, setProductVideos] = useState([]); // Lưu trữ nhiều video
   const navigate = useNavigate();
@@ -39,12 +38,10 @@ function CreateProductForm() {
       image: imageData,
       video: videoData,
       description: description,
-      price: startingPrice,
     };
     dispatch(actProductPostAsync(data, token));
     setProductName("");
     setDescription("");
-    setStartingPrice("");
     setProductImages([]);
     setProductVideos([]);
     navigate("/manage-product");
@@ -180,7 +177,7 @@ function CreateProductForm() {
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </Form.Group>
-                    <Form.Group className="mb-3">
+                    {/* <Form.Group className="mb-3">
                       <Form.Label>Giá khởi điểm</Form.Label>
                       <Form.Control
                         type="number"
@@ -188,7 +185,7 @@ function CreateProductForm() {
                         value={startingPrice}
                         onChange={(e) => setStartingPrice(e.target.value)}
                       />
-                    </Form.Group>
+                    </Form.Group> */}
                   </Card.Body>
                 </Card>
               </Col>

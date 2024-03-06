@@ -19,6 +19,7 @@ import { actUserLogin } from "./store/user/action";
 import { useEffect } from "react";
 import CreateProductForm from "./components/pages/ProductOwner/CreateProduct";
 import Product from "./components/pages/ProductOwner/ProductList";
+import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
 
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -58,8 +59,15 @@ function App() {
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/room-auction" element={<RoomAuctionPage />} />
+        <Route
+          path="/join-room-auction/:auctionID"
+          element={<JoinAuctionRoom />}
+        />
         <Route path="/create-product" element={<CreateProductForm />} />
-        <Route path="/create-auction/:productID" element={<CreateAuctionProductForm />} />
+        <Route
+          path="/create-auction/:productID"
+          element={<CreateAuctionProductForm />}
+        />
         <Route path="/manage-auction" element={<Auction />} />
         <Route path="/manage-product" element={<Product />} />
         <Route path="/auction-detail/:auctionId" element={<AuctionDetail />} />
