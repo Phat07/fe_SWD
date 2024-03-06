@@ -29,14 +29,14 @@ export const AuctionServices = {
       },
     });
   },
-  getAuctionAuctioningByUser(id, token) {
+  getAuctioningByUser(id, token) {
     return API.get(`/auctions/auctioning/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
   },
-  getAuctionaAuctionedByUser(id, token) {
+  getAuctionedByUser(id, token) {
     return API.get(`/auctions/autioned/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -199,14 +199,16 @@ function AuctionPage(props) {
                   marginLeft: "5px",
                 }}
               >
-                Cuộc đấu giá
+                Danh sách cuộc đấu giá đấu giá
               </span>
             </div>
           </div>
         </div>
         <div className="container">
           <div className="row high-padding">
-            <div className="col-lg-3 col-md-4 sidebar-content">
+            <div
+              className="col-lg-3 col-md-4 sidebar-content"
+            >
               <div className="blog-widget-item fadeInUp">
                 <div className="search-area">
                   <div className="sidebar-widget-title">
@@ -224,16 +226,12 @@ function AuctionPage(props) {
                       className="input-with-icon"
                       style={{
                         marginBottom: "20px",
-                        // position: "absolute",
-                        // width: "70%",
                       }}
                     >
                       <input type="text" placeholder="Nhập từ khóa..." />
-                      {/* <FaCalendarAlt className="calendar-icon" /> */}
                     </div>
                     <div class="date-range">
                       <div class="input-with-date">
-                        {/* <span>Từ ngày</span> */}
                         <DatePicker
                           selected={startDate}
                           onChange={(date) => setStartDate(date)}
@@ -273,7 +271,7 @@ function AuctionPage(props) {
                 </div>
               </div>
               <aside className="widget">
-                <div className="blog-widget-item fadeInUp">
+                <div className="blog-widget-item fadeInUp" >
                   <div className="search-area">
                     <div className="sidebar-widget-title">
                       <div className="sidebar-widget-title-text">
@@ -382,7 +380,7 @@ function AuctionPage(props) {
                   viewMode === "mode2" ? "flex-column" : ""
                 }`}
                 style={{
-                  marginBottom: `${viewMode === "mode2" ? "70px" : ""}`,
+                  marginBottom: `${viewMode === "mode2" ? "70px" : "20px"}`,
                 }}
               >
                 {/* Hiển thị danh sách sản phẩm */}
@@ -394,7 +392,7 @@ function AuctionPage(props) {
                     } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
                   >
                     <Card
-                    className="card_auction"
+                      className="card_auction"
                       style={{
                         width: `${viewMode === "mode2" ? "800px" : ""}`,
                       }}
