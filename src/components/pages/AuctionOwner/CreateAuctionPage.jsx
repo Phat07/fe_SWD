@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import socketIOClient from 'socket.io-client';
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { actAuctionPostAsync } from "../../../store/auction/action";

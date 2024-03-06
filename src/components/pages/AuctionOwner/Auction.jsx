@@ -5,6 +5,7 @@ import TableAution from "./TableAution";
 import ChangeTabAution from "./ChangeTabAution"; // This might need adjustments for Bootstrap components
 import Header from "../../Header";
 import Footer from "../../Footer";
+import socketIOClient from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -55,7 +56,22 @@ function Auction() {
     navigate(`/auction-detail/${auction.id}`);
     console.log("Update user at id:", auction.id);
   };
+  useEffect(() => {
+    // Kết nối tới Socket.IO server
+    const socket = socketIOClient('http://localhost:3001'); // Thay đổi URL và cổng tùy theo cấu hình của bạn
 
+    // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
+    socket.on('auction_status_changed', () => {
+      console.log("Auction status changed");
+      // Gọi lại các API để cập nhật danh sách các phiên đấu giá
+      // fetchAuctions();
+    });
+
+    return () => {
+      // Đóng kết nối Socket.IO khi component unmount
+      socket.disconnect();
+    };
+  }, []);
   return (
     <div className="app-container">
         <div className="header-container">
