@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserServices } from "./services/userServices";
 import { actUserLogin } from "./store/user/action";
 import { useEffect } from "react";
+import moment from 'moment';
 import CreateProductForm from "./components/pages/ProductOwner/CreateProduct";
 import Product from "./components/pages/ProductOwner/ProductList";
 import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
@@ -27,6 +28,9 @@ function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
+  // YYYY-MM-DD HH:mm:ss
+  const currentTime = moment('2024-03-05T01:56:00.000+00:00').format('YYYY-MM-DD HH:mm:ss'); // Lấy thời gian hiện tại với định dạng ngày và giờ
+    console.log("time",currentTime);
   useEffect(() => {
     UserServices.fetchMe(token)
       .then((res) => {

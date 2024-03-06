@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [backgroundIndex, setBackgroundIndex] = React.useState(0);
+
   const [currentTime, setCurrentTime] = React.useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
   const [searchValue, setSearchValue] = useState("");
