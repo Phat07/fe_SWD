@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Card, Row, Col, Button, Form, Carousel } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { actAuctionGetAsync } from "../../../store/auction/action";
 const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
   const [productName, setProductName] = useState("");
@@ -15,6 +17,19 @@ const AuctionDetail = () => {
   const [endTime, setEndTime] = useState("");
   const [productImage, setProductImage] = useState(null);
   const navigate = useNavigate();
+  const auctions = useSelector((state) => state.AUCTION.auctions);
+  console.log("aucctionsss", auctions);
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const dispatch = useDispatch();
+  const [auction, setAuction] = useState("");
+  useEffect(() => {
+    dispatch(actAuctionGetAsync(token));
+  }, [auctionId]);
+  useEffect(() => {
+    const item = auctions.find((i) => i._id === auctionId);
+    setAuction(item);
+  }, [auctions, auctionId]);
+  console.log("auctionDetail", auction);
   // const location = useLocation();
   // const userEditData = useMemo(
   //   () => location.state?.userEditData || {},
@@ -59,7 +74,7 @@ const AuctionDetail = () => {
                         <Card.Body>
                           <Card.Title>Ảnh Sản Phẩm</Card.Title>
                           <Carousel>
-                            {images.map((image, index) => (
+                            {auction?.product_id?.image?.map((image, index) => (
                               <Carousel.Item key={index}>
                                 <img
                                   className="d-block w-100"
@@ -86,9 +101,7 @@ const AuctionDetail = () => {
                           >
                             <video controls style={{ maxWidth: "100%" }}>
                               <source
-                                src={
-                                  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-                                }
+                                src={auction?.product_id?.video}
                                 type="video/mp4"
                               />
                               Your browser does not support the video tag.
@@ -108,6 +121,7 @@ const AuctionDetail = () => {
                             <Form.Control
                               type="text"
                               placeholder="Nhập tên sản phẩm"
+                              // disabled ={auctionId} 
                               value={productName}
                               onChange={(e) => setProductName(e.target.value)}
                             />

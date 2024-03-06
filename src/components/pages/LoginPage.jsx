@@ -43,11 +43,11 @@ const LoginPage = () => {
       })
       .catch((error) => {
         if (error.response) {
-          toast.error("Server error:", error.response.data);
+          // toast.error("Server error:", error.response.data);
         } else if (error.request) {
-          toast.error("Network error:", error.request);
+          // toast.error("Network error:", error.request);
         } else {
-          toast.error("Error:", error.message);
+          // toast.error("Error:", error.message);
         }
       });
   };

@@ -12,27 +12,19 @@ import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/header.css";
 import { useSelector } from "react-redux";
+import CurrentTime from "./currentTime";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
 
-  const [currentTime, setCurrentTime] = React.useState(new Date());
+  // const [currentTime, setCurrentTime] = React.useState(new Date());
   const [showPopup, setShowPopup] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
   const navigate = useNavigate();
-  // React.useEffect(() => {
-  //   const interval = setInterval(changeBackground, 5000); // Change background every 5 seconds
-  //   return () => clearInterval(interval);
-  // }, [backgroundIndex]);
 
-  // React.useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentTime(new Date());
-  //   }, 1000);
-  //   return () => clearInterval(timer);
-  // }, []);
+  
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -42,15 +34,7 @@ const Header = () => {
   //   setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
   // };
 
-  const formatDate = (date) => {
-    const options = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
+ 
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -138,11 +122,7 @@ const Header = () => {
               md={2}
               className="d-flex justify-content-end align-items-center"
             >
-              <div>
-                <strong>{currentTime.toLocaleTimeString()}</strong>
-                <br />
-                {formatDate(currentTime)}
-              </div>
+              <CurrentTime/>
             </Col>
             {/* Login Section */}
             <Col md={1}>

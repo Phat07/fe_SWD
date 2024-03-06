@@ -39,6 +39,7 @@ function CreateAuctionProductForm() {
 
   const [auctionInfo, setAuctionInfo] = useState("");
   const [stepPrice, setStepPrice] = useState("");
+  const [startingPrice, setStartingPrice] = useState("");
   const [regitrationStartTime, setRegitrationStartTime] = useState("");
   const [regitrationEndTime, setRegitrationEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -66,6 +67,7 @@ function CreateAuctionProductForm() {
 
     // Logic to handle form submission
     let data = {
+      starting_price: startingPrice,
       minimum_price_step: stepPrice,
       auctionInfo: auctionInfo,
       start_time: startTime,
@@ -78,6 +80,7 @@ function CreateAuctionProductForm() {
     };
     dispatch(actAuctionPostAsync(data, token));
     setAuctionInfo("");
+    setStartingPrice("")
     setStepPrice("");
     setRegitrationStartTime("");
     setRegitrationEndTime("");
