@@ -4,6 +4,10 @@ import {
   ABOUT_TO_AUCTION,
   AUCTIONING,
   AUCTIONED,
+  AUCTIONING_CUSTOMER,
+  NOT_YET_AUCTION_CUSTOMER,
+  ABOUT_TO_AUCTION_CUSTOMER,
+  AUCTIONED_CUSTOMER,
 } from "./action";
 
 const initialState = {
@@ -12,6 +16,10 @@ const initialState = {
   aboutToAuction: [],
   auctioning: [],
   auctined: [],
+  notYetAuctionCustomer: [],
+  aboutToAuctionCustomer: [],
+  auctioningCustomer: [],
+  auctinedCustomer: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -40,6 +48,27 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         auctined: action.payload,
+      };
+
+    case NOT_YET_AUCTION_CUSTOMER:
+      return {
+        ...state,
+        notYetAuctionCustomer: action.payload,
+      };
+    case ABOUT_TO_AUCTION_CUSTOMER:
+      return {
+        ...state,
+        aboutToAuctionCustomer: action.payload,
+      };
+    case AUCTIONING_CUSTOMER:
+      return {
+        ...state,
+        auctioningCustomer: action.payload,
+      };
+    case AUCTIONED_CUSTOMER:
+      return {
+        ...state,
+        auctinedCustomer: action.payload,
       };
 
     default:

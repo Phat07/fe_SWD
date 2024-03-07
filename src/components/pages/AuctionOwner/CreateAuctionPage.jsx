@@ -68,7 +68,7 @@ function CreateAuctionProductForm() {
     // Logic to handle form submission
     let data = {
       starting_price: startingPrice,
-      minimum_price_step: stepPrice,
+      price_step: stepPrice,
       auctionInfo: auctionInfo,
       start_time: startTime,
       end_time: endTime,

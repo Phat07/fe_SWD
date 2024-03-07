@@ -1,32 +1,44 @@
 // Import thêm useState từ React
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useDropzone } from "react-dropzone";
 import { FiEye, FiEyeOff, FiMail, FiTrash2 } from "react-icons/fi"; // Import FiEye và FiEyeOff
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../css/signUp.css";
 import * as faceapi from "face-api.js";
 import * as tf from "@tensorflow/tfjs";
 import * as blazeface from "@tensorflow-models/blazeface";
 import { load } from "@tensorflow-models/blazeface";
+import { useDispatch, useSelector } from "react-redux";
+import { actAllRoleGetAsync, actPostUserAsync } from "../../store/user/action";
+import { FaMale, FaFemale } from "react-icons/fa";
+import { BsFillPersonFill } from "react-icons/bs";
 
 const SignUpPage = () => {
   const [validated, setValidated] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
     address: "",
     phone: "",
-    avatar: [],
-    role: "", // Thêm trường cho trường chọn select
-    frontIdImage: [], // Thêm trường cho ảnh mặt trước căn cước công dân
-    backIdImage: [], // Thêm trường cho ảnh mặt sau căn cước công dân
+    image: "",
+    role_id: "",
+    gender: "",
   });
+  const role = useSelector((state) => state.USER.roles);
+  console.log("role", role);
+  useEffect(() => {
+    dispatch(actAllRoleGetAsync());
+  }, []);
+
   const [emailVerified, setEmailVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để điều khiển hiển thị/masquerade password
@@ -41,41 +53,20 @@ const SignUpPage = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-
-  //   if (name === "confirmPassword") {
-  //     setPasswordMatch(value === formData.password);
-  //   }
-  // };
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     console.log("form", formData);
-    if (name === "avatar") {
+    if (name === "image") {
       setFormData({
         ...formData,
-        avatar: [...formData.avatar, ...files],
+        image: [...formData.image, ...files],
       });
     } else if (name === "role") {
       setFormData({
         ...formData,
-        role: value,
+        role_id: value,
       });
       // setRole(value);
-    } else if (name === "frontIdImage") {
-      setFormData({
-        ...formData,
-        frontIdImage: [...formData.avatar, ...files],
-      });
-      // setFrontIdImage(files[0]);
-    } else if (name === "backIdImage") {
-      setFormData({
-        ...formData,
-        backIdImage: [...formData.avatar, ...files],
-      });
-      // setBackIdImage(files[0]);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -84,134 +75,92 @@ const SignUpPage = () => {
       setPasswordMatch(value === formData.password);
     }
   };
+  const convertToBase64 = async (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const image = formData?.frontIdImage[0];
-
-    // Kiểm tra xem image có tồn tại không
-    if (!image) {
-      console.error("Không tìm thấy hình ảnh");
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      // Nếu form không hợp lệ, cập nhật validated state và ngăn chặn submit
+      setValidated(true);
       return;
     }
-
-    // Tải mô hình Blazeface
-    const model = await blazeface.load();
-
-    // Tải hình ảnh và nhận diện khuôn mặt
-    const img = document.createElement("img");
-    img.src = URL.createObjectURL(image);
-    img.onload = async () => {
-      console.log("test00");
-      const predictions = await model.estimateFaces(img);
-
-      // Kiểm tra xem có khuôn mặt trong hình ảnh không
-      if (predictions.length === 0) {
-        console.error("Trong hình ảnh không có mặt người");
-        // Thực hiện các hành động xử lý khi không có mặt người trong hình ảnh
-      } else {
-        // Có mặt người trong hình ảnh, thực hiện các hành động tiếp theo
-        // Ví dụ: gửi hình ảnh lên server, hoặc thực hiện các xử lý khác
-      }
-    };
-  };
-// xử lý email không hợp lệ thì sẽ thông báo lỗi ra và không cho thực hiện bước tiếp theo
-  const handleOTPVerification = () => {
-    setEmailVerified(true);
-    setShowOTPModal(false);
-    document.getElementById("signUpButton").style.backgroundColor = "#007bff";
-    document.getElementById("signUpButton").style.color = "#fff";
-  };
-
-  const handleEmailVerification = () => {
-    if (validateEmail(formData?.email) === false) {
-      console.log("aaaa");
-      setStatusEmail(false);
-      setShowOTPModal(true);
-    } else if (validateEmail(formData?.email) === true) {
-      setStatusEmail(true);
-      setShowOTPModal(true);
-    }
-    console.log("bbb", validateEmail(formData?.email));
+    // const base64Image = await convertToBase64(formData?.image);
+    // let data = {
+    //   username: formData?.username,
+    //   fullName: formData?.fullName,
+    //   email: formData?.email,
+    //   password: formData?.password,
+    //   address: formData?.address,
+    //   phone: formData?.phone,
+    //   image: base64Image,
+    //   role_id: formData?.role_id,
+    //   gender: formData?.gender,
+    // };
+    const formData1 = new FormData();
+    formData1.append("image", formData?.image); // Giữ nguyên file hình ảnh
+    formData1.append("username", formData?.username);
+    formData1.append("fullName", formData?.fullName);
+    formData1.append("email", formData?.email);
+    formData1.append("password", formData?.password);
+    formData1.append("address", formData?.address);
+    formData1.append("phone", formData?.phone);
+    formData1.append("role_id", formData?.role_id);
+    formData1.append("gender", formData?.gender);
+    dispatch(actPostUserAsync(formData1));
+    navigate("/login");
   };
 
   const handleRemoveAvatar = (index) => {
-    const newAvatars = [...formData.avatar];
+    const newAvatars = [...formData.image];
     newAvatars.splice(index, 1);
-    setFormData({ ...formData, avatar: newAvatars });
-  };
-  const handleRemoveFrontIdImage = (index) => {
-    setFormData((prevFormData) => {
-      const newFrontIdImageList = [...prevFormData.frontIdImage];
-      newFrontIdImageList.splice(index, 1);
-      return {
-        ...prevFormData,
-        frontIdImage: newFrontIdImageList,
-      };
-    });
+    setFormData({ ...formData, image: newAvatars });
   };
 
-  // Hàm xóa hình ảnh khỏi danh sách backIdImage
-  const handleRemoveBackIdImage = (index) => {
-    setFormData((prevFormData) => {
-      const newBackIdImageList = [...prevFormData.backIdImage];
-      newBackIdImageList.splice(index, 1);
-      return {
-        ...prevFormData,
-        backIdImage: newBackIdImageList,
-      };
-    });
-  };
-  // const { getRootProps, getInputProps } = useDropzone({
+  // const {
+  //   getRootProps: getAvatarRootProps,
+  //   getInputProps: getAvatarInputProps,
+  // } = useDropzone({
   //   accept: "image/*",
   //   onDrop: (acceptedFiles) => {
   //     setFormData({
   //       ...formData,
-  //       avatar: [...formData.avatar, ...acceptedFiles],
+  //       image: [...formData.image, ...acceptedFiles],
   //     });
   //   },
   // });
+
   const {
     getRootProps: getAvatarRootProps,
     getInputProps: getAvatarInputProps,
   } = useDropzone({
     accept: "image/*",
     onDrop: (acceptedFiles) => {
-      setFormData({
-        ...formData,
-        avatar: [...formData.avatar, ...acceptedFiles],
-      });
+      if (acceptedFiles.length > 0) {
+        setFormData({
+          ...formData,
+          image: acceptedFiles[0], 
+        });
+      }
     },
   });
 
-  const {
-    getRootProps: getFrontIdRootProps,
-    getInputProps: getFrontIdInputProps,
-  } = useDropzone({
-    accept: "image/*",
-    onDrop: (acceptedFiles) => {
-      setFormData({
-        ...formData,
-        frontIdImage: [...formData.frontIdImage, ...acceptedFiles],
-      });
-    },
-  });
-
-  const {
-    getRootProps: getBackIdRootProps,
-    getInputProps: getBackIdInputProps,
-  } = useDropzone({
-    accept: "image/*",
-    onDrop: (acceptedFiles) => {
-      setFormData({
-        ...formData,
-        backIdImage: [...formData.backIdImage, ...acceptedFiles],
-      });
-    },
-  });
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword); // Đảo ngược trạng thái hiển thị/masquerade password
   };
+  const handleGenderSelect = (selectedGender) => {
+    setFormData({ ...formData, gender: selectedGender });
+  };
+
   console.log("test", formData);
   return (
     <>
@@ -247,11 +196,58 @@ const SignUpPage = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    disabled={!emailVerified}
+                    // disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a username.
                   </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="fullName">
+                  <Form.Label>FullName</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    // disabled={!emailVerified}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please enter a fullName.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                {/* tạo một select option chọn gender giúp tui gồm male và female */}
+                <Form.Group controlId="gender">
+                  <Form.Label>Gender</Form.Label>
+                  <div className="gender-icons">
+                    <div
+                      className={`gender-icon ${
+                        formData.gender === "male" ? "selected" : ""
+                      }`}
+                      onClick={() => handleGenderSelect("male")}
+                    >
+                      <FaMale />
+                      <span className="gender-label">Male</span>
+                    </div>
+                    <div
+                      className={`gender-icon ${
+                        formData.gender === "female" ? "selected" : ""
+                      }`}
+                      onClick={() => handleGenderSelect("female")}
+                    >
+                      <FaFemale />
+                      <span className="gender-label">Female</span>
+                    </div>
+                    <div
+                      className={`gender-icon ${
+                        formData.gender === "other" ? "selected" : ""
+                      }`}
+                      onClick={() => handleGenderSelect("other")}
+                    >
+                      <BsFillPersonFill />
+                      <span className="gender-label">Other</span>
+                    </div>
+                  </div>
                 </Form.Group>
 
                 <Form.Group controlId="email">
@@ -263,42 +259,12 @@ const SignUpPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     style={{ marginRight: "10px" }}
-                    disabled={emailVerified}
+                    // disabled={emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a valid email.
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Button
-                  className="verify-email-button"
-                  variant="primary"
-                  onClick={handleEmailVerification}
-                  style={{
-                    marginTop: "10px",
-                    backgroundColor: "#fff",
-                    color: "#007bff",
-                    border: "solid #007bff 1px",
-                    borderRadius: "5px",
-                    padding: "10px 20px",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    display: "block",
-                    width: "100%",
-                    position: "relative",
-                    fontWeight: "500",
-                  }}
-                  disabled={emailVerified}
-                >
-                  Verify Email{" "}
-                  <FiMail
-                    style={{
-                      fontSize: "20",
-                      position: "absolute",
-                      top: "12px",
-                      marginLeft: "5px",
-                    }}
-                  />
-                </Button>
 
                 <Row className="align-items-center">
                   <Col xs={10}>
@@ -310,7 +276,7 @@ const SignUpPage = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        disabled={!emailVerified}
+                        // disabled={!emailVerified}
                       />
                       <Form.Control.Feedback type="invalid">
                         Please enter a password.
@@ -342,7 +308,7 @@ const SignUpPage = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     isInvalid={!passwordMatch}
-                    disabled={!emailVerified}
+                    // disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Passwords do not match.
@@ -355,13 +321,16 @@ const SignUpPage = () => {
                     as="select"
                     required
                     name="role"
-                    value={formData?.role}
+                    value={formData?.role_id}
                     onChange={handleChange}
-                    disabled={!emailVerified}
+                    // disabled={!emailVerified}
                   >
                     <option value="">Select Role</option>
-                    <option value="customer">Customer</option>
-                    <option value="productOwner">Product Owner</option>
+                    {role.map((roleOption) => (
+                      <option key={roleOption.value} value={roleOption._id}>
+                        {roleOption.title}
+                      </option>
+                    ))}
                   </Form.Control>
                 </Form.Group>
 
@@ -374,7 +343,7 @@ const SignUpPage = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    disabled={!emailVerified}
+                    // disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter your address.
@@ -389,22 +358,22 @@ const SignUpPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    disabled={!emailVerified}
+                    // disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter your phone number.
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="avatar">
+                <Form.Group controlId="image">
                   <Form.Label>Avatar</Form.Label>
                   <div {...getAvatarRootProps()} className="dropzone">
                     <input {...getAvatarInputProps()} />
                     <div className="dropzone-content">
-                      {formData.avatar.map((avatar, index) => (
+                      {/* {formData.image.map((image, index) => (
                         <div key={index} className="avatar-wrapper">
                           <img
-                            src={URL.createObjectURL(avatar)}
+                            src={URL.createObjectURL(image)}
                             alt="Avatar"
                             className="avatar-preview"
                           />
@@ -418,90 +387,16 @@ const SignUpPage = () => {
                             </button>
                           </div>
                         </div>
-                      ))}
-                      {formData.avatar.length === 0 && (
-                        <>
-                          <p>
-                            Drag 'n' drop some files here, or click to select
-                            files
-                          </p>
-                          <Button variant="primary" className="btn-upload">
-                            {" "}
-                            {/* Disable if email is not verified */}
-                            Upload Image
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </Form.Group>
-
-                <Form.Group controlId="frontIdImage">
-                  <Form.Label>
-                    The front of the citizen identification card
-                  </Form.Label>
-                  <div {...getFrontIdRootProps()} className="dropzone">
-                    <input {...getFrontIdInputProps()} />
-                    <div className="dropzone-content">
-                      {formData.frontIdImage.map((image, index) => (
-                        <div key={index} className="avatar-wrapper">
+                      ))} */}
+                      {formData.image && (
+                        <div>
                           <img
-                            src={URL.createObjectURL(image)}
-                            alt="Front ID Image"
-                            className="avatar-preview"
+                            src={URL.createObjectURL(formData?.image)}
+                            alt="Uploaded"
                           />
-                          <div className="button-wrapper">
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveFrontIdImage(index)}
-                              className="btn-remove-avatar"
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
                         </div>
-                      ))}
-                      {formData.frontIdImage.length === 0 && (
-                        <>
-                          <p>
-                            Drag 'n' drop some files here, or click to select
-                            files
-                          </p>
-                          <Button variant="primary" className="btn-upload">
-                            {" "}
-                            {/* Disable if email is not verified */}
-                            Upload Image
-                          </Button>
-                        </>
                       )}
-                    </div>
-                  </div>
-                </Form.Group>
-
-                <Form.Group controlId="backIdImage">
-                  <Form.Label>Back of citizen identification card</Form.Label>
-                  <div {...getBackIdRootProps()} className="dropzone">
-                    <input {...getBackIdInputProps()} />
-                    <div className="dropzone-content">
-                      {formData.backIdImage.map((image, index) => (
-                        <div key={index} className="avatar-wrapper">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt="Back ID Image"
-                            className="avatar-preview"
-                          />
-                          <div className="button-wrapper">
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveBackIdImage(index)}
-                              className="btn-remove-avatar"
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                      {formData.backIdImage.length === 0 && (
+                      {formData.image === "" && (
                         <>
                           <p>
                             Drag 'n' drop some files here, or click to select
@@ -525,11 +420,10 @@ const SignUpPage = () => {
                     type="submit"
                     style={{
                       marginTop: "20px",
-                      backgroundColor: "#E5E8EB",
-                      color: "#A2ACB8",
+                      backgroundColor: "#007bff",
+                      color: "#fff",
                       border: "none",
                     }}
-                    disabled={!emailVerified}
                   >
                     Sign Up <FontAwesomeIcon icon={faUserPlus} />
                   </Button>
@@ -539,44 +433,6 @@ const SignUpPage = () => {
           </Col>
         </Row>
       </Container>
-
-      <Modal show={showOTPModal} onHide={() => setShowOTPModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Email Verification</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {statusEmail === false ? (
-            <p>Email invalidate</p>
-          ) : (
-            <p>
-              An OTP has been sent to your email. Please verify your email
-              address.
-              <br />
-              <input
-                className="otp"
-                placeholder="Nhập OTP"
-                onChange={(e) => setOtp(e.target.value)}
-              />
-            </p>
-          )}
-
-          {/* Your OTP verification input and logic can be implemented here */}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowOTPModal(false)}>
-            Cancel
-          </Button>
-          {statusEmail === false ? (
-            <></>
-          ) : (
-            <Button variant="primary" onClick={handleOTPVerification}>
-              Verify
-            </Button>
-          )}
-        </Modal.Footer>
-      </Modal>
-
-      {/* <Footer /> */}
     </>
   );
 };

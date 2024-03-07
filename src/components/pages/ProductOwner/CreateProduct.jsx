@@ -7,6 +7,7 @@ import { FaTrash } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { ProductServices } from "../../../services/productServices";
 import { actProductPostAsync } from "../../../store/product/action";
+import { log } from "@tensorflow/tfjs";
 function CreateProductForm() {
   // State for form fields
   const [productName, setProductName] = useState("");
@@ -48,15 +49,29 @@ function CreateProductForm() {
   };
 
   // Calculate default start and end times for auction
+  // const handleImageChange = (e) => {
+  //   const files = e.target.files;
+  //   const newImages = Array.from(files).map((file) => ({
+  //     file,
+  //     url: URL.createObjectURL(file),
+  //   }));
+  //   setProductImages((prev) => [...prev, ...newImages]);
+  // };
+  const isImageExist = (url) => {
+    return productImages.some((image) => image.url === url);
+  };
   const handleImageChange = (e) => {
     const files = e.target.files;
-    const newImages = Array.from(files).map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-    }));
+    const newImages = Array.from(files)
+      .filter((file) => !isImageExist(URL.createObjectURL(file)))
+      .map((file) => ({
+        file,
+        url: URL.createObjectURL(file),
+      }));
     setProductImages((prev) => [...prev, ...newImages]);
   };
-
+  console.log("productImage", productImages);
+  console.log("productVideo", productVideos);
   const handleVideoChange = (e) => {
     const files = e.target.files;
     const newVideos = Array.from(files).map((file) => ({
@@ -65,13 +80,29 @@ function CreateProductForm() {
     }));
     setProductVideos((prev) => [...prev, ...newVideos]);
   };
-
+  
   const removeImage = (index) => {
-    setProductImages((prev) => prev.filter((_, i) => i !== index));
+    const removedImageUrl = productImages[index].url;
+    // Tạo một bản sao của mảng ảnh
+    const updatedImages = [...productImages];
+    // Xóa ảnh khỏi mảng
+    updatedImages.splice(index, 1);
+    // Cập nhật state với mảng mới
+    setProductImages(updatedImages);
+    // Thu hồi URL của ảnh đã xóa
+    URL.revokeObjectURL(removedImageUrl);
   };
 
   const removeVideo = (index) => {
-    setProductVideos((prev) => prev.filter((_, i) => i !== index));
+    const removedVideoUrl = productVideos[index].url;
+    // Tạo một bản sao của mảng video
+    const updatedVideos = [...productVideos];
+    // Xóa video khỏi mảng
+    updatedVideos.splice(index, 1);
+    // Cập nhật state với mảng mới
+    setProductVideos(updatedVideos);
+    // Thu hồi URL của video đã xóa
+    URL.revokeObjectURL(removedVideoUrl);
   };
   return (
     <div className="app-container">

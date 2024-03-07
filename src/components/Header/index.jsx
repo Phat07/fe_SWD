@@ -13,7 +13,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../css/header.css";
 import { useSelector } from "react-redux";
 import CurrentTime from "./currentTime";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Header = () => {
   const [showDropdown, setShowDropdown] = React.useState(false);
 
@@ -24,8 +25,6 @@ const Header = () => {
   console.log("user", user);
   const navigate = useNavigate();
 
-  
-
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -33,8 +32,6 @@ const Header = () => {
   // const changeBackground = () => {
   //   setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
   // };
-
- 
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -49,6 +46,7 @@ const Header = () => {
   };
   return (
     <div style={{ position: "relative" }}>
+      <ToastContainer position="top-right" autoClose={2000} />
       <header style={{ padding: "20px", zIndex: 1 }}>
         <Container fluid>
           <Row>
@@ -122,7 +120,7 @@ const Header = () => {
               md={2}
               className="d-flex justify-content-end align-items-center"
             >
-              <CurrentTime/>
+              <CurrentTime />
             </Col>
             {/* Login Section */}
             <Col md={1}>
@@ -142,7 +140,7 @@ const Header = () => {
                 </Button>
               </Link> */}
               {user ? (
-                <>
+                <div style={{ cursor: "pointer" }}>
                   <Image
                     src={user.image}
                     alt="Orchid"
@@ -150,7 +148,7 @@ const Header = () => {
                     roundedCircle
                     onClick={() => navigate(`/profile`)}
                   />
-                </>
+                </div>
               ) : (
                 <>
                   <a href="/login">

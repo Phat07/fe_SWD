@@ -205,7 +205,7 @@ function DetailPage(props) {
                   }}
                 >
                   <FaGavel />
-                  <Link to={"/payment"}>
+                  <Link to={"/paid-item"}>
                     <Button
                       style={{ backgroundColor: "#B41712", border: "none" }}
                     >

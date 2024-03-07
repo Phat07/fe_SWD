@@ -1,6 +1,7 @@
 import {
   ACT_USER_LOGIN,
   ACT_USER_NOT_FETCH_ME,
+  ALL_ROLE,
   // GET_ALL_ADMIN_AND_SUPERADMIN_USER,
   // GET_ALL_ADMIN_USER,
   // GET_ALL_TRAINEE_USER,
@@ -11,51 +12,14 @@ import {
 } from "./action";
 
 const initialState = {
-  // fakeUser: [],
   users: [],
   token: null,
   currentUser: null,
-  // role: null,
-  // trainer: [],
-  // admin: [],
-  // adminAndSuperAdmin: [],
-  // trainee: [],
+  roles: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    // case GET_ALL_USER:
-    //   return {
-    //     ...state,
-    //     users: { ...state, users: action.payload },
-    //     // users: [...action.payload],
-    //   };
-    // case GET_ALL_TRAINER_USER:
-    //   return {
-    //     ...state,
-    //     trainer: [...action.payload],
-    //   };
-    // case GET_ALL_TRAINEE_USER:
-    //   return {
-    //     ...state,
-    //     trainee: [...action.payload],
-    //   };
-    // case GET_ALL_ADMIN_USER:
-    //   return {
-    //     ...state,
-    //     admin: [...action.payload],
-    //   };
-    // case GET_ALL_ADMIN_AND_SUPERADMIN_USER:
-    //   return {
-    //     ...state,
-    //     adminAndSuperAdmin: [...action.payload],
-    //   };
-    // case UPDATE_USER:
-    //   return {
-    //     ...state,
-    //     users: [...state.users, action.payload],
-    //     error: null,
-    //   };
     case ACT_USER_LOGIN:
       localStorage.setItem("ACCESS_TOKEN", action.payload.token);
       return {
@@ -70,11 +34,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         token: action.payload,
       };
-    // case GET_ALL_USER_FAKE:
-    //   return {
-    //     ...state,
-    //     fakeUser: action.payload,
-    //   };
+    case ALL_ROLE:
+      return {
+        ...state,
+        roles: action.payload,
+      };
     default:
       return state;
   }

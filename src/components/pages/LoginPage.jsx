@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { UserServices } from "../../services/userServices";
 import { actUserLogin } from "../../store/user/action";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,14 +15,14 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user",user);
+  console.log("user", user);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: val });
   };
-  const dispatch= useDispatch()
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     UserServices.loginUser(formData)
@@ -34,9 +34,9 @@ const LoginPage = () => {
         UserServices.fetchMe(token)
           .then((res) => {
             dispatch(actUserLogin(currentUser, token, role));
-            // toast.success(
-            //   `Bạn đã đăng nhập với role ${role}. Chào mừng đã vào cổng`
-            // );
+            toast.success(
+              `Chào mừng đã vào cổng`
+            );
             navigate("/");
           })
           .catch((err) => alert("Login or password failed"));
@@ -133,7 +133,7 @@ const LoginPage = () => {
               <Button
                 variant="primary"
                 type="submit"
-                style={{ width: "500px" }}
+                style={{ width: "500px", marginTop: "20px" }}
               >
                 Login
               </Button>

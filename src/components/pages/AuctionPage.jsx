@@ -295,7 +295,7 @@ function AuctionPage(props) {
                             checked={selectedValue === "all"}
                             onChange={() => handleSelect("all")}
                           />
-                          Tất cả
+                          Chưa diễn ra
                         </label>
                         <label
                           className={`custom-checkbox ${
