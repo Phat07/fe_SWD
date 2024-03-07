@@ -7,6 +7,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import { actAuctionPostAsync } from "../../../store/auction/action";
 import moment from "moment/moment";
+import { toast } from "react-toastify";
 function CreateAuctionProductForm() {
   // State for form fields
 
@@ -65,8 +66,50 @@ function CreateAuctionProductForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Logic to handle form submission
+    if (
+      !auctionInfo ||
+      !stepPrice ||
+      !startingPrice ||
+      !regitrationStartTime ||
+      !regitrationEndTime ||
+      !startTime ||
+      !endTime
+    ) {
+      // alert("Vui lòng điền tất cả các trường trong form!");
+      toast.error("Vui lòng điền tất cả các trường trong form!");
+      return;
+    }
+
+    // Chuyển đổi chuỗi thời gian thành đối tượng Date để so sánh
+    const regStart = new Date(regitrationStartTime);
+    const regEnd = new Date(regitrationEndTime);
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    // Kiểm tra các điều kiện thời gian
+    if (regStart >= regEnd) {
+      alert(
+        "Thời gian bắt đầu đăng ký phải nhỏ hơn thời gian kết thúc đăng ký!"
+      );
+      return;
+    }
+
+    if (regEnd >= start) {
+      alert(
+        "Thời gian kết thúc đăng ký phải nhỏ hơn thời gian bắt đầu đấu giá!"
+      );
+      return;
+    }
+
+    if (start >= end) {
+      alert(
+        "Thời gian bắt đầu đấu giá phải nhỏ hơn thời gian kết thúc đấu giá!"
+      );
+      return;
+    }
+
     let data = {
+      // Khai báo và sử dụng data như trước
       starting_price: startingPrice,
       price_step: stepPrice,
       auctionInfo: auctionInfo,
@@ -78,41 +121,23 @@ function CreateAuctionProductForm() {
       host_id: user?._id,
       product_id: productId,
     };
+
+    // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
     dispatch(actAuctionPostAsync(data, token));
+
+    // Reset form sau khi gửi thành công
     setAuctionInfo("");
-    setStartingPrice("")
+    setStartingPrice("");
     setStepPrice("");
     setRegitrationStartTime("");
     setRegitrationEndTime("");
     setStartTime("");
     setEndTime("");
+
+    // Điều hướng người dùng
     navigate("/manage-auction");
-    console.log({
-      startTime,
-      endTime,
-    });
-    // Ideally, here you would send the data to your backend or state management store
   };
 
-  // Calculate default start and end times for auction
-  // const defaultStartTime = new Date(
-  //   new Date().getTime() + 7 * 24 * 60 * 60 * 1000
-  // )
-  //   .toISOString()
-  //   .slice(0, 16); // 1 week from now
-  // const defaultEndTime = new Date(
-  //   new Date().getTime() + 14 * 24 * 60 * 60 * 1000
-  // )
-  //   .toISOString()
-  //   .slice(0, 16); // 2 weeks from now
-  // const defaultRegisterStartTime = new Date(new Date().getTime())
-  //   .toISOString()
-  //   .slice(0, 16); // 1 week from now
-  // const defaultRegisterEndTime = new Date(
-  //   new Date().getTime() + 7 * 24 * 60 * 60 * 1000
-  // )
-  //   .toISOString()
-  //   .slice(0, 16); // 2 weeks from now
   return (
     <div className="app-container">
       <div className="header-container">
@@ -179,7 +204,9 @@ function CreateAuctionProductForm() {
                       <Form.Control
                         type="datetime-local"
                         // defaultValue={defaultRegisterStartTime}
-                        onChange={(e) => setStartTime(e.target.value)}
+                        onChange={(e) =>
+                          setRegitrationStartTime(e.target.value)
+                        }
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -187,7 +214,7 @@ function CreateAuctionProductForm() {
                       <Form.Control
                         type="datetime-local"
                         // defaultValue={defaultRegisterEndTime}
-                        onChange={(e) => setEndTime(e.target.value)}
+                        onChange={(e) => setRegitrationEndTime(e.target.value)}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -195,9 +222,7 @@ function CreateAuctionProductForm() {
                       <Form.Control
                         type="datetime-local"
                         // defaultValue={defaultStartTime}
-                        onChange={(e) =>
-                          setRegitrationStartTime(e.target.value)
-                        }
+                        onChange={(e) => setStartTime(e.target.value)}
                       />
                     </Form.Group>
                     <Form.Group className="mb-3">
@@ -205,7 +230,7 @@ function CreateAuctionProductForm() {
                       <Form.Control
                         type="datetime-local"
                         // defaultValue={defaultEndTime}
-                        onChange={(e) => setRegitrationEndTime(e.target.value)}
+                        onChange={(e) => setEndTime(e.target.value)}
                       />
                     </Form.Group>
                   </Card.Body>
@@ -215,11 +240,7 @@ function CreateAuctionProductForm() {
                 <Button variant="primary" type="submit" className="me-2">
                   Create Auction
                 </Button>
-                <Button
-                  variant="danger"
-                  type="submit"
-                  onClick={() => navigate(-1)}
-                >
+                <Button variant="danger" onClick={() => navigate(-1)}>
                   Cancel
                 </Button>
               </Col>

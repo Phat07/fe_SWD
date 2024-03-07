@@ -92,8 +92,8 @@ const Header = () => {
                       </Nav.Link>
                       {showDropdown && (
                         <div className="dropdown-content">
-                          <Link to="#">Auction Item</Link>
-                          <Link to="#">Cart</Link>
+                          <Link to="/manage-auction">Auction</Link>
+                          <Link to="/manage-product">Product</Link>
                         </div>
                       )}
                     </div>

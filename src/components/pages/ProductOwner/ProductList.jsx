@@ -26,15 +26,14 @@ function Product() {
   }, []);
   const navigate = useNavigate();
 
-  const handleDelete = (auction) => {
-    console.log("Delete item with id:", auction.id);
-    setDeleteData(auction);
+  const handleDelete = (product) => {
+    console.log("Delete item with id:", product.name);
+    setDeleteData(product);
     setShowDelete(true);
   };
 
-  const handleDetailAuction = (auction) => {
-    // navigate(`/auction-detail/${auction.id}`);
-    console.log("Update user at id:", auction.id);
+  const handleDetailAuction = (product) => {
+    navigate(`/product-detail/${product._id}`);
   };
 
   return (
@@ -86,6 +85,7 @@ function Product() {
                         <th>ID</th>
                         <th>Name</th>
                         <th>Status</th>
+                        <th>Create Date</th>
                         <th>Actions</th>
                         <th>Auction</th>
                       </tr>
@@ -94,7 +94,7 @@ function Product() {
                       {products &&
                         products?.map((item, index) => (
                           <tr key={index}>
-                            <td>{item.id}</td>
+                            <td>{index + 1}</td>
                             <td>{item.name}</td>
                             <td>
                               {item.status === false ? (
@@ -103,6 +103,7 @@ function Product() {
                                 <Badge bg="success">da dau gia</Badge>
                               )}
                             </td>
+                            <td>Cho Push BE</td>
                             <td>
                               {handleDetailAuction && (
                                 <Button
@@ -120,16 +121,20 @@ function Product() {
                                   Delete
                                 </Button>
                               )}
-                              </td>
-                              <td>
-                              <Button
-                                variant="success"
-                                onClick={() =>
-                                  navigate(`/create-auction/${item._id}`)
-                                }
-                              >
-                                Create Auction
-                              </Button>
+                            </td>
+                            <td>
+                              {item.status === false ? (
+                                <Button
+                                  variant="success"
+                                  onClick={() =>
+                                    navigate(`/create-auction/${item._id}`)
+                                  }
+                                >
+                                  Create Auction
+                                </Button>
+                              ) : (
+                                <strong>San pham dang tren ke</strong>
+                              )}
                             </td>
                           </tr>
                         ))}

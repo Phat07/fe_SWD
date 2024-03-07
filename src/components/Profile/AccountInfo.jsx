@@ -21,6 +21,7 @@ const AccountInfo = () => {
     address: "123 Main Street, Anytown, USA",
     phoneNumber: "+123456789",
     password: "123456789",
+    Moneywallet: "200",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -99,6 +100,9 @@ const AccountInfo = () => {
               </Card.Text>
               <Card.Text>
                 <strong>Số điện thoại:</strong> {user.phoneNumber}
+              </Card.Text>
+              <Card.Text>
+                <strong>Tiền trong ví:</strong> {user.Moneywallet}
               </Card.Text>
 
               {/* Các trường thông tin khác */}

@@ -3,19 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Card, Row, Col, Button, Form, Carousel } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
-import { FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { actAuctionGetAsync } from "../../../store/auction/action";
 const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startingPrice, setStartingPrice] = useState("");
-  const [stepPrice, setStepPrice] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [auctionInfo, setAuctionInfo] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [productImage, setProductImage] = useState(null);
+  // const [productName, setProductName] = useState("");
+  // const [description, setDescription] = useState("");
+  // const [startingPrice, setStartingPrice] = useState("");
+  // const [stepPrice, setStepPrice] = useState("");
+  // const [startTime, setStartTime] = useState("");
+  // const [auctionInfo, setAuctionInfo] = useState("");
+  // const [endTime, setEndTime] = useState("");
+  // const [productImage, setProductImage] = useState(null);
   const navigate = useNavigate();
   const auctions = useSelector((state) => state.AUCTION.auctions);
   console.log("aucctionsss", auctions);
@@ -30,29 +29,6 @@ const AuctionDetail = () => {
     setAuction(item);
   }, [auctions, auctionId]);
   console.log("auctionDetail", auction);
-  // const location = useLocation();
-  // const userEditData = useMemo(
-  //   () => location.state?.userEditData || {},
-  //   [location.state?.userEditData]
-  // );
-  const images = [
-    "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
-  ];
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic to handle form submission
-    console.log({
-      productName,
-      description,
-      startingPrice,
-      startTime,
-      endTime,
-      productImage,
-    });
-    // Ideally, here you would send the data to your backend or state management store
-  };
   return (
     <div className="app-container">
       <div className="header-container">
@@ -67,7 +43,7 @@ const AuctionDetail = () => {
                 <strong>Thông Tin Chi Tiết Autionn với ID {auctionId} </strong>
               </Card.Header>
               <Card.Body>
-                <Form onSubmit={handleSubmit}>
+                <Form>
                   <Row className="mb-4">
                     <Col md={6}>
                       <Card>
@@ -121,9 +97,8 @@ const AuctionDetail = () => {
                             <Form.Control
                               type="text"
                               placeholder="Nhập tên sản phẩm"
-                              // disabled ={auctionId} 
-                              value={productName}
-                              onChange={(e) => setProductName(e.target.value)}
+                              readOnly={auctionId}
+                              value={auction?.product_id?.name}
                             />
                           </Form.Group>
                           <Form.Group className="mb-3">
@@ -132,8 +107,8 @@ const AuctionDetail = () => {
                               as="textarea"
                               rows={3}
                               placeholder="Mô tả sản phẩm"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
+                              readOnly={auctionId}
+                              value={auction?.product_id?.description}
                             />
                           </Form.Group>
                           <Form.Group className="mb-3">
@@ -141,8 +116,8 @@ const AuctionDetail = () => {
                             <Form.Control
                               type="number"
                               placeholder="Giá khởi điểm"
-                              value={startingPrice}
-                              onChange={(e) => setStartingPrice(e.target.value)}
+                              readOnly={auctionId}
+                              value={auction?.starting_price}
                             />
                           </Form.Group>
                         </Card.Body>
@@ -156,66 +131,84 @@ const AuctionDetail = () => {
                             <Form.Label>Thong tin dau gia</Form.Label>
                             <Form.Control
                               as="textarea"
+                              readOnly={auctionId}
                               rows={3}
                               placeholder="Thông tin đấu giá"
-                              value={auctionInfo}
-                              onChange={(e) => setAuctionInfo(e.target.value)}
+                              value={auction?.auctionInfo}
                             />
                           </Form.Group>
                           <Form.Group className="mb-3">
                             <Form.Label>Bước giá tối thiểu</Form.Label>
                             <Form.Control
                               type="number"
+                              readOnly={auctionId}
                               placeholder="Minimun Price Step"
-                              value={stepPrice}
-                              onChange={(e) => setStepPrice(e.target.value)}
+                              value={auction?.minimum_price_step}
                             />
                           </Form.Group>
                           <Form.Group className="mb-3">
-                            <Form.Label>Thời gian bắt đầu dang ki</Form.Label>
+                            <Form.Label>Thời gian bắt đầu đăng kí</Form.Label>
                             <Form.Control
                               type="datetime-local"
-                              defaultValue={endTime}
-                              onChange={(e) => setStartTime(e.target.value)}
+                              readOnly={auctionId}
+                              value={
+                                auction?.regitration_start_time
+                                  ? auction.regitration_start_time.substring(
+                                      0,
+                                      16
+                                    )
+                                  : ""
+                              }
                             />
                           </Form.Group>
+
                           <Form.Group className="mb-3">
-                            <Form.Label>Thời gian kết thúc dang ki</Form.Label>
+                            <Form.Label>Thời gian kết thúc đăng kí</Form.Label>
                             <Form.Control
                               type="datetime-local"
-                              defaultValue={endTime}
-                              onChange={(e) => setEndTime(e.target.value)}
+                              readOnly={auctionId}
+                              value={
+                                auction?.regitration_end_time
+                                  ? auction.regitration_end_time.substring(
+                                      0,
+                                      16
+                                    )
+                                  : ""
+                              }
                             />
                           </Form.Group>
+
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian bắt đầu</Form.Label>
                             <Form.Control
                               type="datetime-local"
-                              defaultValue={startTime}
-                              onChange={(e) => setStartTime(e.target.value)}
+                              readOnly={auctionId}
+                              value={
+                                auction?.start_time
+                                  ? auction.start_time.substring(0, 16)
+                                  : ""
+                              }
                             />
                           </Form.Group>
+
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian kết thúc</Form.Label>
                             <Form.Control
                               type="datetime-local"
-                              defaultValue={endTime}
-                              onChange={(e) => setEndTime(e.target.value)}
+                              readOnly={auctionId}
+                              value={
+                                auction?.end_time
+                                  ? auction.end_time.substring(0, 16)
+                                  : ""
+                              }
                             />
                           </Form.Group>
                         </Card.Body>
                       </Card>
                     </Col>
                     <Col xs="auto" className="mt-2">
-                      <Button variant="primary" type="submit" className="me-2">
-                        Create Auction
-                      </Button>
-                      <Button
-                        variant="danger"
-                        type="submit"
-                        onClick={() => navigate(-1)}
-                      >
-                        Cancel
+                      <Button variant="success" onClick={() => navigate(-1)}>
+                        Back
                       </Button>
                     </Col>
                   </Row>

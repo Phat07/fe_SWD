@@ -21,6 +21,11 @@ function CreateProductForm() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!productName || !description || !productImages || !productVideos) {
+      alert("Vui lòng điền tất cả các trường trong form!");
+      return;
+    }
     // Logic to handle form submission
     let imageData = []; // Khởi tạo imageData là một mảng
     let videoData = null; // Khởi tạo videoData là null
