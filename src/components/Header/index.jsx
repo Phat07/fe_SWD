@@ -24,8 +24,6 @@ const Header = () => {
   console.log("user", user);
   const navigate = useNavigate();
 
-  
-
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -33,8 +31,6 @@ const Header = () => {
   // const changeBackground = () => {
   //   setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
   // };
-
- 
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -94,8 +90,8 @@ const Header = () => {
                       </Nav.Link>
                       {showDropdown && (
                         <div className="dropdown-content">
-                          <Link to="#">Auction Item</Link>
-                          <Link to="#">Cart</Link>
+                          <Link to="/manage-auction">Auction</Link>
+                          <Link to="/manage-product">Product</Link>
                         </div>
                       )}
                     </div>
@@ -122,7 +118,7 @@ const Header = () => {
               md={2}
               className="d-flex justify-content-end align-items-center"
             >
-              <CurrentTime/>
+              <CurrentTime />
             </Col>
             {/* Login Section */}
             <Col md={1}>

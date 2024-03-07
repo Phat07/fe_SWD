@@ -1,5 +1,4 @@
 import { AuctionServices } from "../../services/auctionServices";
-
 export const ALL_AUCTION = "ALL_AUCTION";
 export const NOT_YET_AUCTION = "NOT_YET_AUCTION";
 export const ABOUT_TO_AUCTION = "ABOUT_TO_AUCTION";

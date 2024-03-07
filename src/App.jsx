@@ -17,10 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserServices } from "./services/userServices";
 import { actUserLogin } from "./store/user/action";
 import { useEffect } from "react";
-import moment from 'moment';
+import moment from "moment";
 import CreateProductForm from "./components/pages/ProductOwner/CreateProduct";
 import Product from "./components/pages/ProductOwner/ProductList";
 import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
+import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
+import { ToastContainer } from "react-bootstrap";
 
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -29,8 +31,10 @@ function App() {
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
   // YYYY-MM-DD HH:mm:ss
-  const currentTime = moment('2024-03-05T01:56:00.000+00:00').format('YYYY-MM-DD HH:mm:ss'); // Lấy thời gian hiện tại với định dạng ngày và giờ
-    console.log("time",currentTime);
+  const currentTime = moment("2024-03-05T01:56:00.000+00:00").format(
+    "YYYY-MM-DD HH:mm:ss"
+  ); // Lấy thời gian hiện tại với định dạng ngày và giờ
+  console.log("time", currentTime);
   useEffect(() => {
     UserServices.fetchMe(token)
       .then((res) => {
@@ -55,6 +59,18 @@ function App() {
   return (
     <>
       {/* <ToastContainer position="top-right" autoClose={2000} /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -75,6 +91,7 @@ function App() {
         <Route path="/manage-auction" element={<Auction />} />
         <Route path="/manage-product" element={<Product />} />
         <Route path="/auction-detail/:auctionId" element={<AuctionDetail />} />
+        <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />
         <Route path="profile" element={<Profile />} />
       </Routes>

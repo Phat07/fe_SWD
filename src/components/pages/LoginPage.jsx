@@ -15,14 +15,14 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user",user);
+  console.log("user", user);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: val });
   };
-  const dispatch= useDispatch()
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     UserServices.loginUser(formData)

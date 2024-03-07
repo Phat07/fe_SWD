@@ -37,7 +37,7 @@ const ModalConfirmDeleteProduct = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Delete Product {deleteData.id}</Modal.Title>
+          <Modal.Title>Delete Product {deleteData._id}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div>You want to delete product: {deleteData.name}</div>
@@ -59,8 +59,8 @@ const ModalConfirmDeleteProduct = (props) => {
 ModalConfirmDeleteProduct.propTypes = {
   // Xác định rằng `userDeleteData` là một đối tượng và là required
   deleteData: PropTypes.shape({
-    id: PropTypes.number.isRequired, // Giả sử id là một số và là required
-    name: PropTypes.string.isRequired, // Giả sử name là một chuỗi và là required
+    id: PropTypes.number, // Giả sử id là một số và là required
+    name: PropTypes.string, // Giả sử name là một chuỗi và là required
     // Bạn có thể thêm các thuộc tính khác của userDeleteData ở đây nếu cần
   }).isRequired,
 

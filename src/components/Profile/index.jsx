@@ -17,6 +17,8 @@ import CartAuction from "./Cart";
 import AuctionWating from "./AuctionWating";
 import AuctionHistory from "./AuctionHistory";
 import HistoryTransaction from "./HistoryTransaction";
+import HistoryDeposit from "./HistoryDeposit";
+import PaidItem from "../pages/PaidItem";
 
 function Profile() {
   const [status, setStatus] = useState("account");
@@ -37,7 +39,11 @@ function Profile() {
         return <AuctionWating />;
       case "history":
         return <AuctionHistory />;
-      case "documents":
+      case "nap tien":
+        return <PaidItem />;
+      case "lich su nap tien":
+        return <HistoryDeposit />;
+      case "lich su giao dich":
         return <HistoryTransaction />;
       default:
         return <div>Chọn một mục</div>;
@@ -74,6 +80,14 @@ function Profile() {
                     </Nav.Item>
                     <Nav.Item>
                       <Nav.Link
+                        eventKey="nap tien"
+                        onClick={() => setStatus("nap tien")}
+                      >
+                        Nạp tiền
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link
                         eventKey="cart"
                         onClick={() => setStatus("cart")}
                       >
@@ -98,8 +112,16 @@ function Profile() {
                     </Nav.Item>
                     <Nav.Item>
                       <Nav.Link
-                        eventKey="documents"
-                        onClick={() => setStatus("documents")}
+                        eventKey="lich su nap tien"
+                        onClick={() => setStatus("lich su nap tien")}
+                      >
+                        Lịch sử nạp tiền
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link
+                        eventKey="lich su giao dich"
+                        onClick={() => setStatus("lich su giao dich")}
                       >
                         Lịch sử giao dịch
                       </Nav.Link>

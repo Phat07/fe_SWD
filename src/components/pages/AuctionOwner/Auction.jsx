@@ -20,27 +20,6 @@ import {
 function Auction() {
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState({});
-  const [data, setData] = useState([
-    { id: 1, name: "Aution 1", status: "active" },
-    { id: 2, name: "Aution 2", status: "active" },
-    // Add more sample data here
-  ]);
-
-  const data1 = [
-    { id: 3, name: "Aution 3", status: "active" },
-    { id: 4, name: "Aution 4", status: "active" },
-    // Thêm dữ liệu mẫu khác tại đây
-  ];
-  const [data2, setData2] = useState([
-    { id: 5, name: "Aution 5", status: "active" },
-    { id: 6, name: "Aution 6", status: "active" },
-    // Thêm dữ liệu mẫu khác tại đây
-  ]);
-  const [data3, setData3] = useState([
-    { id: 7, name: "Aution 7", status: "active" },
-    { id: 8, name: "Aution 8", status: "active" },
-    // Thêm dữ liệu mẫu khác tại đây
-  ]);
   // Define other data arrays similarly
   const token = localStorage.getItem("ACCESS_TOKEN");
 
