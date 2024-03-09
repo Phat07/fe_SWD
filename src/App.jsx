@@ -1,6 +1,6 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import HomePage from "./components/pages/HomePage";
 import LoginPage from "./components/pages/LoginPage";
 import SignUpPage from "./components/pages/SignUpPage";
@@ -80,7 +80,17 @@ function App() {
         <Route path="/auction" element={<AuctionPage />} />
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/room-auction" element={<RoomAuctionPage />} />
+        {/* <Route path="/room-auction" element={<RoomAuctionPage />} /> */}
+        <Route
+          path="/room-auction"
+          element={
+            user?.role_id?.title === "HOST" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <RoomAuctionPage />
+            )
+          }
+        />
         <Route
           path="/join-room-auction/:auctionID"
           element={<JoinAuctionRoom />}
@@ -90,8 +100,28 @@ function App() {
           path="/create-auction/:productID"
           element={<CreateAuctionProductForm />}
         />
-        <Route path="/manage-auction" element={<Auction />} />
-        <Route path="/manage-product" element={<Product />} />
+        <Route
+          path="/manage-auction"
+          element={
+            user?.role_id?.title === "MEMBER" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Auction />
+            )
+          }
+        />
+        <Route
+          path="/manage-product"
+          element={
+            user?.role_id?.title === "MEMBER" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Product />
+            )
+          }
+        />
+        {/* <Route path="/manage-auction" element={<Auction />} /> */}
+        {/* <Route path="/manage-product" element={<Product />} /> */}
         <Route path="/auction-detail/:auctionId" element={<AuctionDetail />} />
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />

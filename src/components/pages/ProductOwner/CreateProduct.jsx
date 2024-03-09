@@ -1,70 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header";
 import Footer from "../../Footer";
+import "../../../css/createProduct.css";
 import { FaTrash } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { ProductServices } from "../../../services/productServices";
+import { useDispatch, useSelector } from "react-redux";
 import { actProductPostAsync } from "../../../store/product/action";
-import { log } from "@tensorflow/tfjs";
+import { Spinner } from "react-bootstrap";
+import { toast } from "react-toastify";
+
 function CreateProductForm() {
-  // State for form fields
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
-  const [productImages, setProductImages] = useState([]); // Lưu trữ nhiều ảnh
-  const [productVideos, setProductVideos] = useState([]); // Lưu trữ nhiều video
+  const [productImages, setProductImages] = useState([]);
+  const [productVideos, setProductVideos] = useState([]);
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const user = useSelector((state) => state.USER.currentUser);
   const dispatch = useDispatch();
-  // Handle form submit
   const token = localStorage.getItem("ACCESS_TOKEN");
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  
+  // Create refs for file inputs
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
 
-    if (!productName || !description || !productImages || !productVideos) {
-      alert("Vui lòng điền tất cả các trường trong form!");
-      return;
-    }
-    // Logic to handle form submission
-    let imageData = []; // Khởi tạo imageData là một mảng
-    let videoData = null; // Khởi tạo videoData là null
-
-    // Lấy đường dẫn của hình ảnh từ mảng productImages, nếu có
-    if (productImages.length > 0) {
-      imageData = productImages.map((image) => image.url);
-    }
-
-    // Lấy đường dẫn của video từ đối tượng đầu tiên trong mảng productVideos, nếu có
-    if (productVideos.length > 0) {
-      videoData = productVideos[0].url;
-    }
-    let data = {
-      name: productName,
-      image: imageData,
-      video: videoData,
-      description: description,
-    };
-    dispatch(actProductPostAsync(data, token));
+  // Function to reset form fields
+  const resetFormFields = () => {
     setProductName("");
     setDescription("");
     setProductImages([]);
     setProductVideos([]);
-    navigate("/manage-product");
+    // Reset file input fields
+    imageInputRef.current.value = "";
+    videoInputRef.current.value = "";
   };
 
-  // Calculate default start and end times for auction
-  // const handleImageChange = (e) => {
-  //   const files = e.target.files;
-  //   const newImages = Array.from(files).map((file) => ({
-  //     file,
-  //     url: URL.createObjectURL(file),
-  //   }));
-  //   setProductImages((prev) => [...prev, ...newImages]);
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (
+      !productName ||
+      !description ||
+      productImages.length === 0 ||
+      productVideos.length === 0
+    ) {
+      toast.error(
+        "Vui lòng điền tất cả các trường và chọn ít nhất một ảnh và một video!"
+      );
+      return;
+    }
+
+    let data = new FormData();
+    data.append("name", productName);
+    data.append("description", description);
+    data.append("host_id", user._id);
+
+    productImages.forEach((image, index) => {
+      data.append(`image`, image.file);
+    });
+
+    productVideos.forEach((video, index) => {
+      data.append(`video`, video.file);
+    });
+
+    setIsSubmitting(true);
+    dispatch(actProductPostAsync(data, token)).then(() => {
+      setIsSubmitting(false);
+      resetFormFields(); // Reset form fields after successful submission
+      navigate("/manage-product")
+    });
+    
+  };
+
   const isImageExist = (url) => {
     return productImages.some((image) => image.url === url);
   };
+
   const handleImageChange = (e) => {
     const files = e.target.files;
     const newImages = Array.from(files)
@@ -75,8 +87,7 @@ function CreateProductForm() {
       }));
     setProductImages((prev) => [...prev, ...newImages]);
   };
-  console.log("productImage", productImages);
-  console.log("productVideo", productVideos);
+
   const handleVideoChange = (e) => {
     const files = e.target.files;
     const newVideos = Array.from(files).map((file) => ({
@@ -85,30 +96,23 @@ function CreateProductForm() {
     }));
     setProductVideos((prev) => [...prev, ...newVideos]);
   };
-  
+
   const removeImage = (index) => {
     const removedImageUrl = productImages[index].url;
-    // Tạo một bản sao của mảng ảnh
     const updatedImages = [...productImages];
-    // Xóa ảnh khỏi mảng
     updatedImages.splice(index, 1);
-    // Cập nhật state với mảng mới
     setProductImages(updatedImages);
-    // Thu hồi URL của ảnh đã xóa
     URL.revokeObjectURL(removedImageUrl);
   };
 
   const removeVideo = (index) => {
     const removedVideoUrl = productVideos[index].url;
-    // Tạo một bản sao của mảng video
     const updatedVideos = [...productVideos];
-    // Xóa video khỏi mảng
     updatedVideos.splice(index, 1);
-    // Cập nhật state với mảng mới
     setProductVideos(updatedVideos);
-    // Thu hồi URL của video đã xóa
     URL.revokeObjectURL(removedVideoUrl);
   };
+
   return (
     <div className="app-container">
       <div className="header-container">
@@ -117,7 +121,7 @@ function CreateProductForm() {
       <div className="body-container">
         <div className="container" style={{ marginBottom: "20px" }}></div>
         <Container>
-          <h1>Tạo san pham</h1>
+          <h1>Tạo sản phẩm</h1>
           <Form onSubmit={handleSubmit}>
             <Row className="mb-4">
               <Col md={6}>
@@ -130,6 +134,7 @@ function CreateProductForm() {
                         type="file"
                         multiple
                         onChange={handleImageChange}
+                        ref={imageInputRef} // Set ref for image input
                       />
                     </Form.Group>
                     {productImages.map((image, index) => (
@@ -165,6 +170,7 @@ function CreateProductForm() {
                         multiple
                         accept="video/*"
                         onChange={handleVideoChange}
+                        ref={videoInputRef} // Set ref for video input
                       />
                     </Form.Group>
                     {productVideos.map((video, index) => (
@@ -213,15 +219,6 @@ function CreateProductForm() {
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </Form.Group>
-                    {/* <Form.Group className="mb-3">
-                      <Form.Label>Giá khởi điểm</Form.Label>
-                      <Form.Control
-                        type="number"
-                        placeholder="Giá khởi điểm"
-                        value={startingPrice}
-                        onChange={(e) => setStartingPrice(e.target.value)}
-                      />
-                    </Form.Group> */}
                   </Card.Body>
                 </Card>
               </Col>
@@ -236,6 +233,18 @@ function CreateProductForm() {
                 >
                   Cancel
                 </Button>
+                {isSubmitting ? (
+                  <>
+                    <div className="overlay"></div>
+                    <div className="spinner-container">
+                      <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                  </>
+                ) : (
+                  ""
+                )}
               </Col>
             </Row>
           </Form>

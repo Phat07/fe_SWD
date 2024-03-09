@@ -72,31 +72,35 @@ const Header = () => {
                     >
                       Home
                     </Nav.Link>
-                    <div
-                      className="dropdown"
-                      onMouseEnter={toggleDropdown}
-                      onMouseLeave={toggleDropdown}
-                    >
-                      <Nav.Link
-                        href="#"
-                        className="products-link"
-                        style={{
-                          color: showDropdown ? "#3A43A7" : "black",
-                          // backgroundColor: showDropdown
-                          //   ? "#F6F7F8"
-                          //   : "transparent",
-                          width: "160px",
-                        }}
+                    {user?.role_id?.title === "MEMBER" ? (
+                      ""
+                    ) : (
+                      <div
+                        className="dropdown"
+                        onMouseEnter={toggleDropdown}
+                        onMouseLeave={toggleDropdown}
                       >
-                        Products
-                      </Nav.Link>
-                      {showDropdown && (
-                        <div className="dropdown-content">
-                          <Link to="/manage-auction">Auction</Link>
-                          <Link to="/manage-product">Product</Link>
-                        </div>
-                      )}
-                    </div>
+                        <Nav.Link
+                          href="#"
+                          className="products-link"
+                          style={{
+                            color: showDropdown ? "#3A43A7" : "black",
+                            // backgroundColor: showDropdown
+                            //   ? "#F6F7F8"
+                            //   : "transparent",
+                            width: "160px",
+                          }}
+                        >
+                          Products
+                        </Nav.Link>
+                        {showDropdown && (
+                          <div className="dropdown-content">
+                            <Link to="/manage-auction">Auction</Link>
+                            <Link to="/manage-product">Product</Link>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <Nav.Link
                       href="#"
                       className="mr-md-6"

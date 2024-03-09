@@ -4,14 +4,18 @@ import Banner from "../banner";
 import Promotions from "../promotions";
 import ProductList from "../ProductList";
 import AuctionPage from "../pages/AuctionPage";
+import { useSelector } from "react-redux";
 
 const Body = () => {
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
+
   return (
     <div className="body-container">
       <Banner />
       <Promotions />
       <ProductList />
-      <AuctionPage />
+      {user?.role_id?.title === "MEMBER" ? <AuctionPage /> : ""}
     </div>
   );
 };

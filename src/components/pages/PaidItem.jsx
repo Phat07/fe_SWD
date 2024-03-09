@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actPostWalletUserByIdAsync } from "../../store/wallet/action";
 function PaidItem() {
   // function formatPrice(value) {
   //   // Xóa tất cả ký tự không phải số và chuyển đổi sang số nguyên
@@ -20,7 +22,11 @@ function PaidItem() {
   //   // Trả về giá trị đã format và thêm "đ" vào cuối
   //   return `${formattedNumber}đ`;
   // }
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("userPaid", user);
   const [addMoney, setAddMoney] = useState("");
+  const dispatch = useDispatch();
   // const [formattedPrice, setFormattedPrice] = useState("");
 
   // const handlePriceChange = (e) => {
@@ -42,10 +48,10 @@ function PaidItem() {
   // };
   const navigate = useNavigate();
   const [paymentInfo, setPaymentInfo] = useState({
-    customerName: "Nguyễn Văn A",
-    description: "Thanh toán đơn hàng #1234",
+    // customerName: "Nguyễn Văn A",
+    // description: "Thanh toán đơn hàng #1234",
     amount: 0, // Lưu trữ dưới dạng số để dễ dàng thực hiện các phép toán
-    transferContent: "Thanh toan don hang 1234",
+    // transferContent: "Thanh toan don hang 1234",
   });
 
   const handleAddToCard = (money) => {
@@ -64,7 +70,18 @@ function PaidItem() {
       console.error("Giá trị nhập không phải là số.");
     }
   };
-
+  function handleSubmit() {
+    let data = {
+      user_id: user?._id,
+      type_report: "money",
+      description: `${user?.username} - ${addMoney}`,
+      note: "",
+    };
+    dispatch(actPostWalletUserByIdAsync(data, token)).then(() => {
+      setAddMoney("");
+      setPaymentInfo({ ...paymentInfo, amount: 0 });
+    });
+  }
   return (
     // <div className="app-container">
     //   <div className="header-container">
@@ -102,18 +119,18 @@ function PaidItem() {
               <Card>
                 <Card.Body>
                   <Card.Title>Thông Tin Thanh Toán</Card.Title>
-                  <Card.Text>
-                    Tên khách hàng: {paymentInfo.customerName}
-                  </Card.Text>
-                  <Card.Text>Miêu tả: {paymentInfo.description}</Card.Text>
+                  <Card.Text>Tên khách hàng: {user.fullName}</Card.Text>
+                  {/* <Card.Text>Miêu tả: {user.address}</Card.Text> */}
                   <Card.Text>Số tiền: {paymentInfo.amount}</Card.Text>
                   <Card.Text>
-                    Nội dung chuyển khoản: {paymentInfo.transferContent}
+                    Nội dung chuyển khoản: <strong>{user.username}</strong> -{" "}
+                    <strong>{paymentInfo.amount}</strong>
                   </Card.Text>
                   <Button
                     color="primary"
                     md={2}
-                    onClick={() => navigate("/payment")}
+                    // onClick={() => navigate("/payment")}
+                    onClick={handleSubmit}
                   >
                     Submit Order
                   </Button>

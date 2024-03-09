@@ -16,14 +16,14 @@ const ProductDetail = () => {
   // const [endTime, setEndTime] = useState("");
   // const [productImage, setProductImage] = useState(null);
   const navigate = useNavigate();
-  const products = useSelector((state) => state.PRODUCT.products);
+  const products = useSelector((state) => state.PRODUCT.productsALL);
   console.log("Product: ", products);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const dispatch = useDispatch();
   const [product, setProduct] = useState("");
   useEffect(() => {
     dispatch(actProductGetAsync(token));
-  }, [dispatch, productId, token]);
+  }, []);
   useEffect(() => {
     const item = products.find((i) => i._id === productId);
     setProduct(item);
@@ -76,7 +76,13 @@ const ProductDetail = () => {
                             style={{ position: "relative", marginTop: "20px" }}
                           >
                             <video controls style={{ maxWidth: "100%" }}>
-                              <source src={product?.video} type="video/mp4" />
+                              {product?.video?.map((video, index) => (
+                                <source
+                                  key={index}
+                                  src={video}
+                                  type="video/mp4"
+                                />
+                              ))}
                               Your browser does not support the video tag.
                             </video>
                           </div>
@@ -115,7 +121,7 @@ const ProductDetail = () => {
                       <Button variant="success" onClick={() => navigate(-1)}>
                         Back
                       </Button>{" "}
-                      {product.status === false ? (
+                      {product?.status === false ? (
                         <Button
                           variant="danger"
                           onClick={() =>

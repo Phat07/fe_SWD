@@ -1,8 +1,11 @@
 import React from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Banner(props) {
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
   return (
     <Container
       fluid
@@ -34,11 +37,15 @@ function Banner(props) {
             in Vietnam, on February 15, 2024.
           </p>
         </Col>
-        <div style={{ textAlign: "left" }}>
-          <Link to="/room-auction">
-            <Button variant="danger">Join the Auction</Button>
-          </Link>
-        </div>
+        {user?.role_id?.title === "HOST" ? (
+          ""
+        ) : (
+          <div style={{ textAlign: "left" }}>
+            <Link to="/room-auction">
+              <Button variant="danger">Join the Auction</Button>
+            </Link>
+          </div>
+        )}
       </Row>
     </Container>
   );

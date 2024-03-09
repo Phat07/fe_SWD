@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -9,6 +9,8 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { actGetWalletByUserAsync } from "../../store/wallet/action";
 
 const AccountInfo = () => {
   // Giả sử đây là thông tin người dùng lấy từ API hoặc State Management
@@ -30,6 +32,15 @@ const AccountInfo = () => {
     setShowPassword(!showPassword);
   };
 
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const userInfor = useSelector((state) => state.USER.currentUser);
+  console.log("user", userInfor);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actGetWalletByUserAsync(userInfor?._id, token));
+  }, [userInfor]);
+  const cart = useSelector((state) => state.WALLET.wallet);
+  console.log("cart", cart);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -39,7 +50,14 @@ const AccountInfo = () => {
     // Gửi thông tin cập nhật tới API hoặc xử lý thông tin cập nhật ở đây
     console.log("Updated user info", user);
   };
-
+  function formatCurrencyVND(amount) {
+    // Sử dụng hàm toLocaleString() để định dạng số
+    // Cài đặt style là 'currency' và currency là 'VND'
+    return amount?.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <Container>
       <Row className="mb-3">
@@ -87,22 +105,23 @@ const AccountInfo = () => {
             <Card.Body>
               <Card.Title className="mb-3">Thông Tin Cá Nhân</Card.Title>
               <Card.Text>
-                <strong>Tên đăng nhập:</strong> {user.userName}
+                <strong>Tên đăng nhập:</strong> {userInfor?.username}
               </Card.Text>
               <Card.Text>
-                <strong>Họ và Tên:</strong> {user.fullName}
+                <strong>Họ và Tên:</strong> {userInfor?.fullName}
               </Card.Text>
               <Card.Text>
-                <strong>Email:</strong> {user.email}
+                <strong>Email:</strong> {userInfor?.email}
               </Card.Text>
               <Card.Text>
-                <strong>Địa chỉ:</strong> {user.address}
+                <strong>Địa chỉ:</strong> {userInfor?.address}
               </Card.Text>
               <Card.Text>
-                <strong>Số điện thoại:</strong> {user.phoneNumber}
+                <strong>Số điện thoại:</strong> {userInfor?.phone}
               </Card.Text>
               <Card.Text>
-                <strong>Tiền trong ví:</strong> {user.Moneywallet}
+                <strong>Tiền trong ví:</strong>{" "}
+                {formatCurrencyVND(cart?.balance)}
               </Card.Text>
 
               {/* Các trường thông tin khác */}

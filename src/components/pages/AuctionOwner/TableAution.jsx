@@ -44,10 +44,10 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
+          {data?.map((item, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{item.product_id.name}</td>
+              <td>{item?.product_id?.name}</td>
               <td>
                 {formatDate(item?.regitration_start_time)} -{" "}
                 {formatDate(item?.regitration_end_time)}
@@ -55,7 +55,7 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
               <td>{formatDate(item?.start_time)}</td>
               <td>{formatDate(item?.end_time)}</td>
               <td>
-                <Badge bg="danger">{item.status}</Badge>
+                <Badge bg="danger">{item?.status}</Badge>
               </td>
               <td>
                 {onUpdate && (

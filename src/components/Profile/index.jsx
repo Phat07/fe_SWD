@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   ButtonGroup,
@@ -19,12 +19,20 @@ import AuctionHistory from "./AuctionHistory";
 import HistoryTransaction from "./HistoryTransaction";
 import HistoryDeposit from "./HistoryDeposit";
 import PaidItem from "../pages/PaidItem";
+import { useDispatch, useSelector } from "react-redux";
+import { actGetWalletByUserAsync } from "../../store/wallet/action";
 
 function Profile() {
   const [status, setStatus] = useState("account");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actGetWalletByUserAsync(user?._id, token));
+  }, [user]);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
     setShowConfirmPassword(!showConfirmPassword);
