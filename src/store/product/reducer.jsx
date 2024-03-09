@@ -1,16 +1,21 @@
-import { ALL_PRODUCT } from "./action";
+import { ALL_PRODUCT,ALL_PRODUCT_ALL } from "./action";
 
 const initialState = {
   products: [],
+  productsALL: []
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case ALL_PRODUCT:
-      // localStorage.setItem("ACCESS_TOKEN", action.payload.token);
       return {
         ...state,
         products: action.payload,
+      };
+      case ALL_PRODUCT_ALL:
+      return {
+        ...state,
+        productsALL: action.payload,
       };
 
     default:

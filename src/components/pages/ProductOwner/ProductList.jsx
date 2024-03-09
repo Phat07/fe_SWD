@@ -8,7 +8,8 @@ import Badge from "react-bootstrap/Badge";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { actProductGetAsync } from "../../../store/product/action";
+import { actProductGetByUserIdAsync } from "../../../store/product/action";
+import { format } from "date-fns";
 
 function Product() {
   const [showDelete, setShowDelete] = useState(false);
@@ -18,12 +19,20 @@ function Product() {
   //   { id: 2, name: "Product 2", status: "da dau gia" },
   //   // Add more sample data here
   // ]);
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
+  };
   const products = useSelector((state) => state.PRODUCT.products);
   console.log("products", products);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(actProductGetAsync());
-  }, []);
+    dispatch(actProductGetByUserIdAsync(user?._id,token));
+  }, [user]);
   const navigate = useNavigate();
 
   const handleDelete = (product) => {
@@ -100,10 +109,10 @@ function Product() {
                               {item.status === false ? (
                                 <Badge bg="warning">chua dau gia</Badge>
                               ) : (
-                                <Badge bg="success">da dau gia</Badge>
+                                <Badge bg="success">dang dau gia</Badge>
                               )}
                             </td>
-                            <td>Cho Push BE</td>
+                            <td> {formatDate(item?.timestamp)}</td>
                             <td>
                               {handleDetailAuction && (
                                 <Button
@@ -113,7 +122,7 @@ function Product() {
                                   Detail
                                 </Button>
                               )}{" "}
-                              {handleDelete && (
+                              {item.status === false && handleDelete && (
                                 <Button
                                   variant="danger"
                                   onClick={() => handleDelete(item)}
@@ -133,7 +142,7 @@ function Product() {
                                   Create Auction
                                 </Button>
                               ) : (
-                                <strong>San pham dang tren ke</strong>
+                                <strong>Sản phẩm đang trên kệ</strong>
                               )}
                             </td>
                           </tr>

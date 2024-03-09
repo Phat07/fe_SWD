@@ -14,7 +14,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import ModalConfirmJoinRoom from "./ModalConfirmJoinRoom";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctioningCustomerGetAsync } from "../../../store/auction/action";
+import { actAuctionGetAsync, actAuctioningCustomerGetAsync } from "../../../store/auction/action";
 
 function AuctionPage() {
   const [show, setShow] = useState(false);
@@ -23,11 +23,18 @@ function AuctionPage() {
   const auctioningCustomer = useSelector(
     (state) => state.AUCTION.auctioningCustomer
   );
+  const auctioningHosting = useSelector(
+    (state) => state.AUCTION.auctions
+  );
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("user", user);
   console.log("aucting", auctioningCustomer);
+  console.log("auctionHosting",auctioningHosting);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(actAuctioningCustomerGetAsync(token));
+    dispatch(actAuctionGetAsync(token));
   }, []);
 
   const handleJoin = (aution) => {
@@ -145,7 +152,8 @@ function AuctionPage() {
             </Col>
           </Row>
           <Row>
-            {auctioningCustomer
+          {/* {user?.role_id?.title === "HOST" ? <AuctionPage /> : ""} */}
+            {auctioningHosting
               // .filter((room) => room.productCode.includes(searchTerm))
               ?.map((room) => (
                 <Col key={room.id} sm={12} md={4} className="mb-4">
