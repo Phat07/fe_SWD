@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import ModalConfirmDeleteProduct from "./ModalConfirmDeleteProduct"; // Make sure this is adapted to use React Bootstrap as well
 import Header from "../../Header";
@@ -113,7 +113,7 @@ function Product() {
                                   Detail
                                 </Button>
                               )}{" "}
-                              {handleDelete && (
+                              {handleDelete && item.status === false && (
                                 <Button
                                   variant="danger"
                                   onClick={() => handleDelete(item)}
