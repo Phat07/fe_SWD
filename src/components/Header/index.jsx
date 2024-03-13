@@ -7,8 +7,10 @@ import {
   Col,
   Button,
   Image,
+  Dropdown,
+  DropdownButton,
 } from "react-bootstrap";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaLock, FaUser, FaMoneyBill } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/header.css";
 import { useSelector } from "react-redux";
@@ -36,6 +38,8 @@ const Header = () => {
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
+  const [show, setShow] = useState(false);
+  const toggleShow = () => setShow(!show);
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       // Xử lý tìm kiếm khi nhấn phím "Enter" ở đây
@@ -43,6 +47,12 @@ const Header = () => {
       setShowPopup(false);
       navigate(`/auction?search=${searchValue}`);
     }
+  };
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    // Xử lý tìm kiếm khi nhấn phím "Enter" ở đây
+    localStorage.removeItem("ACCESS_TOKEN");
+    navigate(`/login`);
   };
   return (
     <div style={{ position: "relative" }}>
@@ -60,7 +70,7 @@ const Header = () => {
             </Col>
 
             {/* Navbar */}
-            <Col md={5}>
+            <Col md={6}>
               <Navbar bg="#ffff" style={{ fontWeight: "500" }} expand="md">
                 <Navbar.Toggle aria-controls="navbarNav" />
                 <Navbar.Collapse id="navbarNav">
@@ -102,18 +112,25 @@ const Header = () => {
                       </div>
                     )}
                     <Nav.Link
-                      href="#"
-                      className="mr-md-6"
-                      style={{ marginRight: "100px" }}
+                      href="/notyetauction-customer"
+                      className="md-6"
+                      style={{ marginRight: "10px" }}
                     >
-                      About
+                      Danh sách công bố
                     </Nav.Link>
                     <Nav.Link
                       href="#"
-                      className="mr-md-6"
-                      style={{ marginRight: "100px" }}
+                      className="md-6"
+                      style={{ marginRight: "10px" }}
                     >
-                      Contact
+                      Danh sách sắp đấu giá
+                    </Nav.Link>
+                    <Nav.Link
+                      href="#"
+                      className="md-6"
+                      style={{ marginRight: "10px" }}
+                    >
+                      Phòng đấu giá
                     </Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
@@ -127,16 +144,16 @@ const Header = () => {
               <CurrentTime />
             </Col>
             {/* Login Section */}
-            <Col md={1}>
+            {/* <Col md={1}>
               <div className="search-btn" onClick={togglePopup}>
                 <p>
                   <FaSearch />
                 </p>
               </div>
-            </Col>
+            </Col> */}
             <Col
               md={1}
-              className="d-flex justify-content-end align-items-center"
+              className="d-flex justify-content-center align-items-center"
             >
               {/* <Link to={"/login"}>
                 <Button variant="outline-primary" style={{ color: "black" }}>
@@ -144,15 +161,50 @@ const Header = () => {
                 </Button>
               </Link> */}
               {user ? (
-                <div style={{ cursor: "pointer" }}>
+                <Dropdown
+                  show={show}
+                  onToggle={() => setShow(!show)}
+                  align={{ lg: "end" }}
+                  className="d-flex justify-content-end align-items-center"
+                >
                   <Image
+                    onClick={toggleShow}
                     src={user.image}
-                    alt="Orchid"
-                    style={{ width: "50%", height: "auto" }}
+                    alt="User"
+                    style={{ width: "50%", height: "auto", cursor: "pointer" }}
                     roundedCircle
-                    onClick={() => navigate(`/profile`)}
                   />
-                </div>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      href="/profile"
+                      eventKey="1"
+                      className="d-flex justify-content-left align-items-center"
+                    >
+                      <FaUser style={{ marginRight: "5px" }} />
+                      Profile
+                    </Dropdown.Item>
+                    {/* <Dropdown.Item
+                      href="/paid-item"
+                      eventKey="2"
+                      className="d-flex justify-content-left align-items-center"
+                    >
+                      <FaMoneyBill style={{ marginRight: "5px" }} />
+                      Money recharge
+                    </Dropdown.Item> */}
+                    <Dropdown.Divider />
+                    <Dropdown.Item
+                      href="#"
+                      className="d-flex justify-content-left align-items-center"
+                      onClick={(e) => {
+                        handleLogOut(e);
+                        // Optionally add any action to redirect or refresh the page after logout
+                      }}
+                    >
+                      <FaLock style={{ marginRight: "5px" }} /> Log Out
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               ) : (
                 <>
                   <a href="/login">

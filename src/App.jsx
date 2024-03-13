@@ -23,6 +23,7 @@ import Product from "./components/pages/ProductOwner/ProductList";
 import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
 import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
 import { ToastContainer } from "react-bootstrap";
+import NotYetAuctionUser from "./components/pages/AuctionUser/NotYetAuctionUser";
 
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -126,6 +127,7 @@ function App() {
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="/notyetauction-customer" element={<NotYetAuctionUser />} />
       </Routes>
     </>
   );

@@ -5,6 +5,7 @@ import Promotions from "../promotions";
 import ProductList from "../ProductList";
 import AuctionPage from "../pages/AuctionPage";
 import { useSelector } from "react-redux";
+import CarouselImg from "../Carousel";
 
 const Body = () => {
   const user = useSelector((state) => state.USER.currentUser);
@@ -12,6 +13,7 @@ const Body = () => {
 
   return (
     <div className="body-container">
+      <CarouselImg />
       <Banner />
       <Promotions />
       <ProductList />

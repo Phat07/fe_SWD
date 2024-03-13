@@ -1,9 +1,24 @@
 import React from "react";
-import { Container, Row, Col, Button, Image } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Image,
+  Card,
+  Carousel,
+} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Banner(props) {
+  const images = [
+    "../../../public/assets/images/background/background1.jpg",
+    "../../../public/assets/images/background/background2.jpg",
+    "../../../public/assets/images/background/background3.jpg",
+    "../../../public/assets/images/background/background4.jpg",
+    "../../../public/assets/images/background/background5.jpg",
+  ];
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
   return (

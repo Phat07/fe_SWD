@@ -67,7 +67,7 @@ const AccountInfo = () => {
             <div className="d-flex justify-content-center">
               <Card.Img
                 variant="center"
-                src={user.avatar}
+                src={userInfor?.image}
                 style={{
                   width: "200px",
                   height: "200px",
@@ -85,12 +85,12 @@ const AccountInfo = () => {
                 <Form.Label className="mb-0 me-3">Avatar</Form.Label>
                 <Form.Control
                   type="file"
-                  onChange={(e) =>
-                    setUser({
-                      ...user,
-                      avatar: URL.createObjectURL(e.target.files[0]),
-                    })
-                  }
+                  // onChange={(e) =>
+                  //   setUser({
+                  //     ...user,
+                  //     avatar: URL.createObjectURL(e.target.files[0]),
+                  //   })
+                  // }
                 />
               </Form.Group>
               <Button variant="primary" onClick={handleUpdate}>
@@ -125,7 +125,7 @@ const AccountInfo = () => {
               </Card.Text>
 
               {/* Các trường thông tin khác */}
-              <Form>
+              {/* <Form>
                 <Form.Group
                   className="mb-3 d-flex align-items-center"
                   controlId="password"
@@ -151,7 +151,7 @@ const AccountInfo = () => {
                     </span>
                   </div>
                 </Form.Group>
-              </Form>
+              </Form> */}
             </Card.Body>
           </Card>
         </Col>
