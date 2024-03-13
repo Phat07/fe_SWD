@@ -1,51 +1,20 @@
 // import React from 'react';
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import CurrencyFormat from "react-currency-format";
+
 import Header from "../Header";
 import Footer from "../Footer";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actPostWalletUserByIdAsync } from "../../store/wallet/action";
 function PaidItem() {
-  // function formatPrice(value) {
-  //   // Xóa tất cả ký tự không phải số và chuyển đổi sang số nguyên
-  //   let number = parseInt(value.replace(/\D/g, ""), 10);
-
-  //   // Kiểm tra nếu không phải là số thì trả về chuỗi rỗng
-  //   if (isNaN(number)) {
-  //     return "";
-  //   }
-
-  //   // Format số theo dạng có dấu chấm phân cách hàng nghìn
-  //   let formattedNumber = number.toLocaleString();
-
-  //   // Trả về giá trị đã format và thêm "đ" vào cuối
-  //   return `${formattedNumber}đ`;
-  // }
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
   console.log("userPaid", user);
   const [addMoney, setAddMoney] = useState("");
   const dispatch = useDispatch();
-  // const [formattedPrice, setFormattedPrice] = useState("");
 
-  // const handlePriceChange = (e) => {
-  //   const value = e.target.value;
-  //   const amountNumber = parseFloat(value);
-  //   if (!isNaN(amountNumber)) {
-  //     const formattedMoney = new Intl.NumberFormat("vi-VN", {
-  //       style: "currency",
-  //       currency: "VND",
-  //     }).format(amountNumber);
-
-  //     setAddMoney(amountNumber); // Giữ nguyên giá trị số để xử lý logic nếu cần
-  //     setFormattedPrice(formattedMoney); // Format giá trị để hiển thị
-  //   } else {
-  //     // Xử lý trường hợp không phải là số
-  //     console.error("Giá trị nhập không phải là số.");
-  //   }
-  //   console.log("Monney add:", addMoney);
-  // };
   const navigate = useNavigate();
   const [paymentInfo, setPaymentInfo] = useState({
     // customerName: "Nguyễn Văn A",
@@ -97,13 +66,26 @@ function PaidItem() {
                   <Card.Title>Nạp tiền vào Ví </Card.Title>
                   <Form.Group className="mb-3">
                     <Form.Label>Số tiền nạp vào Ví</Form.Label>
-                    <Form.Control
+                    {/* <Form.Control
                       type="number"
                       placeholder="Số tiền nạp vào"
                       value={addMoney}
                       // onChange={handlePriceChange}
                       onChange={(e) => setAddMoney(e.target.value)}
-                    />
+                    /> */}
+                    <Form.Control
+                        as={CurrencyFormat}
+                        thousandSeparator={true}
+                        decimalSeparator="."
+                        allowNegative={false}
+                        placeholder="Nhập số tiền đấu giá"
+                        value={addMoney}
+                        onValueChange={(values) => {
+                          const { value } = values;
+                          setAddMoney(value)
+                        }}
+                        suffix=" đ"
+                      />
                   </Form.Group>
                   <Button
                     color="primary"

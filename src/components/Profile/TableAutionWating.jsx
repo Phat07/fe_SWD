@@ -11,7 +11,7 @@ import { FaAlignRight, FaAngleDoubleRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Row>
       <Col xs="auto">
@@ -69,7 +69,7 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
                       }
                     }}
                   />
-                ) : (
+                ) : item.status === "not yet auctioned" ? (
                   <Countdown
                     date={new Date(item?.start_time).getTime()}
                     // startDate={new Date(item?.regitration_end_time)}
@@ -95,6 +95,31 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
                       }
                     }}
                   />
+                ) : (
+                  <Countdown
+                    date={new Date(item?.end_time).getTime()}
+                    // startDate={new Date(item?.regitration_end_time)}
+                    // endDate={new Date(item?.start_time)}
+                    renderer={({
+                      days,
+                      hours,
+                      minutes,
+                      seconds,
+                      completed,
+                    }) => {
+                      if (completed) {
+                        return "Expired";
+                      } else {
+                        return (
+                          <>
+                            {days} days {hours} hours {minutes} minutes{" "}
+                            {seconds} seconds{" "}
+                            <FaAngleDoubleRight style={{ color: "blue" }} /> kết thúc đấu giá
+                          </>
+                        );
+                      }
+                    }}
+                  />
                 )}
               </td>
 
@@ -115,7 +140,12 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
                   </Button>
                 )}{" "}
                 {item?.status === "auctioning" ? (
-                  <Button variant="success" onClick={() => navigate(`/join-room-auction/${item?.auction_id}`)}>
+                  <Button
+                    variant="success"
+                    onClick={() =>
+                      navigate(`/join-room-auction/${item?.auction_id}`)
+                    }
+                  >
                     Join the room
                   </Button>
                 ) : (

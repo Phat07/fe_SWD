@@ -11,6 +11,7 @@ export const NOT_YET_AUCTION_CUSTOMER = "NOT_YET_AUCTION_CUSTOMER";
 export const ABOUT_TO_AUCTION_CUSTOMER = "ABOUT_TO_AUCTION_CUSTOMER";
 export const AUCTIONED_CUSTOMER = "AUCTIONED_CUSTOMER";
 export const GET_MOST_PRICE_AUCTIONID = "GET_MOST_PRICE_AUCTIONID";
+export const GET_MEMBER_PRICE_AUCTIONID = "GET_MEMBER_PRICE_AUCTIONID";
 
 export const allAuction = (list) => {
   return {
@@ -374,42 +375,6 @@ export function actAuctionedMemberGetAsync(id, token) {
   };
 }
 
-//  auctionBid
-
-export function actAuctionBidPost(data, token) {
-  return (dispatch) => {
-    AuctionServices.postAuctionBid(data, token)
-      .then((response) => {
-        if (response.status === 200 || response.status === 201) {
-          // dispatch(allAuction(response.data));
-          console.log("successAuction", response);
-          let dataMost = {
-            auctionId: data?.auctionId,
-          };
-          dispatch(actGetMostPriceAuctionGetAsync(dataMost, token));
-          toast.success(`Bạn đã đấu giá thành công với số tiền ${data?.price}`);
-        } else {
-          // toast.error("get all syllabus to fail");
-          console.log("fail");
-        }
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 400) {
-          console.error(
-            "Failed to load resource: the server responded with a status of 400 (Bad Request)",
-            error
-          );
-          toast.error(error.response.data.error || error.response.data.message);
-        } else {
-          console.error(
-            "An error occurred while making the request:",
-            error.response.data.message
-          );
-          toast.error("Lỗi: " + error.message);
-        }
-      });
-  };
-}
 
 export const getMostPriceAuctionId = (list) => {
   return {
@@ -434,6 +399,72 @@ export function actGetMostPriceAuctionGetAsync(data, token) {
         // Xử lý lỗi nếu có
         console.error("Error while fetching all auctions:", error);
         // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+
+export const getMemberPriceAuctionId = (list) => {
+  return {
+    type: GET_MEMBER_PRICE_AUCTIONID,
+    payload: list,
+  };
+};
+export function actGetMemberJoinAuctionGetAsync(data, token) {
+  return (dispatch) => {
+    AuctionServices.getMemberJoinAuctionBid(data, token)
+      .then((response) => {
+        console.log("mostPrice", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMemberPriceAuctionId(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+
+
+
+//  auctionBid
+
+export function actAuctionBidPost(data, token) {
+  return (dispatch) => {
+    AuctionServices.postAuctionBid(data, token)
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          // dispatch(allAuction(response.data));
+          console.log("successAuction", response);
+          let dataMost = {
+            auctionId: data?.auctionId,
+          };
+          dispatch(actGetMostPriceAuctionGetAsync(dataMost, token));
+          dispatch(actGetMemberJoinAuctionGetAsync(dataMost, token));
+          toast.success(`Bạn đã đấu giá thành công với số tiền ${data?.price}`);
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          console.error(
+            "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+            error
+          );
+          toast.error(error.response.data.error || error.response.data.message);
+        } else {
+          console.error(
+            "An error occurred while making the request:",
+            error.response.data.message
+          );
+          toast.error("Lỗi: " + error.message);
+        }
       });
   };
 }

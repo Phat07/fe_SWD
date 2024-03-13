@@ -9,14 +9,23 @@ import { useDispatch, useSelector } from "react-redux";
 import Countdown from "react-countdown";
 import { FaAngleDoubleRight } from "react-icons/fa";
 import io from "socket.io-client";
-
+import { format } from "date-fns";
+import { useSpring, animated } from "react-spring";
+import { FaUser } from "react-icons/fa";
+import "../../../css/animateIcon.css";
 import {
   actAuctionBidPost,
+  actGetMemberJoinAuctionGetAsync,
   actGetMostPriceAuctionGetAsync,
 } from "../../../store/auction/action";
 
 const socket = io("http://localhost:3001");
 function JoinAuctionRoom() {
+  const styles = useSpring({
+    from: { opacity: 0, transform: "translateY(-50px)" },
+    to: { opacity: 1, transform: "translateY(0)" },
+    config: { duration: 500 },
+  });
   // Giả sử đây là thời gian kết thúc đấu giá tính bằng milliseconds
   // const endTime = new Date().getTime() + 10000000; // 10.000 giây từ bây giờ
   const [data, setData] = useState("");
@@ -32,9 +41,13 @@ function JoinAuctionRoom() {
   const mostPrice = useSelector((state) => state.AUCTION.mostPrice);
   console.log("mostPrice", mostPrice);
   const auctions = useSelector((state) => state.AUCTION.auctions);
+  const memberPriceAuction = useSelector(
+    (state) => state.AUCTION.memberPriceAuction
+  );
 
   console.log("memberJoin", auctions);
   console.log("aucctionsssBid", auctionBid);
+  console.log("memberPriceAuction", memberPriceAuction);
 
   useEffect(() => {
     const item = auctions.find((i) => i._id === auctionID);
@@ -44,15 +57,17 @@ function JoinAuctionRoom() {
     setNewBid(e);
   };
   useEffect(() => {
+    let data = {
+      auctionId: auctionID,
+    };
     // Lắng nghe sự kiện 'newBid' từ server
     socket.on("bidAccepted", (newBidData) => {
       setData(newBidData); // Cập nhật dữ liệu đấu giá mới
       dispatch(actGetMostPriceAuctionGetAsync(data, token));
+      dispatch(actGetMemberJoinAuctionGetAsync(data, token));
     });
-    let data = {
-      auctionId: auctionID,
-    };
     dispatch(actGetMostPriceAuctionGetAsync(data, token));
+    dispatch(actGetMemberJoinAuctionGetAsync(data, token));
     // Đừng quên hủy lắng nghe khi component unmount
     return () => {
       socket.off("bidAccepted");
@@ -80,7 +95,11 @@ function JoinAuctionRoom() {
       currency: "VND",
     });
   }
-
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
+  };
   return (
     <div className="app-container">
       <div className="header-container">
@@ -181,6 +200,9 @@ function JoinAuctionRoom() {
                     />
                   </strong>
                 </Card.Title>
+                {/* <animated.div style={styles}>
+                  <FaUser size={40} />
+                </animated.div> */}
 
                 <Card className="mt-3 mb-3">
                   <Card.Body>
@@ -192,25 +214,81 @@ function JoinAuctionRoom() {
                     </Card.Text>
                   </Card.Body>
                   <Card.Body>
-                    <Table striped bordered hover responsive>
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Name</th>
-                          <th>Money Add</th>
-                          {/* <th>Money Total</th> */}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {/* {data.map((item, index) => (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>+{item.moneyAdd}</td>
+                    <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+                      <Table striped bordered hover responsive>
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Money Add</th>
+                            <th>Bid Time Auction</th>
                           </tr>
-                        ))} */}
-                      </tbody>
-                    </Table>
+                        </thead>
+                        <tbody>
+                          {memberPriceAuction?.map((item, index) => (
+                            <tr key={index}>
+                              <td
+                                style={{
+                                  color: `${
+                                    item?.customer_id === user?._id
+                                      ? "green"
+                                      : ""
+                                  }`,
+                                }}
+                              >
+                                {index + 1}
+                              </td>
+                              <td
+                                style={{
+                                  color: `${
+                                    item?.customer_id === user?._id
+                                      ? "green"
+                                      : ""
+                                  }`,
+                                }}
+                              >
+                                {item?.customer_id === user?._id ? (
+                                  // <div className="animated-user-icon">
+                                  //   <FaUser className="user-icon" size={20} />
+                                  // </div>
+                                  <>YOU</>
+                                ) : (
+                                  // <>đây là bạn</>
+                                  <>
+                                    <span style={{ fontWeight: "600" }}>
+                                      xxxx
+                                    </span>
+                                    {item?.customer_id.slice(-4)}
+                                  </>
+                                )}
+                              </td>
+                              <td
+                                style={{
+                                  color: `${
+                                    item?.customer_id === user?._id
+                                      ? "green"
+                                      : ""
+                                  }`,
+                                }}
+                              >
+                                {formatCurrencyVND(item?.price)}
+                              </td>
+                              <td
+                                style={{
+                                  color: `${
+                                    item?.customer_id === user?._id
+                                      ? "green"
+                                      : ""
+                                  }`,
+                                }}
+                              >
+                                {formatDate(item?.create_time)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </div>
                   </Card.Body>
                 </Card>
 
