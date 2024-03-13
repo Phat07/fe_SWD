@@ -8,8 +8,13 @@ import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types"; // Import PropTypes
 import { format } from "date-fns";
 import { Card, Carousel } from "react-bootstrap";
+import Countdown from "react-countdown";
 
 const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
+  const auctionRegisEndTime = new Date(data?.regitration_end_time).getTime();
+  console.log("End time", auctionRegisEndTime);
+  const currentTime = new Date().getTime();
+  const timeDiff = auctionRegisEndTime - currentTime;
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -55,7 +60,30 @@ const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
               <Card.Title>{item?.product_id?.name}</Card.Title>
               <Card.Text>Người tổ chức: {item?.host_id?.fullName}</Card.Text>
               <Card.Text>Thời gian còn lại đến khi hết đang kí</Card.Text>
-              <Card.Text></Card.Text>
+              <Card.Text>
+                {" "}
+                {/* <div className="timestamp-div"> */}
+                <div className="countdown-container">
+                  {timeDiff > 0 ? (
+                    <div className="countdown-container">
+                      <Countdown
+                        date={Date.now() + timeDiff}
+                        renderer={({ days, hours, minutes, seconds }) => (
+                          <div>
+                            <span>{days} days</span> -{" "}
+                            <span>{hours} hours</span> -{" "}
+                            <span>{minutes} minutes</span> -{" "}
+                            <span>{seconds} seconds</span>
+                          </div>
+                        )}
+                      />
+                    </div>
+                  ) : (
+                    <p>0 days - 0 hours - 0 minutes - 0 seconds</p>
+                  )}
+                </div>
+                {/* </div> */}
+              </Card.Text>
               <Button variant="primary" onClick={() => onUpdate(item)}>
                 Chi tiết
               </Button>

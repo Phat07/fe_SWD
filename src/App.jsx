@@ -128,7 +128,16 @@ function App() {
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="/notyetauction-customer" element={<NotYetAuctionUser />} />
+        <Route
+          path="/notyetauction-customer"
+          element={
+            user?.role_id?.title === "HOST" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <NotYetAuctionUser />
+            )
+          }
+        />
       </Routes>
     </>
   );

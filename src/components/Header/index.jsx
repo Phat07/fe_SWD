@@ -83,7 +83,29 @@ const Header = () => {
                       Home
                     </Nav.Link>
                     {user?.role_id?.title === "MEMBER" ? (
-                      ""
+                      <div>
+                        <Nav.Link
+                          href="/notyetauction-customer"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Danh sách công bố
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Danh sách sắp đấu giá
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Phòng đấu giá
+                        </Nav.Link>
+                      </div>
                     ) : (
                       <div
                         className="dropdown"
@@ -111,27 +133,6 @@ const Header = () => {
                         )}
                       </div>
                     )}
-                    <Nav.Link
-                      href="/notyetauction-customer"
-                      className="md-6"
-                      style={{ marginRight: "10px" }}
-                    >
-                      Danh sách công bố
-                    </Nav.Link>
-                    <Nav.Link
-                      href="#"
-                      className="md-6"
-                      style={{ marginRight: "10px" }}
-                    >
-                      Danh sách sắp đấu giá
-                    </Nav.Link>
-                    <Nav.Link
-                      href="#"
-                      className="md-6"
-                      style={{ marginRight: "10px" }}
-                    >
-                      Phòng đấu giá
-                    </Nav.Link>
                   </Nav>
                 </Navbar.Collapse>
               </Navbar>

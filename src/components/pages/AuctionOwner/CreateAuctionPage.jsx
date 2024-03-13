@@ -65,22 +65,23 @@ function CreateAuctionProductForm() {
     const end = new Date(endTime);
 
     // Kiểm tra các điều kiện thời gian
+    // Kiểm tra các điều kiện thời gian
     if (regStart >= regEnd) {
-      alert(
+      toast.error(
         "Thời gian bắt đầu đăng ký phải nhỏ hơn thời gian kết thúc đăng ký!"
       );
       return;
     }
 
     if (regEnd >= start) {
-      alert(
+      toast.error(
         "Thời gian kết thúc đăng ký phải nhỏ hơn thời gian bắt đầu đấu giá!"
       );
       return;
     }
 
     if (start >= end) {
-      alert(
+      toast.error(
         "Thời gian bắt đầu đấu giá phải nhỏ hơn thời gian kết thúc đấu giá!"
       );
       return;
