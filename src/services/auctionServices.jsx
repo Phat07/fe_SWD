@@ -121,4 +121,11 @@ export const AuctionServices = {
       },
     });
   },
+  getMemberJoinAuctionBid(data, token) {
+    return API.get(`/auctionBid/auctionBid-sortDes/${data.auctionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };
