@@ -8,11 +8,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, Container, Pagination } from "react-bootstrap";
 // import ReactPaginate from 'react-paginate';
 import { FaCalendarAlt } from "react-icons/fa";
+import { useSelector } from "react-redux";
 function AuctionPage(props) {
   const location = useLocation();
   const [search] = useSearchParams();
   console.log("location", location.search);
   console.log("search", search.get("search"));
+  const auctions = useSelector((state) => state.AUCTION.auctions);
+  console.log("allAuction", auctions);
   const data = [
     {
       id: 1,
@@ -138,7 +141,8 @@ function AuctionPage(props) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [viewMode, setViewMode] = useState("mode1"); // State để lưu trữ chế độ hiển thị
-  const [selectedValue, setSelectedValue] = useState("all");
+  const [selectedValue, setSelectedValue] = useState("not yet auctioned");
+  const [searchKeyword, setSearchKeyword] = useState(""); // State to manage the input value
 
   const handleSelect = (value) => {
     setSelectedValue(value);
@@ -155,7 +159,8 @@ function AuctionPage(props) {
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
   const currentCards = data.slice(indexOfFirstCard, indexOfLastCard);
-
+  console.log("time-start", startDate);
+  console.log("time-end", endDate);
   // Hàm chuyển trang
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
@@ -179,30 +184,6 @@ function AuctionPage(props) {
               }}
             >
               <h2 className="current-page">Danh sách cuộc đấu giá</h2>
-              {/* <div className="link-redirect" style={{ marginTop: "20px" }}>
-              <Link
-                className="page-index"
-                style={{
-                  color: "#787878",
-                  textDecoration: "none",
-                  cursor: "pointer",
-                }}
-                to="/"
-                >
-                Trang chủ
-              </Link>
-              /
-              <span
-                className="page-des"
-                style={{
-                  fontWeight: "bold",
-                  color: "#787878",
-                  marginLeft: "5px",
-                }}
-              >
-                Cuộc đấu giá
-              </span>
-            </div> */}
             </div>
           </div>
           <div className="container">
@@ -229,7 +210,13 @@ function AuctionPage(props) {
                           // width: "70%",
                         }}
                       >
-                        <input type="text" placeholder="Nhập từ khóa..." />
+                        <input
+                          type="text"
+                          placeholder="Nhập từ khóa..."
+                          value={searchKeyword}
+                          onChange={(e) => setSearchKeyword(e.target.value)} // Update the searchKeyword state
+                        />
+
                         {/* <FaCalendarAlt className="calendar-icon" /> */}
                       </div>
                       <div className="date-range">
@@ -258,7 +245,7 @@ function AuctionPage(props) {
                           <FaCalendarAlt className="calendar-icon" />
                         </div>
                       </div>
-                      <Button
+                      {/* <Button
                         style={{
                           marginTop: "20px",
                           backgroundColor: "#B41712",
@@ -268,8 +255,8 @@ function AuctionPage(props) {
                           width: "70px",
                         }}
                       >
-                        LỌC
-                      </Button>
+                        LỌCs
+                      </Button> */}
                     </div>
                   </div>
                 </div>
@@ -286,53 +273,53 @@ function AuctionPage(props) {
                       <div className="blog-widget-body">
                         <label
                           className={`custom-checkbox ${
-                            selectedValue === "all" && "active"
+                            selectedValue === "not yet auctioned" && "active"
                           }`}
                         >
                           <input
                             type="checkbox"
-                            value="all"
-                            checked={selectedValue === "all"}
-                            onChange={() => handleSelect("all")}
+                            value="not yet auctioned"
+                            checked={selectedValue === "not yet auctioned"}
+                            onChange={() => handleSelect("not yet auctioned")}
                           />
                           Chưa diễn ra
                         </label>
                         <label
                           className={`custom-checkbox ${
-                            selectedValue === "upcoming" && "active"
+                            selectedValue === "about to auction" && "active"
                           }`}
                         >
                           <input
                             type="checkbox"
-                            value="upcoming"
-                            checked={selectedValue === "upcoming"}
-                            onChange={() => handleSelect("upcoming")}
+                            value="about to auction"
+                            checked={selectedValue === "about to auction"}
+                            onChange={() => handleSelect("about to auction")}
                           />
                           Sắp diễn ra
                         </label>
                         <label
                           className={`custom-checkbox ${
-                            selectedValue === "ongoing" && "active"
+                            selectedValue === "auctioning" && "active"
                           }`}
                         >
                           <input
                             type="checkbox"
-                            value="ongoing"
-                            checked={selectedValue === "ongoing"}
-                            onChange={() => handleSelect("ongoing")}
+                            value="auctioning"
+                            checked={selectedValue === "auctioning"}
+                            onChange={() => handleSelect("auctioning")}
                           />
                           Đang diễn ra
                         </label>
                         <label
                           className={`custom-checkbox ${
-                            selectedValue === "finished" && "active"
+                            selectedValue === "auctioned" && "active"
                           }`}
                         >
                           <input
                             type="checkbox"
-                            value="finished"
-                            checked={selectedValue === "finished"}
-                            onChange={() => handleSelect("finished")}
+                            value="auctioned"
+                            checked={selectedValue === "auctioned"}
+                            onChange={() => handleSelect("auctioned")}
                           />
                           Đã kết thúc
                         </label>
@@ -340,34 +327,6 @@ function AuctionPage(props) {
                     </div>
                   </div>
                 </aside>
-                {/* <aside className="widget">
-                <div className="blog-widget-item fadeInUp">
-                  <div className="search-area">
-                    <div className="sidebar-widget-title">
-                      <div className="sidebar-widget-title-text">
-                        <h4>Tìm Kiếm</h4>
-                        <span className="hight-light"></span>
-                      </div>
-                      <div className="sidebar-widget-title-tools"></div>
-                    </div>
-                    <div className="blog-widget-body">form</div>
-                  </div>
-                </div>
-              </aside>
-              <aside className="widget">
-                <div className="blog-widget-item fadeInUp">
-                  <div className="search-area">
-                    <div className="sidebar-widget-title">
-                      <div className="sidebar-widget-title-text">
-                        <h4>Tìm Kiếm</h4>
-                        <span className="hight-light"></span>
-                      </div>
-                      <div className="sidebar-widget-title-tools"></div>
-                    </div>
-                    <div className="blog-widget-body">form</div>
-                  </div>
-                </div>
-              </aside> */}
               </div>
               <div
                 className="col-lg-9 col-md-8"
@@ -386,47 +345,74 @@ function AuctionPage(props) {
                     marginBottom: `${viewMode === "mode2" ? "70px" : ""}`,
                   }}
                 >
-                  {/* Hiển thị danh sách sản phẩm */}
-                  {currentCards.map((card) => (
-                    <div
-                      key={card.id}
-                      className={` ${
-                        viewMode === "mode2" ? "col-lg-3" : "col-lg-3"
-                      } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
-                    >
-                      <Card
-                        className="card_auction"
-                        style={{
-                          width: `${viewMode === "mode2" ? "800px" : ""}`,
-                        }}
+                  {auctions
+                    .filter(
+                      (auction) =>
+                        auction.product_id.name
+                          .toLowerCase()
+                          .includes(searchKeyword.toLowerCase()) &&
+                        ((selectedValue === "not yet auctioned" &&
+                          auction.status === "not yet auctioned") ||
+                          (selectedValue === "about to auction" &&
+                            auction.status === "about to auction") ||
+                          (selectedValue === "auctioning" &&
+                            auction.status === "auctioning") ||
+                          (selectedValue === "auctioned" &&
+                            auction.status === "auctioned")) &&
+                        (!startDate ||
+                          !endDate ||
+                          (startDate &&
+                            endDate &&
+                            new Date(auction.registration_start_time) >=
+                              startDate &&
+                            new Date(auction.endTime) <= endDate))
+                    )
+                    .map((card) => (
+                      <div
+                        key={card.id}
+                        className={` ${
+                          viewMode === "mode2" ? "col-lg-3" : "col-lg-3"
+                        } col-md-2 ${viewMode === "mode2" ? "mb-2" : ""}`}
                       >
-                        <div
+                        <Card
+                          className="card_auction"
                           style={{
-                            display: `${viewMode === "mode2" ? "flex" : ""}`,
+                            width: `${viewMode === "mode2" ? "800px" : ""}`,
                           }}
                         >
-                          <div>
-                            <Card.Img
-                              variant="top"
-                              src={card.image}
-                              style={{
-                                width: `${viewMode === "mode2" ? "200px" : ""}`,
-                              }}
-                            />
+                          <div
+                            style={{
+                              display: `${viewMode === "mode2" ? "flex" : ""}`,
+                            }}
+                          >
+                            <div>
+                              <Card.Img
+                                variant="top"
+                                src={card?.product_id?.image[0]}
+                                style={{
+                                  width: `${
+                                    viewMode === "mode2" ? "200px" : ""
+                                  }`,
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <Card.Body>
+                                <Card.Title>
+                                  {card?.product_id?.name}
+                                </Card.Title>
+                                <Card.Text>
+                                  {card?.product_id?.description}
+                                </Card.Text>
+                                <Link to={`/detail/${card._id}`}>
+                                  <Button>Chi tiết</Button>
+                                </Link>
+                              </Card.Body>
+                            </div>
                           </div>
-                          <div>
-                            <Card.Body>
-                              <Card.Title>{card.title}</Card.Title>
-                              <Card.Text>{card.content}</Card.Text>
-                              <Link to={`/detail/${card.title}`}>
-                                <Button>Chi tiết</Button>
-                              </Link>
-                            </Card.Body>
-                          </div>
-                        </div>
-                      </Card>
-                    </div>
-                  ))}
+                        </Card>
+                      </div>
+                    ))}
                 </div>
                 <div
                   className="row"

@@ -1,7 +1,8 @@
-import { WALLET_ID } from "./action";
+import { WALLET_ID, WALLET_HISTORY_ID } from "./action";
 
 const initialState = {
   wallet: "",
+  walletHistory: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         wallet: action.payload,
+      };
+    case WALLET_HISTORY_ID:
+      return {
+        ...state,
+        walletHistory: action.payload,
       };
     default:
       return state;

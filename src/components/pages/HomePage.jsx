@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../css/style.css";
 import Header from "../Header";
 import Body from "../Body";
 import Footer from "../Footer";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { actAuctionGetAsync, actAuctioningCustomerGetAsync } from "../../store/auction/action";
+import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
 
 function HomePage(props) {
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(actAuctionGetAsync(token));
+    dispatch(actMoneyCofigGetAsync(token));
+    dispatch(actAuctioningCustomerGetAsync(token))
+  }, []);
+
   return (
     <div
       className="app-container"

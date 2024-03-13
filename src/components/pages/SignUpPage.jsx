@@ -35,6 +35,7 @@ const SignUpPage = () => {
   });
   const role = useSelector((state) => state.USER.roles);
   console.log("role", role);
+  const rolePage = role?.filter((i) => i?.title !== "ADMIN");
   useEffect(() => {
     dispatch(actAllRoleGetAsync());
   }, []);
@@ -148,7 +149,7 @@ const SignUpPage = () => {
       if (acceptedFiles.length > 0) {
         setFormData({
           ...formData,
-          image: acceptedFiles[0], 
+          image: acceptedFiles[0],
         });
       }
     },
@@ -326,7 +327,7 @@ const SignUpPage = () => {
                     // disabled={!emailVerified}
                   >
                     <option value="">Select Role</option>
-                    {role.map((roleOption) => (
+                    {rolePage.map((roleOption) => (
                       <option key={roleOption.value} value={roleOption._id}>
                         {roleOption.title}
                       </option>

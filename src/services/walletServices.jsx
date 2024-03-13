@@ -15,4 +15,18 @@ export const WalletServices = {
       },
     });
   },
+  getWalletHistory(data, token) {
+    return API.get(`/wallets/wallet-history/${data}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  postJoinRegisterAuction(data, token) {
+    return API.post("/wallets/registerJoinInAuction", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

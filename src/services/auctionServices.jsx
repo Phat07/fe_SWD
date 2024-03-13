@@ -71,11 +71,54 @@ export const AuctionServices = {
       },
     });
   },
-  // fetchMe: (token) => {
-  //   return API.get("/users/fetchMe", {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  // },
+  // API cho member
+  getAuctionNotYetByMember(id, token) {
+    return API.get(`/auctions/memberAuctions-not-yet/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  getAuctionAboutToByMember(id, token) {
+    return API.get(`/auctions/memberAuctions-about-to/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  getAuctioningByMember(id, token) {
+    return API.get(`/auctions/memberAuctions-auctioning/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  getAuctionedByMember(id, token) {
+    return API.get(`/auctions/memberAuctions-autioned/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+
+  //  post AuctionBid
+
+  postAuctionBid(data, token) {
+    return API.post(
+      `/auctionBid/${data.auctionId}/${data.customerId}/new-bid`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  },
+  getMostAuctionBid(data, token) {
+    return API.get(`/auctions/getMostPriceInAuctionBid/${data.auctionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

@@ -6,8 +6,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types"; // Import PropTypes
+import Countdown from "react-countdown";
+import { FaAlignRight, FaAngleDoubleRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
+  const navigate = useNavigate()
   return (
     <Row>
       <Col xs="auto">
@@ -28,7 +32,7 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Time</th>
             <th>Name</th>
             <th>Status</th>
             <th>Actions</th>
@@ -37,15 +41,71 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
               <td>
-                {item.status === "sắp diễn ra" ? (
-                  <Badge bg="warning">Sắp diễn ra</Badge>
-                ) : item.status === "chưa diễn ra" ? (
-                  <Badge bg="success">Chưa diễn ra</Badge>
+                {/* {index + 1}.{" "} */}
+                {item?.status === "not yet auctioned" ? (
+                  <Countdown
+                    date={new Date(item?.regitration_end_time).getTime()}
+                    // startDate={new Date()}
+                    // endDate={new Date(item?.regitration_end_time)}
+                    renderer={({
+                      days,
+                      hours,
+                      minutes,
+                      seconds,
+                      completed,
+                    }) => {
+                      if (completed) {
+                        return "Expired";
+                      } else {
+                        return (
+                          <>
+                            {days} days {hours} hours {minutes} minutes{" "}
+                            {seconds} seconds{" "}
+                            <FaAngleDoubleRight style={{ color: "blue" }} /> kết
+                            thúc đăng ký
+                          </>
+                        );
+                      }
+                    }}
+                  />
                 ) : (
-                  <Badge bg="secondary">Trạng thái khác</Badge> // Thay "Trạng thái khác" bằng trạng thái thực tế
+                  <Countdown
+                    date={new Date(item?.start_time).getTime()}
+                    // startDate={new Date(item?.regitration_end_time)}
+                    // endDate={new Date(item?.start_time)}
+                    renderer={({
+                      days,
+                      hours,
+                      minutes,
+                      seconds,
+                      completed,
+                    }) => {
+                      if (completed) {
+                        return "Expired";
+                      } else {
+                        return (
+                          <>
+                            {days} days {hours} hours {minutes} minutes{" "}
+                            {seconds} seconds{" "}
+                            <FaAngleDoubleRight style={{ color: "blue" }} /> bắt
+                            đầu đấu giá
+                          </>
+                        );
+                      }
+                    }}
+                  />
+                )}
+              </td>
+
+              <td>{item?.product?.name}</td>
+              <td>
+                {item.status === "about to auction" ? (
+                  <Badge bg="warning">Sắp diễn ra</Badge>
+                ) : item.status === "not yet auctioned" ? (
+                  <Badge bg="secondary">Chưa diễn ra</Badge>
+                ) : (
+                  <Badge bg="success">Đang diễn ra</Badge> // Thay "Trạng thái khác" bằng trạng thái thực tế
                 )}
               </td>
               <td>
@@ -54,11 +114,18 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
                     Detail
                   </Button>
                 )}{" "}
-                {onDelete && (
+                {item?.status === "auctioning" ? (
+                  <Button variant="success" onClick={() => navigate(`/join-room-auction/${item?.auction_id}`)}>
+                    Join the room
+                  </Button>
+                ) : (
+                  <></>
+                )}
+                {/* {onDelete && (
                   <Button variant="danger" onClick={() => onDelete(item)}>
                     Cancel registration
                   </Button>
-                )}
+                )} */}
               </td>
             </tr>
           ))}

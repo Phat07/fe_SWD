@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, Nav, Tab } from "react-bootstrap";
 
 const ChangeTabAutionWating = (props) => {
-  const { chuaDienRaContent, sapDienRaContent } = props;
+  const { chuaDienRaContent, sapDienRaContent, dangDienRaContent } = props;
   const [activeTab, setActiveTab] = useState("chuaDienRa");
 
   return (
@@ -25,10 +25,17 @@ const ChangeTabAutionWating = (props) => {
             Sắp diễn ra
           </Nav.Link>
         </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="dangDienRa">
+            {/* <CIcon icon={cilMediaPlay} className="me-2" /> */}
+            Đang diễn ra
+          </Nav.Link>
+        </Nav.Item>
       </Nav>
       <Tab.Content>
         <Tab.Pane eventKey="chuaDienRa">{chuaDienRaContent}</Tab.Pane>
         <Tab.Pane eventKey="sapDienRa">{sapDienRaContent}</Tab.Pane>
+        <Tab.Pane eventKey="dangDienRa">{dangDienRaContent}</Tab.Pane>
       </Tab.Content>
     </Tab.Container>
   );

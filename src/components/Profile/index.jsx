@@ -20,7 +20,8 @@ import HistoryTransaction from "./HistoryTransaction";
 import HistoryDeposit from "./HistoryDeposit";
 import PaidItem from "../pages/PaidItem";
 import { useDispatch, useSelector } from "react-redux";
-import { actGetWalletByUserAsync } from "../../store/wallet/action";
+import { actGetWalletByUserAsync, actGetWalletHistoryByUserAsync } from "../../store/wallet/action";
+import { actAuctionAboutToMemberGetAsync, actAuctionNotYetMemberGetAsync, actAuctionedMemberGetAsync, actAuctioningMemberGetAsync } from "../../store/auction/action";
 
 function Profile() {
   const [status, setStatus] = useState("account");
@@ -32,6 +33,14 @@ function Profile() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actGetWalletByUserAsync(user?._id, token));
+    dispatch(actGetWalletHistoryByUserAsync(user?._id, token));
+    // memberAuction
+    dispatch(actAuctionNotYetMemberGetAsync(user?._id, token));
+    dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
+    dispatch(actAuctioningMemberGetAsync(user?._id, token));
+    dispatch(actAuctionedMemberGetAsync(user?._id, token));
+
+
   }, [user]);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>

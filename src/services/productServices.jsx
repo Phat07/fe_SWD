@@ -18,11 +18,4 @@ export const ProductServices = {
       },
     });
   },
-  // fetchMe: (token) => {
-  //   return API.get("/users/fetchMe", {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  // },
 };
