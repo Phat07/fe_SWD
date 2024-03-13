@@ -1,89 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Link } from "react-router-dom";
-import { FaGavel } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
+import { FaGavel, FaLock } from "react-icons/fa";
+import { useTimer } from "react-timer-hook";
+import { format } from "date-fns";
+import Countdown from "react-countdown";
 import "../../css/detail.css";
+import { Image, Modal } from "react-bootstrap";
 import { Button, Card, Carousel, Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { actAuctionGetAsync } from "../../store/auction/action";
+import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
+import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action";
 
 function DetailPage(props) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State để kiểm soát hiển thị popup
-  const auctionRooms = [
-    {
-      id: 1,
-      title: "Phòng 1",
-      description: "Mô tả phòng 1",
-      currentParticipants: 5,
-      productCode: "SP001",
-      duration: "30 phút",
-      startTime: "10:00 25/02/2024",
-      endTime: "10:30 25/02/2024",
-      images: [
-        "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
-    ]
-    },
-    {
-        id: 2,
-        title: "Phòng 2",
-        description: "Mô tả phòng 1",
-        currentParticipants: 5,
-        productCode: "SP002",
-        duration: "30 phút",
-        startTime: "10:00 25/02/2024",
-        endTime: "10:30 25/02/2024",
-        images: [
-          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
-      ]
-      },
-      {
-        id: 3,
-        title: "Phòng 3",
-        description: "Mô tả phòng 1",
-        currentParticipants: 5,
-        productCode: "SP003",
-        duration: "30 phút",
-        startTime: "10:00 25/02/2024",
-        endTime: "10:30 25/02/2024",
-        images: [
-          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
-      ]
-      },
-      {
-        id: 4,
-        title: "Phòng 4",
-        description: "Mô tả phòng 1",
-        currentParticipants: 5,
-        productCode: "SP004",
-        duration: "30 phút",
-        startTime: "10:00 25/02/2024",
-        endTime: "10:30 25/02/2024",
-        images: [
-          "https://cdn.britannica.com/84/73184-050-05ED59CB/Sunflower-field-Fargo-North-Dakota.jpg", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE8w6TKU8zvTgVk38Cdw2pMddLsJGvlEi5ZQ&usqp=CAU", 
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6hb_Fnt1hatRzXyvhGMBnf0VNWeB1QwPPMQ&usqp=CAU",
-      ]
-      }
-  ];
-  const images = [
-    "../../../public/assets/images/background/background1.jpg",
-    "../../../public/assets/images/background/background2.jpg",
-    "../../../public/assets/images/background/background3.jpg",
-    "../../../public/assets/images/background/background4.jpg",
-    "../../../public/assets/images/background/background5.jpg",
-  ];
-  const [activeDiv, setActiveDiv] = useState(1); // State để theo dõi div đang active
 
+  const [activeDiv, setActiveDiv] = useState(1); // State để theo dõi div đang active
+  const { id } = useParams(); // Lấy ID từ URL
+  const dispatch = useDispatch();
+  const [auction, setAuction] = useState("");
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const auctions = useSelector((state) => state.AUCTION.auctions);
+  const user = useSelector((state) => state.USER.currentUser);
+  console.log("aucctionsss", auctions);
+  const conFigMoney = useSelector((state) => state.MONEYCONFIG.configMoney);
+  console.log("configMoney", conFigMoney);
+  const joinAuctionConfig = conFigMoney?.find(
+    (config) => config.type_config === "Join in auction"
+  );
+  const token = localStorage.getItem("ACCESS_TOKEN");
+  useEffect(() => {
+    dispatch(actAuctionGetAsync(token));
+  }, [id, dispatch, token]);
+  useEffect(() => {
+    dispatch(actMoneyCofigGetAsync(token));
+  }, []);
+  useEffect(() => {
+    const item = auctions.find((i) => i._id === id);
+    setAuction(item);
+  }, [auctions, id]);
+  console.log("detailAuction", auction);
+  const auctionStartTime = new Date(auction?.regitration_end_time).getTime();
+  const currentTime = new Date().getTime();
+  const timeDiff = auctionStartTime - currentTime;
   // Hàm xử lý khi click vào một div
   const handleDivClick = (divIndex) => {
     setActiveDiv(divIndex); // Set active div bằng index của div được click
   };
+
   const handleImageClick = (index) => {
     setSelectedImage(index);
     setShowPopup(true); // Khi click vào hình ảnh, hiển thị popup
@@ -93,7 +60,35 @@ function DetailPage(props) {
     setSelectedImage(index);
     setShowPopup(false); // Đóng popup khi nhấn nút đóng
   };
-  console.log("index", selectedImage);
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
+  };
+
+  const handleJoinConfirmation = () => {
+    let data = {
+      userId: user?._id,
+      auctionId: id,
+    };
+    // Xác nhận tham gia đấu giá
+    // Thực hiện các hành động khi người dùng xác nhận tham gia đấu giá ở đây
+    setShowConfirmationModal(false); // Đóng modal sau khi xác nhận
+    dispatch(actJoinRegisterAuctionForMemberAsync(data, token));
+  };
+
+  const handleJoin = (room) => {
+    // Mở modal xác nhận khi người dùng nhấn tham gia
+    setShowConfirmationModal(true);
+  };
+  function formatCurrencyVND(amount) {
+    // Sử dụng hàm toLocaleString() để định dạng số
+    // Cài đặt style là 'currency' và currency là 'VND'
+    return amount?.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
   return (
     <div
       className="app-container"
@@ -120,7 +115,7 @@ function DetailPage(props) {
             backgroundSize: "contain",
           }}
         >
-          <h2 className="current-page">Danh sách cuộc đấu giá</h2>
+          <h2 className="current-page">Danh sách sản phẩm đấu giá</h2>
           <div className="link-redirect" style={{ marginTop: "20px" }}>
             <Link
               className="page-index"
@@ -149,51 +144,90 @@ function DetailPage(props) {
         <div className="container">
           <div className="row high-padding">
             <div className="col-lg-5 col-md-4 sidebar-content">
-              <div className="gallery-container">
-                <div className="main-image">
-                  {selectedImage !== null && (
-                    <img
-                      src={images[selectedImage]}
-                      alt="Selected"
-                      onClick={handleClosePopup}
-                    />
-                  )}
-                  {selectedImage === null && <img src={images[0]} alt="Main" />}
+              <div className="row high-padding">
+                <div className="col-lg-6 col-md-6 sidebar-content">
+                  {/* Hiển thị hình ảnh */}
+                  <Card>
+                    <Card.Body>
+                      <Card.Title>Ảnh Sản Phẩm</Card.Title>
+                      <Carousel>
+                        {auction?.product_id?.image?.map((image, index) => (
+                          <Carousel.Item key={index}>
+                            <Image
+                              className="d-block w-100"
+                              src={image}
+                              alt={`Slide ${index + 1}`}
+                              fluid
+                            />
+                          </Carousel.Item>
+                        ))}
+                      </Carousel>
+                    </Card.Body>
+                  </Card>
                 </div>
-                <div className="thumbnail-container">
-                  {images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Thumbnail ${index}`}
-                      className={
-                        selectedImage === index ? "selected-thumbnail" : ""
-                      }
-                      onClick={() => handleImageClick(index)}
-                    />
-                  ))}
+                <div className="col-lg-6 col-md-6">
+                  {/* Hiển thị video */}
+                  <Card>
+                    <Card.Body>
+                      <Card.Title>Video Sản Phẩm</Card.Title>
+                      <div style={{ position: "relative", marginTop: "20px" }}>
+                        <video controls style={{ maxWidth: "100%" }}>
+                          {auction?.product_id?.video?.map((video, index) => (
+                            <source key={index} src={video} type="video/mp4" />
+                          ))}
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    </Card.Body>
+                  </Card>
                 </div>
               </div>
             </div>
             <div className="col-lg-7 col-md-8">
-              <p className="para">Thời gian đếm ngược bắt đầu trả giá</p>
+              <p className="para">Thời gian đếm ngược đăng ký bắt đầu</p>
               <div className="timestamp-div">
-                09 NGÀY 18 GIỜ 38 PHÚT 00 GIÂY
+                <div className="countdown-container">
+                  {timeDiff > 0 ? (
+                    <div className="countdown-container">
+                      <Countdown
+                        date={Date.now() + timeDiff}
+                        renderer={({ days, hours, minutes, seconds }) => (
+                          <div>
+                            <span>{days} days</span> -{" "}
+                            <span>{hours} hours</span> -{" "}
+                            <span>{minutes} minutes</span> -{" "}
+                            <span>{seconds} seconds</span>
+                          </div>
+                        )}
+                      />
+                    </div>
+                  ) : (
+                    <h5>0 days - 0 hours - 0 minutes - 0 seconds</h5>
+                  )}
+                </div>
               </div>
               <div className="register-form">
                 <div className="row">
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
-                  <div className="col-6 left-infor-text">a</div>
-                  <div className="col-6 right-info-text">b</div>
+                  <div className="col-6 left-infor-text">
+                    Regitration_start_time
+                  </div>
+                  <div className="col-6 right-info-text">
+                    {formatDate(auction?.regitration_start_time)}
+                  </div>
+                  <div className="col-6 left-infor-text">
+                    Regitration_end_time
+                  </div>
+                  <div className="col-6 right-info-text">
+                    {formatDate(auction?.regitration_end_time)}
+                  </div>
+                  <div className="col-6 left-infor-text">Start_time</div>
+                  <div className="col-6 right-info-text">
+                    {formatDate(auction?.start_time)}
+                  </div>
+                  <div className="col-6 left-infor-text">End_time</div>
+                  <div className="col-6 right-info-text">
+                    {formatDate(auction?.end_time)}
+                  </div>
                 </div>
                 <div
                   style={{
@@ -204,14 +238,22 @@ function DetailPage(props) {
                     margin: "15px",
                   }}
                 >
-                  <FaGavel />
-                  <Link to={"/paid-item"}>
-                    <Button
-                      style={{ backgroundColor: "#B41712", border: "none" }}
-                    >
-                      Đăng ký tham gia đấu giá
-                    </Button>
-                  </Link>
+                  {timeDiff > 0 ? (
+                    <>
+                      <FaGavel />
+                      <Button
+                        style={{ backgroundColor: "#B41712", border: "none" }}
+                        onClick={handleJoin}
+                      >
+                        Đăng ký tham gia đấu giá
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <FaLock />
+                      <h5>Thời gian tham gia đấu giá đã hết</h5>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -243,76 +285,84 @@ function DetailPage(props) {
             </div>
           </div>
           <div className="col-lg-12 info-ap">
-            {activeDiv === 1 ? <>thông tin mô tả tài sản</> : <></>}
-            {activeDiv === 2 ? <>thông tin mô tả đấu giá</> : <></>}
+            {activeDiv === 1 ? <>{auction?.product_id?.description}</> : <></>}
+            {activeDiv === 2 ? <>{auction?.auctionInfo}</> : <></>}
             {activeDiv === 3 ? <>thông tin mô tả liên quan</> : <></>}
           </div>
         </div>
         <div className="col-lg-12" style={{ marginTop: "20px" }}>
-          <h3 style={{marginBottom:"25px",fontWeight:"800"}}>Tài sản khác</h3>
+          <h3 style={{ marginBottom: "25px", fontWeight: "800" }}>
+            Tài sản khác
+          </h3>
           <div className="row d-flex g-4">
-              {auctionRooms
-                .map((room) => (
-                  <Col key={room.id} sm={12} md={3} className="mb-4">
-                    <Card>
-                      <Carousel>
-                        {room.images.map((image, index) => (
-                          <Carousel.Item key={index}>
-                            <img
-                              className="d-block w-100"
-                              src={image}
-                              alt={`Slide ${index + 1}`}
-                              style={{
-                                height: "200px",
-                                objectFit: "cover",
-                                width: "100%",
-                              }}
-                            />
-                          </Carousel.Item>
-                        ))}
-                      </Carousel>
-                      <Card.Body>
-                        <Card.Title>{room.title}</Card.Title>
-                        <Card.Text>{room.description}</Card.Text>
-                        <Card.Text>Mã sản phẩm: {room.productCode}</Card.Text>
-                        <Card.Text>
-                          Số người tham gia: {room.currentParticipants}
-                        </Card.Text>
-                        <Card.Text>
-                          Thời gian: {room.startTime} - {room.endTime} (
-                          {room.duration})
-                        </Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={() => handleJoin(room)}
-                        >
-                          Tham gia
-                        </Button>
-                        {/* <Button variant="primary">Tham gia</Button> */}
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
+            {/* {auctionRooms.map((room) => (
+              <Col key={room.id} sm={12} md={3} className="mb-4">
+                <Card>
+                  <Carousel>
+                    {room.images.map((image, index) => (
+                      <Carousel.Item key={index}>
+                        <img
+                          className="d-block w-100"
+                          src={image}
+                          alt={`Slide ${index + 1}`}
+                          style={{
+                            height: "200px",
+                            objectFit: "cover",
+                            width: "100%",
+                          }}
+                        />
+                      </Carousel.Item>
+                    ))}
+                  </Carousel>
+                  <Card.Body>
+                    <Card.Title>{room.title}</Card.Title>
+                    <Card.Text>{room.description}</Card.Text>
+                    <Card.Text>Mã sản phẩm: {room.productCode}</Card.Text>
+                    <Card.Text>
+                      Số người tham gia: {room.currentParticipants}
+                    </Card.Text>
+                    <Card.Text>
+                      Thời gian: {room.startTime} - {room.endTime} (
+                      {room.duration})
+                    </Card.Text>
+                    <Button variant="primary" onClick={() => handleJoin(room)}>
+                      Tham gia
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))} */}
           </div>
         </div>
       </div>
-      {/* Popup */}
-      {showPopup && (
-        <div className="popup-container">
-          <div className="popup-content">
-            <button
-              className="close-button"
-              onClick={() => handleClosePopup(selectedImage)}
-            >
-              X
-            </button>
-            <img src={images[selectedImage]} alt="Popup" />
-          </div>
-        </div>
-      )}
       <div className="footer-container">
         <Footer />
       </div>
+      <Modal
+        show={showConfirmationModal}
+        onHide={() => setShowConfirmationModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận tham gia đấu giá</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Bạn có muốn tham gia đấu giá với mức phí là{" "}
+            {formatCurrencyVND(joinAuctionConfig?.money)}?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmationModal(false)}
+          >
+            Hủy bỏ
+          </Button>
+          <Button variant="primary" onClick={handleJoinConfirmation}>
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

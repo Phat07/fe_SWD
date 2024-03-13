@@ -8,6 +8,11 @@ import {
   NOT_YET_AUCTION_CUSTOMER,
   ABOUT_TO_AUCTION_CUSTOMER,
   AUCTIONED_CUSTOMER,
+  GET_AUCTION_MEMBER_AUCTION_NOT_YET,
+  GET_AUCTION_MEMBER_AUCTION_ABOUT_TO,
+  GET_AUCTION_MEMBER_AUCTIONING,
+  GET_AUCTION_MEMBER_AUCTIONED,
+  GET_MOST_PRICE_AUCTIONID,
 } from "./action";
 
 const initialState = {
@@ -20,6 +25,12 @@ const initialState = {
   aboutToAuctionCustomer: [],
   auctioningCustomer: [],
   auctinedCustomer: [],
+  // member
+  notYetAuctionMember: [],
+  aboutToAuctionMember: [],
+  auctioningMember: [],
+  auctinedMember: [],
+  mostPrice: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -69,6 +80,36 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         auctinedCustomer: action.payload,
+      };
+
+    // member
+
+    case GET_AUCTION_MEMBER_AUCTION_NOT_YET:
+      return {
+        ...state,
+        notYetAuctionMember: action.payload,
+      };
+    case GET_AUCTION_MEMBER_AUCTION_ABOUT_TO:
+      return {
+        ...state,
+        aboutToAuctionMember: action.payload,
+      };
+    case GET_AUCTION_MEMBER_AUCTIONING:
+      return {
+        ...state,
+        auctioningMember: action.payload,
+      };
+    case GET_AUCTION_MEMBER_AUCTIONED:
+      return {
+        ...state,
+        auctinedMember: action.payload,
+      };
+
+    // price
+    case GET_MOST_PRICE_AUCTIONID:
+      return {
+        ...state,
+        mostPrice: action.payload,
       };
 
     default:

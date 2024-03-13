@@ -1,72 +1,86 @@
 import React, { useState, useEffect } from "react";
+import CurrencyFormat from "react-currency-format";
+
 import { Card, Button, Carousel, Form, Row, Col, Table } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import Countdown from "react-countdown";
+import { FaAngleDoubleRight } from "react-icons/fa";
+import io from "socket.io-client";
 
+import {
+  actAuctionBidPost,
+  actGetMostPriceAuctionGetAsync,
+} from "../../../store/auction/action";
+
+const socket = io("http://localhost:3001");
 function JoinAuctionRoom() {
   // Giả sử đây là thời gian kết thúc đấu giá tính bằng milliseconds
   // const endTime = new Date().getTime() + 10000000; // 10.000 giây từ bây giờ
+  const [data, setData] = useState("");
   const [currentBid, setCurrentBid] = useState(0);
   const [newBid, setNewBid] = useState("");
-  // const [timeLeft, setTimeLeft] = useState(endTime - new Date().getTime());
+  const [auctionBid, setAuctionBid] = useState("");
+  const { auctionID } = useParams();
+  const dispatch = useDispatch();
+  console.log("id", auctionID);
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     const now = new Date().getTime();
-  //     const distance = endTime - now;
-  //     setTimeLeft(distance);
+  const user = useSelector((state) => state.USER.currentUser);
+  const mostPrice = useSelector((state) => state.AUCTION.mostPrice);
+  console.log("mostPrice", mostPrice);
+  const auctions = useSelector((state) => state.AUCTION.auctions);
 
-  //     if (distance < 0) {
-  //       clearInterval(timer);
-  //       setTimeLeft(0);
-  //       // Thêm logic ở đây khi đấu giá kết thúc
-  //     }
-  //   }, 1000);
+  console.log("memberJoin", auctions);
+  console.log("aucctionsssBid", auctionBid);
 
-  //   return () => clearInterval(timer);
-  // }, [endTime]);
-
+  useEffect(() => {
+    const item = auctions.find((i) => i._id === auctionID);
+    setAuctionBid(item);
+  }, [auctions, auctionID]);
   const handleBidChange = (e) => {
-    setNewBid(e.target.value);
+    setNewBid(e);
   };
-
+  useEffect(() => {
+    // Lắng nghe sự kiện 'newBid' từ server
+    socket.on("bidAccepted", (newBidData) => {
+      setData(newBidData); // Cập nhật dữ liệu đấu giá mới
+      dispatch(actGetMostPriceAuctionGetAsync(data, token));
+    });
+    let data = {
+      auctionId: auctionID,
+    };
+    dispatch(actGetMostPriceAuctionGetAsync(data, token));
+    // Đừng quên hủy lắng nghe khi component unmount
+    return () => {
+      socket.off("bidAccepted");
+    };
+  }, []);
+  console.log("newBid", newBid);
+  console.log("dataBID", data);
   const submitBid = () => {
-    if (parseInt(newBid) > currentBid) {
-      setCurrentBid(parseInt(newBid));
-      setNewBid("");
-      // Thêm logic cập nhật lên server ở đây
-    } else {
-      alert("Your bid must be higher than the current bid.");
-    }
+    let data = {
+      auctionId: auctionBid?._id,
+      customerId: user?._id,
+      price: +newBid,
+    };
+    // Gửi yêu cầu đấu giá lên server
+    dispatch(actAuctionBidPost(data, token));
+    setNewBid("");
+    socket.emit("submitBid");
   };
 
-  // Định dạng thời gian đếm ngược
-  // const formatTimeLeft = () => {
-  //   let seconds = Math.floor((timeLeft / 1000) % 60);
-  //   let minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-  //   let hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+  function formatCurrencyVND(amount) {
+    // Sử dụng hàm toLocaleString() để định dạng số
+    // Cài đặt style là 'currency' và currency là 'VND'
+    return amount?.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
 
-  //   hours = hours < 10 ? "0" + hours : hours;
-  //   minutes = minutes < 10 ? "0" + minutes : minutes;
-  //   seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  //   return hours + ":" + minutes + ":" + seconds;
-  // };
-  const data = [
-    {
-      name: "Aution 3",
-      status: "active",
-      moneyAdd: "500000",
-      Total: "1000000",
-    },
-    {
-      name: "Aution 4",
-      status: "active",
-      moneyAdd: "500000",
-      Total: "2000000",
-    },
-    // Thêm dữ liệu mẫu khác tại đây
-  ];
   return (
     <div className="app-container">
       <div className="header-container">
@@ -111,17 +125,25 @@ function JoinAuctionRoom() {
                   <Card.Body>
                     <Card.Title>Thông Tin Sản Phẩm</Card.Title>
                     <div className="mb-3">
-                      <strong>Tên sản phẩm:</strong>
+                      <strong>
+                        Tên sản phẩm: {auctionBid?.product_id?.name}
+                      </strong>
                     </div>
                     <div className="mb-3">
-                      <strong>Mô tả:</strong>
+                      <strong>
+                        Mô tả: {auctionBid?.product_id?.description}
+                      </strong>
                     </div>
                     <div className="mb-3">
-                      <strong>Giá khởi điểm:</strong>{" "}
-                      {/* {startingPrice.toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })} */}
+                      <strong>
+                        Giá khởi điểm:{" "}
+                        {formatCurrencyVND(auctionBid?.starting_price)}
+                      </strong>{" "}
+                    </div>
+                    <div className="mb-3">
+                      <strong>
+                        Bước giá: {formatCurrencyVND(auctionBid?.price_step)}
+                      </strong>{" "}
                     </div>
                   </Card.Body>
                 </Card>
@@ -133,7 +155,31 @@ function JoinAuctionRoom() {
               <Card.Body>
                 <Card.Title>Đấu Giá</Card.Title>
                 <Card.Title style={{ textAlign: "center" }}>
-                  <strong>Thời gian còn lại: 32:36:42</strong>
+                  <strong>
+                    <Countdown
+                      date={new Date(auctionBid?.end_time)}
+                      renderer={({
+                        days,
+                        hours,
+                        minutes,
+                        seconds,
+                        completed,
+                      }) => {
+                        if (completed) {
+                          return "Expired";
+                        } else {
+                          return (
+                            <>
+                              {days} days {hours} hours {minutes} minutes{" "}
+                              {seconds} seconds{" "}
+                              <FaAngleDoubleRight style={{ color: "blue" }} />{" "}
+                              kết thúc đấu giá
+                            </>
+                          );
+                        }
+                      }}
+                    />
+                  </strong>
                 </Card.Title>
 
                 <Card className="mt-3 mb-3">
@@ -142,7 +188,7 @@ function JoinAuctionRoom() {
                       Số tiền hiện tại:
                     </Card.Title>
                     <Card.Text style={{ textAlign: "center" }}>
-                      <strong>${currentBid}</strong>
+                      <strong>{formatCurrencyVND(mostPrice?.price)}</strong>
                     </Card.Text>
                   </Card.Body>
                   <Card.Body>
@@ -156,14 +202,13 @@ function JoinAuctionRoom() {
                         </tr>
                       </thead>
                       <tbody>
-                        {data.map((item, index) => (
+                        {/* {data.map((item, index) => (
                           <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>
                             <td>+{item.moneyAdd}</td>
-                            {/* <td>{item.Total}</td> */}
                           </tr>
-                        ))}
+                        ))} */}
                       </tbody>
                     </Table>
                   </Card.Body>
@@ -176,11 +221,24 @@ function JoinAuctionRoom() {
                     controlId="formPlaintextBid"
                   >
                     <Col sm="8">
-                      <Form.Control
+                      {/* <Form.Control
                         type="number"
                         placeholder="Nhập số tiền đấu giá"
                         value={newBid}
                         onChange={handleBidChange}
+                      /> */}
+                      <Form.Control
+                        as={CurrencyFormat}
+                        thousandSeparator={true}
+                        decimalSeparator="."
+                        allowNegative={false}
+                        placeholder="Nhập số tiền đấu giá"
+                        value={newBid}
+                        onValueChange={(values) => {
+                          const { value } = values;
+                          handleBidChange(value);
+                        }}
+                        suffix=" đ"
                       />
                     </Col>
                     <Col sm="4">

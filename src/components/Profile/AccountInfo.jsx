@@ -67,7 +67,7 @@ const AccountInfo = () => {
             <div className="d-flex justify-content-center">
               <Card.Img
                 variant="center"
-                src={user.avatar}
+                src={userInfor?.image}
                 style={{
                   width: "200px",
                   height: "200px",
@@ -125,7 +125,7 @@ const AccountInfo = () => {
               </Card.Text>
 
               {/* Các trường thông tin khác */}
-              <Form>
+              {/* <Form>
                 <Form.Group
                   className="mb-3 d-flex align-items-center"
                   controlId="password"
@@ -151,7 +151,7 @@ const AccountInfo = () => {
                     </span>
                   </div>
                 </Form.Group>
-              </Form>
+              </Form> */}
             </Card.Body>
           </Card>
         </Col>

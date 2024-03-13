@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 import { AuctionServices } from "../../services/auctionServices";
+import { data } from "@tensorflow/tfjs";
 export const ALL_AUCTION = "ALL_AUCTION";
 export const NOT_YET_AUCTION = "NOT_YET_AUCTION";
 export const ABOUT_TO_AUCTION = "ABOUT_TO_AUCTION";
@@ -8,6 +10,7 @@ export const AUCTIONING_CUSTOMER = "AUCTIONING_CUSTOMER";
 export const NOT_YET_AUCTION_CUSTOMER = "NOT_YET_AUCTION_CUSTOMER";
 export const ABOUT_TO_AUCTION_CUSTOMER = "ABOUT_TO_AUCTION_CUSTOMER";
 export const AUCTIONED_CUSTOMER = "AUCTIONED_CUSTOMER";
+export const GET_MOST_PRICE_AUCTIONID = "GET_MOST_PRICE_AUCTIONID";
 
 export const allAuction = (list) => {
   return {
@@ -240,15 +243,197 @@ export function actAuctionPostAsync(data, token) {
     try {
       const response = await AuctionServices.addAuction(data, token);
       if (response.status === 200 || response.status === 201) {
-        // toast.success("New Product has been added successfully ~");
-        dispatch(actAuctionGetAsync(token));
+        toast.success("New Auction has been added successfully ~");
+        // dispatch(actAuctionGetAsync(token));
       } else {
         // toast.error("Post Product to fail");
         console.log("fail");
       }
     } catch (error) {
-      console.error("Error occurred while posting auction:", error);
+      if (error.response && error.response.status === 400) {
+        console.error(
+          "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+          error
+        );
+        toast.error(error.response.data.error);
+      } else {
+        console.error("An error occurred while making the request:", error);
+        toast.error("Lỗi: " + error.message);
+      }
       // Xử lý lỗi ở đây, ví dụ hiển thị thông báo cho người dùng
     }
+  };
+}
+
+export const GET_AUCTION_MEMBER_AUCTION_NOT_YET =
+  "GET_AUCTION_MEMBER_AUCTION_NOT_YET";
+export const GET_AUCTION_MEMBER_AUCTION_ABOUT_TO =
+  "GET_AUCTION_MEMBER_AUCTION_ABOUT_TO";
+export const GET_AUCTION_MEMBER_AUCTIONING = "GET_AUCTION_MEMBER_AUCTIONING";
+export const GET_AUCTION_MEMBER_AUCTIONED = "GET_AUCTION_MEMBER_AUCTIONED";
+
+export const getMemberAuctionNotYet = (list) => {
+  return {
+    type: GET_AUCTION_MEMBER_AUCTION_NOT_YET,
+    payload: list,
+  };
+};
+export const getMemberAuctionAboutTo = (list) => {
+  return {
+    type: GET_AUCTION_MEMBER_AUCTION_ABOUT_TO,
+    payload: list,
+  };
+};
+export const getMemberAuctioning = (list) => {
+  return {
+    type: GET_AUCTION_MEMBER_AUCTIONING,
+    payload: list,
+  };
+};
+export const getMemberAuctioned = (list) => {
+  return {
+    type: GET_AUCTION_MEMBER_AUCTIONED,
+    payload: list,
+  };
+};
+
+export function actAuctionNotYetMemberGetAsync(id, token) {
+  return (dispatch) => {
+    AuctionServices.getAuctionNotYetByMember(id, token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMemberAuctionNotYet(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+export function actAuctionAboutToMemberGetAsync(id, token) {
+  return (dispatch) => {
+    AuctionServices.getAuctionAboutToByMember(id, token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMemberAuctionAboutTo(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+export function actAuctioningMemberGetAsync(id, token) {
+  return (dispatch) => {
+    AuctionServices.getAuctioningByMember(id, token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMemberAuctioning(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+export function actAuctionedMemberGetAsync(id, token) {
+  return (dispatch) => {
+    AuctionServices.getAuctionedByMember(id, token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMemberAuctioned(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+
+//  auctionBid
+
+export function actAuctionBidPost(data, token) {
+  return (dispatch) => {
+    AuctionServices.postAuctionBid(data, token)
+      .then((response) => {
+        if (response.status === 200 || response.status === 201) {
+          // dispatch(allAuction(response.data));
+          console.log("successAuction", response);
+          let dataMost = {
+            auctionId: data?.auctionId,
+          };
+          dispatch(actGetMostPriceAuctionGetAsync(dataMost, token));
+          toast.success(`Bạn đã đấu giá thành công với số tiền ${data?.price}`);
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          console.error(
+            "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+            error
+          );
+          toast.error(error.response.data.error || error.response.data.message);
+        } else {
+          console.error(
+            "An error occurred while making the request:",
+            error.response.data.message
+          );
+          toast.error("Lỗi: " + error.message);
+        }
+      });
+  };
+}
+
+export const getMostPriceAuctionId = (list) => {
+  return {
+    type: GET_MOST_PRICE_AUCTIONID,
+    payload: list,
+  };
+};
+
+export function actGetMostPriceAuctionGetAsync(data, token) {
+  return (dispatch) => {
+    AuctionServices.getMostAuctionBid(data, token)
+      .then((response) => {
+        console.log("mostPrice", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getMostPriceAuctionId(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
   };
 }

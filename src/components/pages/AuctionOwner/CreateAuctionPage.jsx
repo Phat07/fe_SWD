@@ -7,37 +7,13 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import { actAuctionPostAsync } from "../../../store/auction/action";
 import moment from "moment/moment";
+import { Spinner } from "react-bootstrap";
+
+import "../../../css/createAuction.css";
+
 import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
 function CreateAuctionProductForm() {
-  // State for form fields
-
-  // function formatPrice(value) {
-  //   // Xóa tất cả ký tự không phải số và chuyển đổi sang số nguyên
-  //   let number = parseInt(value.replace(/\D/g, ""), 10);
-
-  //   // Kiểm tra nếu không phải là số thì trả về chuỗi rỗng
-  //   if (isNaN(number)) {
-  //     return "";
-  //   }
-
-  //   // Format số theo dạng có dấu chấm phân cách hàng nghìn
-  //   let formattedNumber = number.toLocaleString();
-
-  //   // Trả về giá trị đã format và thêm "đ" vào cuối
-  //   return `${formattedNumber}đ`;
-  // }
-
-  // function unformatPrice(formattedValue) {
-  //   // Loại bỏ ký tự "đ" và dấu chấm phân cách hàng nghìn
-  //   let numberString = formattedValue.replace(/đ/g, "").replace(/\./g, "");
-
-  //   // Chuyển đổi chuỗi thành số
-  //   let number = parseInt(numberString, 10);
-
-  //   // Kiểm tra nếu kết quả là NaN thì trả về 0 hoặc trả về số
-  //   return isNaN(number) ? 0 : number;
-  // }
-
   const [auctionInfo, setAuctionInfo] = useState("");
   const [stepPrice, setStepPrice] = useState("");
   const [startingPrice, setStartingPrice] = useState("");
@@ -45,6 +21,8 @@ function CreateAuctionProductForm() {
   const [regitrationEndTime, setRegitrationEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const param = useParams();
   const productId = param.productID;
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -121,21 +99,21 @@ function CreateAuctionProductForm() {
       host_id: user?._id,
       product_id: productId,
     };
-
+    setIsSubmitting(true);
     // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
-    dispatch(actAuctionPostAsync(data, token));
+    dispatch(actAuctionPostAsync(data, token)).then(() => {
+      setIsSubmitting(false);
+      setAuctionInfo("");
+      setStartingPrice("");
+      setStepPrice("");
+      setRegitrationStartTime("");
+      setRegitrationEndTime("");
+      setStartTime("");
+      setEndTime("");
+      // navigate("/manage-auction");
+    });
 
     // Reset form sau khi gửi thành công
-    setAuctionInfo("");
-    setStartingPrice("");
-    setStepPrice("");
-    setRegitrationStartTime("");
-    setRegitrationEndTime("");
-    setStartTime("");
-    setEndTime("");
-
-    // Điều hướng người dùng
-    navigate("/manage-auction");
   };
 
   return (
@@ -247,6 +225,16 @@ function CreateAuctionProductForm() {
             </Row>
           </Form>
         </Container>
+        {isSubmitting ? (
+          <>
+            <div className="overlay1"></div>
+            <div className="spinner-container1">
+              <FaSpinner />
+            </div>
+          </>
+        ) : (
+          ""
+        )}
       </div>
       <div className="footer-container">
         <Footer />

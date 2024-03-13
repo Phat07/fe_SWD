@@ -57,9 +57,9 @@ const AuctionDetail = () => {
                                   src={image}
                                   alt={`Slide ${index + 1}`}
                                   style={{
-                                    height: "400px",
-                                    objectFit: "cover",
-                                    width: "100%",
+                                    objectFit: "cover", // Đảm bảo ảnh không bị méo và lấp đầy hoàn toàn vùng hiển thị
+                                    height: "400px", // Điều chỉnh kích thước cao tối đa
+                                    width: "100%", // Lấp đầy toàn bộ chiều rộng của vùng hiển thị
                                   }}
                                 />
                               </Carousel.Item>
@@ -75,13 +75,14 @@ const AuctionDetail = () => {
                           <div
                             style={{ position: "relative", marginTop: "20px" }}
                           >
-                            <video controls style={{ maxWidth: "100%" }}>
+                            {auction?.product_id?.video?.map((video, index) => (
                               <source
-                                src={auction?.product_id?.video}
+                                key={index}
+                                src={video}
                                 type="video/mp4"
                               />
-                              Your browser does not support the video tag.
-                            </video>
+                            ))}
+                            Your browser does not support the video tag.
                           </div>
                         </Card.Body>
                       </Card>
@@ -143,7 +144,7 @@ const AuctionDetail = () => {
                               type="number"
                               readOnly={auctionId}
                               placeholder="Minimun Price Step"
-                              value={auction?.minimum_price_step}
+                              value={auction?.price_step}
                             />
                           </Form.Group>
                           <Form.Group className="mb-3">

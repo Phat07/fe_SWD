@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Row, Col, Button, Form, Table } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const HistoryDeposit = () => {
   const data = [
@@ -8,9 +9,26 @@ const HistoryDeposit = () => {
     // Thêm dữ liệu mẫu khác tại đây
   ];
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
+  function formatCurrencyVND(amount) {
+    // Sử dụng hàm toLocaleString() để định dạng số
+    // Cài đặt style là 'currency' và currency là 'VND'
+    return amount?.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  }
+
+  const historyMoney = useSelector((state) => state.WALLET.walletHistory);
+  console.log("history", historyMoney);
   return (
     <Row>
       <Col xs={12}>
@@ -23,19 +41,28 @@ const HistoryDeposit = () => {
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>Index</th>
+                    {/* <th>Type</th> */}
                     <th>Money</th>
-                    <th>Date Send Request</th>
                     <th>Date Accept</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
+                  {historyMoney?.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.id}</td>
-                      <td>{item.money}</td>
-                      <td>{formatDate(item.send)}</td>
-                      <td>{formatDate(item.accept)}</td>
+                      <td>{++index}</td>
+                      {/* <td style={{color:`${item?.type==="deposit"?"green":"red"}`}}>{item?.type}</td> */}
+                      <td
+                        style={{
+                          color: `${
+                            item?.type === "deposit" ? "green" : "red"
+                          }`,
+                        }}
+                      >
+                        {item?.type === "deposit" ? "+" : "-"}
+                        {formatCurrencyVND(item?.amount)}
+                      </td>
+                      <td>{formatDate(item?.timestamp)}</td>
                     </tr>
                   ))}
                 </tbody>

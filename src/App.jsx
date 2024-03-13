@@ -23,6 +23,7 @@ import Product from "./components/pages/ProductOwner/ProductList";
 import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
 import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
 import { ToastContainer } from "react-bootstrap";
+import { actAuctionGetAsync } from "./store/auction/action";
 
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -57,6 +58,7 @@ function App() {
         }
         navigate("/login");
       });
+    dispatch(actAuctionGetAsync(token));
   }, []);
   return (
     <>
