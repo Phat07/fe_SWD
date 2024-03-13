@@ -6,7 +6,6 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types"; // Import PropTypes
-import { Card } from "react-bootstrap";
 import { format } from "date-fns";
 
 const TableAution = ({ data = [], onUpdate, onDelete }) => {

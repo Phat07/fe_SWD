@@ -219,8 +219,8 @@ function AuctionPage(props) {
 
                         {/* <FaCalendarAlt className="calendar-icon" /> */}
                       </div>
-                      <div class="date-range">
-                        <div class="input-with-date">
+                      <div className="date-range">
+                        <div className="input-with-date">
                           {/* <span>Từ ngày</span> */}
                           <DatePicker
                             selected={startDate}
@@ -232,7 +232,7 @@ function AuctionPage(props) {
                           />
                           <FaCalendarAlt className="calendar-icon" />
                         </div>
-                        <div class="input-with-date">
+                        <div className="input-with-date">
                           <DatePicker
                             selected={endDate}
                             onChange={(date) => setEndDate(date)}

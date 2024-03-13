@@ -7,14 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { actAuctionGetAsync } from "../../../store/auction/action";
 const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
-  // const [productName, setProductName] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [startingPrice, setStartingPrice] = useState("");
-  // const [stepPrice, setStepPrice] = useState("");
-  // const [startTime, setStartTime] = useState("");
-  // const [auctionInfo, setAuctionInfo] = useState("");
-  // const [endTime, setEndTime] = useState("");
-  // const [productImage, setProductImage] = useState(null);
   const navigate = useNavigate();
   const auctions = useSelector((state) => state.AUCTION.auctions);
   console.log("aucctionsss", auctions);

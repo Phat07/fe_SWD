@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Row, Col, Button } from "react-bootstrap";
 import ModalConfirmDeleteProduct from "./ModalConfirmDeleteProduct"; // Make sure this is adapted to use React Bootstrap as well
 import Header from "../../Header";
@@ -31,7 +31,7 @@ function Product() {
   console.log("products", products);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(actProductGetByUserIdAsync(user?._id,token));
+    dispatch(actProductGetByUserIdAsync(user?._id, token));
   }, [user]);
   const navigate = useNavigate();
 
