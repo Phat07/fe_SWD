@@ -24,7 +24,7 @@ import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
 import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
 import { ToastContainer } from "react-bootstrap";
 import { actAuctionGetAsync } from "./store/auction/action";
-
+import NotYetAuctionUser from "./components/pages/AuctionUser/NotYetAuctionUser";
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const navigate = useNavigate();
