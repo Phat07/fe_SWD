@@ -21,23 +21,6 @@ function AuctionWating() {
   const user = useSelector((state) => state.USER.currentUser);
   const token = localStorage.getItem("ACCESS_TOKEN");
 
-  const [data, setData] = useState([
-    { id: 1, name: "Aution 1", status: "chưa diễn ra" },
-    { id: 2, name: "Aution 2", status: "chưa diễn ra" },
-    // Add more sample data here
-  ]);
-
-  const data1 = [
-    { id: 3, name: "Aution 3", status: "sắp diễn ra" },
-    { id: 4, name: "Aution 4", status: "sắp diễn ra" },
-    // Thêm dữ liệu mẫu khác tại đây
-  ];
-
-  const data2 = [
-    { id: 5, name: "Aution 5", status: "đang diễn ra" },
-    { id: 6, name: "Aution 6", status: "đang diễn ra" },
-    // Thêm dữ liệu mẫu khác tại đây
-  ];
   // Define other data arrays similarly
 
   const auctionNotYetMember = useSelector(

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaGavel, FaLock } from "react-icons/fa";
 import { useTimer } from "react-timer-hook";
 import { format } from "date-fns";
@@ -10,12 +10,17 @@ import "../../css/detail.css";
 import { Image, Modal } from "react-bootstrap";
 import { Button, Card, Carousel, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctionGetAsync, actGetMostPriceAuctionGetAsync } from "../../store/auction/action";
+import {
+  actAuctionGetAsync,
+  actGetMostPriceAuctionGetAsync,
+} from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
 import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action";
 import { toast } from "react-toastify";
 
 function DetailPage(props) {
+  const navigate = useNavigate();
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State để kiểm soát hiển thị popup
 
@@ -24,6 +29,7 @@ function DetailPage(props) {
   const dispatch = useDispatch();
   const [auction, setAuction] = useState("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const auctions = useSelector((state) => state.AUCTION.auctions);
   const user = useSelector((state) => state.USER.currentUser);
   console.log("aucctionsss", auctions);
@@ -88,9 +94,6 @@ function DetailPage(props) {
   };
 
   const handleJoin = (room) => {
-    if(!user){
-      toast.error('Bạn cần đăng nhập để tham gia đấu giá')
-    }
     // Mở modal xác nhận khi người dùng nhấn tham gia
     setShowConfirmationModal(true);
   };
@@ -282,9 +285,13 @@ function DetailPage(props) {
                   <div className="col-lg-7 col-md-8">
                     <h3>Kết quả cuộc đấu giá</h3>
                     {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>Người chiến thắng: {mostPriceDetail?.customer_id?.slice(-4)}</p>
                     <p>
-                      Giá chiến thắng: {formatCurrencyVND(mostPriceDetail?.price)}
+                      Người chiến thắng:{" "}
+                      {mostPriceDetail?.customer_id?.slice(-4)}
+                    </p>
+                    <p>
+                      Giá chiến thắng:{" "}
+                      {formatCurrencyVND(mostPriceDetail?.price)}
                     </p>
                   </div>
                 </div>
@@ -384,26 +391,44 @@ function DetailPage(props) {
         show={showConfirmationModal}
         onHide={() => setShowConfirmationModal(false)}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Xác nhận tham gia đấu giá</Modal.Title>
-        </Modal.Header>
+        {user && (
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận tham gia đấu giá</Modal.Title>
+          </Modal.Header>
+        )}
         <Modal.Body>
           <p>
-            Bạn có muốn tham gia đấu giá với mức phí là{" "}
-            {formatCurrencyVND(joinAuctionConfig?.money)}?
+            {user ? (
+              <>
+                Bạn có muốn tham gia đấu giá với mức phí là{" "}
+                {formatCurrencyVND(joinAuctionConfig?.money)}?
+              </>
+            ) : (
+              <div>
+                <Modal.Body>Bạn cần đăng nhập để đấu giá</Modal.Body>
+                <Modal.Footer>
+                  {/* <Link to={"/login"}>Go to login</Link> */}
+                  <Button variant="primary" onClick={() => navigate("/login")}>
+                    Go to Login
+                  </Button>
+                </Modal.Footer>
+              </div>
+            )}
           </p>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowConfirmationModal(false)}
-          >
-            Hủy bỏ
-          </Button>
-          <Button variant="primary" onClick={handleJoinConfirmation}>
-            Xác nhận
-          </Button>
-        </Modal.Footer>
+        {user && (
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowConfirmationModal(false)}
+            >
+              Hủy bỏ
+            </Button>
+            <Button variant="primary" onClick={handleJoinConfirmation}>
+              Xác nhận
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </div>
   );

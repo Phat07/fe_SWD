@@ -19,9 +19,19 @@ import AuctionHistory from "./AuctionHistory";
 import HistoryTransaction from "./HistoryTransaction";
 import HistoryDeposit from "./HistoryDeposit";
 import PaidItem from "../pages/PaidItem";
+import socketIOClient from "socket.io-client";
+
 import { useDispatch, useSelector } from "react-redux";
-import { actGetWalletByUserAsync, actGetWalletHistoryByUserAsync } from "../../store/wallet/action";
-import { actAuctionAboutToMemberGetAsync, actAuctionNotYetMemberGetAsync, actAuctionedMemberGetAsync, actAuctioningMemberGetAsync } from "../../store/auction/action";
+import {
+  actGetWalletByUserAsync,
+  actGetWalletHistoryByUserAsync,
+} from "../../store/wallet/action";
+import {
+  actAuctionAboutToMemberGetAsync,
+  actAuctionNotYetMemberGetAsync,
+  actAuctionedMemberGetAsync,
+  actAuctioningMemberGetAsync,
+} from "../../store/auction/action";
 
 function Profile() {
   const [status, setStatus] = useState("account");
@@ -32,6 +42,31 @@ function Profile() {
   console.log("user", user);
   const dispatch = useDispatch();
   useEffect(() => {
+    // Kết nối tới Socket.IO server
+    const socket = socketIOClient("http://localhost:3001"); // Thay đổi URL và cổng tùy theo cấu hình của bạn
+
+    // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
+    socket.on("auction_status_changed", () => {
+      // dispatch(actNotYetAuctionGetAsync(user?._id, token));
+      // dispatch(actAboutToAuctionGetAsync(user?._id, token));
+      // dispatch(actAuctioningAuctionGetAsync(user?._id, token));
+      // dispatch(actAuctionedAuctionGetAsync(user?._id, token));
+      // member
+      dispatch(actAuctionNotYetMemberGetAsync(user?._id, token));
+      dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
+      dispatch(actAuctioningMemberGetAsync(user?._id, token));
+      dispatch(actAuctionedMemberGetAsync(user?._id, token));
+      console.log("Auction status changed");
+      // Gọi lại các API để cập nhật danh sách các phiên đấu giá
+      // fetchAuctions();
+    });
+
+    return () => {
+      // Đóng kết nối Socket.IO khi component unmount
+      socket.disconnect();
+    };
+  }, []);
+  useEffect(() => {
     dispatch(actGetWalletByUserAsync(user?._id, token));
     dispatch(actGetWalletHistoryByUserAsync(user?._id, token));
     // memberAuction
@@ -39,8 +74,6 @@ function Profile() {
     dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
     dispatch(actAuctioningMemberGetAsync(user?._id, token));
     dispatch(actAuctionedMemberGetAsync(user?._id, token));
-
-
   }, [user]);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
