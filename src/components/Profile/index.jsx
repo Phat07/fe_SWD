@@ -83,8 +83,8 @@ function Profile() {
     switch (status) {
       case "account":
         return <AccountInfo />;
-      case "cart":
-        return <CartAuction />;
+      // case "cart":
+      //   return <CartAuction />;
       case "auction":
         return <AuctionWating />;
       case "history":
@@ -136,14 +136,14 @@ function Profile() {
                         Nạp tiền
                       </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    {/* <Nav.Item>
                       <Nav.Link
                         eventKey="cart"
                         onClick={() => setStatus("cart")}
                       >
                         Giỏ hàng
                       </Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
                     <Nav.Item>
                       <Nav.Link
                         eventKey="auction"

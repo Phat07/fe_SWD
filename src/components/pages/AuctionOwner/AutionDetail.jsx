@@ -67,14 +67,18 @@ const AuctionDetail = () => {
                           <div
                             style={{ position: "relative", marginTop: "20px" }}
                           >
-                            {auction?.product_id?.video?.map((video, index) => (
-                              <source
-                                key={index}
-                                src={video}
-                                type="video/mp4"
-                              />
-                            ))}
-                            Your browser does not support the video tag.
+                            <video controls style={{ maxWidth: "100%" }}>
+                              {auction?.product_id?.video?.map(
+                                (video, index) => (
+                                  <source
+                                    key={index}
+                                    src={video}
+                                    type="video/mp4"
+                                  />
+                                )
+                              )}
+                              Your browser does not support the video tag.
+                            </video>
                           </div>
                         </Card.Body>
                       </Card>

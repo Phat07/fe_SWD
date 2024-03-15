@@ -75,68 +75,108 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="navbarNav" />
                 <Navbar.Collapse id="navbarNav">
                   <Nav className="mr-auto">
-                    <Nav.Link
+                    {/* <Nav.Link
                       href="#"
                       className="mr-md-6"
                       style={{ marginRight: "100px" }}
                     >
                       Home
-                    </Nav.Link>
-                    {user?.role_id?.title === "HOST" ? (
-                      <div
-                        className="dropdown"
-                        onMouseEnter={toggleDropdown}
-                        onMouseLeave={toggleDropdown}
-                      >
-                        <Nav.Link
-                          href="#"
-                          className="products-link"
-                          style={{
-                            color: showDropdown ? "#3A43A7" : "black",
-                            // backgroundColor: showDropdown
-                            //   ? "#F6F7F8"
-                            //   : "transparent",
-                            width: "160px",
-                          }}
+                    </Nav.Link> */}
+                    {
+                      user?.role_id?.title === "HOST" ? (
+                        <div
+                          className="dropdown"
+                          onMouseEnter={toggleDropdown}
+                          onMouseLeave={toggleDropdown}
                         >
-                          Products
-                        </Nav.Link>
-                        {showDropdown && (
-                          <div className="dropdown-content">
-                            <Link to="/manage-auction">Auction</Link>
-                            <Link to="/manage-product">Product</Link>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div style={{ display: "flex" }}>
-                        <Nav.Link
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          <Link
-                            to={"/notyetauction-customer"}
-                            style={{ textDecoration: "none", color: "black" }}
+                          <Nav.Link
+                            href="#"
+                            className="products-link"
+                            style={{
+                              color: showDropdown ? "#3A43A7" : "black",
+                              // backgroundColor: showDropdown
+                              //   ? "#F6F7F8"
+                              //   : "transparent",
+                              width: "160px",
+                            }}
                           >
-                            Danh sách công bố
-                          </Link>
-                        </Nav.Link>
-                        <Nav.Link
-                          href="#"
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          Danh sách sắp đấu giá
-                        </Nav.Link>
-                        <Nav.Link
-                          href="#"
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          Phòng đấu giá
-                        </Nav.Link>
-                      </div>
-                    )}
+                            Products
+                          </Nav.Link>
+                          {showDropdown && (
+                            <div className="dropdown-content">
+                              <Link to="/manage-auction">Auction</Link>
+                              <Link to="/manage-product">Product</Link>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          <Nav.Link
+                            // href="/notyetauction-customer"
+                            className="md-6"
+                            style={{ marginRight: "10px" }}
+                          >
+                            <Link
+                              to={"/notyetauction-customer"}
+                              style={{ textDecoration: "none", color: "black" }}
+                            >
+                              Danh sách công bố
+                            </Link>
+                          </Nav.Link>
+                          <Nav.Link
+                            className="md-6"
+                            style={{ marginRight: "10px" }}
+                          >
+                            <Link
+                              to={"/abouttoauction-customer"}
+                              style={{ textDecoration: "none", color: "black" }}
+                            >
+                              Danh sách sắp đấu giá
+                            </Link>
+                          </Nav.Link>
+                          <Nav.Link
+                            className="md-6"
+                            style={{ marginRight: "10px" }}
+                          >
+                            <Link
+                              to={"/room-auction"}
+                              style={{ textDecoration: "none", color: "black" }}
+                            >
+                              Phòng đấu giá
+                            </Link>
+                          </Nav.Link>
+                        </>
+                      )
+                      // : (
+                      //   <div style={{ display: "flex" }}>
+                      //     <Nav.Link
+                      //       className="md-6"
+                      //       style={{ marginRight: "10px" }}
+                      //     >
+                      //       <Link
+                      //         to={"/notyetauction-customer"}
+                      //         style={{ textDecoration: "none", color: "black" }}
+                      //       >
+                      //         Danh sách công bố
+                      //       </Link>
+                      //     </Nav.Link>
+                      //     <Nav.Link
+                      //       href="#"
+                      //       className="md-6"
+                      //       style={{ marginRight: "10px" }}
+                      //     >
+                      //       Danh sách sắp đấu giá
+                      //     </Nav.Link>
+                      //     <Nav.Link
+                      //       href="#"
+                      //       className="md-6"
+                      //       style={{ marginRight: "10px" }}
+                      //     >
+                      //       Phòng đấu giá
+                      //     </Nav.Link>
+                      //   </div>
+                      // )
+                    }
                   </Nav>
                 </Navbar.Collapse>
               </Navbar>

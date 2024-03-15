@@ -26,7 +26,7 @@ import JoinAuctionRoom from "./components/pages/AuctionRoom/JoinRoomAuction";
 import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
 import { actAuctionGetAsync } from "./store/auction/action";
 import NotYetAuctionUser from "./components/pages/AuctionUser/NotYetAuctionUser";
-
+import AboutToAuctionUser from "./components/pages/AuctionUser/AboutToAuction";
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ function App() {
         console.log("res", res);
         if (res.data && res.data.user) {
           const currentUser = res.data.user;
-          const role = res.data.user.title; 
+          const role = res.data.user.title;
           dispatch(actUserLogin(currentUser, token, role));
         } else {
           alert("Please login");
@@ -137,6 +137,16 @@ function App() {
               <Navigate to="/" replace />
             ) : (
               <NotYetAuctionUser />
+            )
+          }
+        />
+        <Route
+          path="/abouttoauction-customer"
+          element={
+            user?.role_id?.title === "HOST" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AboutToAuctionUser />
             )
           }
         />

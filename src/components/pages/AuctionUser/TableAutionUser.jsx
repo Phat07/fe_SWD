@@ -59,7 +59,12 @@ const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
             <Card.Body>
               <Card.Title>{item?.product_id?.name}</Card.Title>
               <Card.Text>Người tổ chức: {item?.host_id?.fullName}</Card.Text>
-              <Card.Text>Thời gian còn lại đến khi hết đang kí</Card.Text>
+              {item?.status === "not yet auctioned" ? (
+                <Card.Text>Thời gian còn lại đến khi hết đang kí</Card.Text>
+              ) : (
+                <Card.Text>Thời gian còn lại đến khi đấu giá</Card.Text>
+              )}
+
               <Card.Text>
                 {" "}
                 {/* <div className="timestamp-div"> */}
