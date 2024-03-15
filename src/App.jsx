@@ -25,6 +25,7 @@ import ProductDetail from "./components/pages/ProductOwner/ProductDetail";
 import { ToastContainer } from "react-bootstrap";
 import { actAuctionGetAsync } from "./store/auction/action";
 import NotYetAuctionUser from "./components/pages/AuctionUser/NotYetAuctionUser";
+import AboutToAuctionUser from "./components/pages/AuctionUser/AboutToAuction";
 function App() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const navigate = useNavigate();
@@ -135,6 +136,16 @@ function App() {
               <Navigate to="/" replace />
             ) : (
               <NotYetAuctionUser />
+            )
+          }
+        />
+        <Route
+          path="/abouttoauction-customer"
+          element={
+            user?.role_id?.title === "HOST" ? (
+              <Navigate to="/" replace />
+            ) : (
+              <AboutToAuctionUser />
             )
           }
         />

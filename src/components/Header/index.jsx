@@ -75,37 +75,50 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="navbarNav" />
                 <Navbar.Collapse id="navbarNav">
                   <Nav className="mr-auto">
-                    <Nav.Link
+                    {/* <Nav.Link
                       href="#"
                       className="mr-md-6"
                       style={{ marginRight: "100px" }}
                     >
                       Home
-                    </Nav.Link>
+                    </Nav.Link> */}
                     {user?.role_id?.title === "MEMBER" ? (
-                      <div>
+                      <>
                         <Nav.Link
-                          href="/notyetauction-customer"
+                          // href="/notyetauction-customer"
                           className="md-6"
                           style={{ marginRight: "10px" }}
                         >
-                          Danh sách công bố
+                          <Link
+                            to={"/notyetauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            Danh sách công bố
+                          </Link>
                         </Nav.Link>
                         <Nav.Link
-                          href="#"
                           className="md-6"
                           style={{ marginRight: "10px" }}
                         >
-                          Danh sách sắp đấu giá
+                          <Link
+                            to={"/abouttoauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            Danh sách sắp đấu giá
+                          </Link>
                         </Nav.Link>
                         <Nav.Link
-                          href="#"
                           className="md-6"
                           style={{ marginRight: "10px" }}
                         >
-                          Phòng đấu giá
+                          <Link
+                            to={"/room-auction"}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            Phòng đấu giá
+                          </Link>
                         </Nav.Link>
-                      </div>
+                      </>
                     ) : (
                       <div
                         className="dropdown"
