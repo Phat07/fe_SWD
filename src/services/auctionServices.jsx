@@ -94,7 +94,7 @@ export const AuctionServices = {
     });
   },
   getAuctionedByMember(id, token) {
-    return API.get(`/auctions/memberAuctions-autioned/${id}`, {
+    return API.get(`/auctions/memberAuctions-auctioned/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

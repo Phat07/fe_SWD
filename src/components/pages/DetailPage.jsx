@@ -10,9 +10,10 @@ import "../../css/detail.css";
 import { Image, Modal } from "react-bootstrap";
 import { Button, Card, Carousel, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctionGetAsync } from "../../store/auction/action";
+import { actAuctionGetAsync, actGetMostPriceAuctionGetAsync } from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
 import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action";
+import { toast } from "react-toastify";
 
 function DetailPage(props) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -31,12 +32,18 @@ function DetailPage(props) {
   const joinAuctionConfig = conFigMoney?.find(
     (config) => config.type_config === "Join in auction"
   );
+  const mostPriceDetail = useSelector((state) => state.AUCTION.mostPrice);
+  console.log("mostPriceDetail", mostPriceDetail);
   const token = localStorage.getItem("ACCESS_TOKEN");
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
   }, [id, dispatch, token]);
   useEffect(() => {
+    let data = {
+      auctionId: id,
+    };
     dispatch(actMoneyCofigGetAsync(token));
+    dispatch(actGetMostPriceAuctionGetAsync(data, token));
   }, []);
   useEffect(() => {
     const item = auctions.find((i) => i._id === id);
@@ -46,6 +53,9 @@ function DetailPage(props) {
   const auctionStartTime = new Date(auction?.regitration_end_time).getTime();
   const currentTime = new Date().getTime();
   const timeDiff = auctionStartTime - currentTime;
+
+  const endTimeToRender = new Date(auction?.end_time).getTime();
+  const renderResult = endTimeToRender - currentTime;
   // Hàm xử lý khi click vào một div
   const handleDivClick = (divIndex) => {
     setActiveDiv(divIndex); // Set active div bằng index của div được click
@@ -78,6 +88,9 @@ function DetailPage(props) {
   };
 
   const handleJoin = (room) => {
+    if(!user){
+      toast.error('Bạn cần đăng nhập để tham gia đấu giá')
+    }
     // Mở modal xác nhận khi người dùng nhấn tham gia
     setShowConfirmationModal(true);
   };
@@ -228,6 +241,14 @@ function DetailPage(props) {
                   <div className="col-6 right-info-text">
                     {formatDate(auction?.end_time)}
                   </div>
+                  <div className="col-6 left-infor-text">Price</div>
+                  <div className="col-6 right-info-text">
+                    {formatCurrencyVND(auction?.starting_price)}
+                  </div>
+                  <div className="col-6 left-infor-text">Price Step</div>
+                  <div className="col-6 right-info-text">
+                    {formatCurrencyVND(auction?.price_step)}
+                  </div>
                 </div>
                 <div
                   style={{
@@ -256,6 +277,27 @@ function DetailPage(props) {
                   )}
                 </div>
               </div>
+              {renderResult <= 0 ? (
+                <div className="row">
+                  <div className="col-lg-7 col-md-8">
+                    <h3>Kết quả cuộc đấu giá</h3>
+                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
+                    <p>Người chiến thắng: {mostPriceDetail?.customer_id?.slice(-4)}</p>
+                    <p>
+                      Giá chiến thắng: {formatCurrencyVND(mostPriceDetail?.price)}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="row">
+                  <div className="col-lg-7 col-md-8">
+                    <h3>Kết quả cuộc đấu giá</h3>
+                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
+                    <p>Người chiến thắng: chưa có kết quả</p>
+                    <p>Giá chiến thắng: chưa có kết quả</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

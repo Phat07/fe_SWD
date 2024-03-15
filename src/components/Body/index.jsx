@@ -17,7 +17,7 @@ const Body = () => {
       <Banner />
       <Promotions />
       <ProductList />
-      {user?.role_id?.title === "MEMBER" ? <AuctionPage /> : ""}
+      {user?.role_id?.title === "HOST" ? "" : <AuctionPage />}
     </div>
   );
 };

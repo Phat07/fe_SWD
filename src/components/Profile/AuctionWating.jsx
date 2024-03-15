@@ -1,15 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Modal, Button } from "react-bootstrap";
 import ModalConfirmDeleteWating from "./ModalConfirmDeleteWating"; // Make sure this is adapted to use React Bootstrap as well
 import TableAutionWating from "./TableAutionWating";
 import ChangeTabAutionWating from "./ChangeTabAutionWating";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import socketIOClient from "socket.io-client";
+
+import {
+  actAuctionAboutToMemberGetAsync,
+  actAuctionNotYetMemberGetAsync,
+  actAuctionedMemberGetAsync,
+  actAuctioningMemberGetAsync,
+} from "../../store/auction/action";
 
 function AuctionWating() {
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState({});
   const navigate = useNavigate();
+  const user = useSelector((state) => state.USER.currentUser);
+  const token = localStorage.getItem("ACCESS_TOKEN");
+
   const [data, setData] = useState([
     { id: 1, name: "Aution 1", status: "chưa diễn ra" },
     { id: 2, name: "Aution 2", status: "chưa diễn ra" },
@@ -51,9 +62,34 @@ function AuctionWating() {
   };
 
   const handleDetailAuction = (auction) => {
-    navigate(`/auction-detail/${auction.id}`);
+    navigate(`/auction-detail/${auction}`);
     console.log("Update user at id:", auction.id);
   };
+  useEffect(() => {
+    // Kết nối tới Socket.IO server
+    const socket = socketIOClient("http://localhost:3001"); // Thay đổi URL và cổng tùy theo cấu hình của bạn
+
+    // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
+    socket.on("auction_status_changed", () => {
+      // dispatch(actNotYetAuctionGetAsync(user?._id, token));
+      // dispatch(actAboutToAuctionGetAsync(user?._id, token));
+      // dispatch(actAuctioningAuctionGetAsync(user?._id, token));
+      // dispatch(actAuctionedAuctionGetAsync(user?._id, token));
+      // member
+      dispatch(actAuctionNotYetMemberGetAsync(user?._id, token));
+      dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
+      dispatch(actAuctioningMemberGetAsync(user?._id, token));
+      dispatch(actAuctionedMemberGetAsync(user?._id, token));
+      console.log("Auction status changed");
+      // Gọi lại các API để cập nhật danh sách các phiên đấu giá
+      // fetchAuctions();
+    });
+
+    return () => {
+      // Đóng kết nối Socket.IO khi component unmount
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <Row>

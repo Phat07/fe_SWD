@@ -140,7 +140,7 @@ function AuctionPage(props) {
   ];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [viewMode, setViewMode] = useState("mode1"); // State để lưu trữ chế độ hiển thị
+  const [viewMode, setViewMode] = useState("mode2"); // State để lưu trữ chế độ hiển thị
   const [selectedValue, setSelectedValue] = useState("not yet auctioned");
   const [searchKeyword, setSearchKeyword] = useState(""); // State to manage the input value
 
@@ -425,7 +425,7 @@ function AuctionPage(props) {
                 >
                   <Pagination>
                     {Array.from({
-                      length: Math.ceil(data.length / cardsPerPage),
+                      length: Math.ceil(auctions.length / cardsPerPage),
                     }).map((item, index) => (
                       <Pagination.Item
                         key={index}

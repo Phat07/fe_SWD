@@ -6,7 +6,8 @@ import { toast } from "react-toastify";
 import { UserServices } from "../../services/userServices";
 import { actUserLogin } from "../../store/user/action";
 import { useDispatch, useSelector } from "react-redux";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -34,26 +35,32 @@ const LoginPage = () => {
         UserServices.fetchMe(token)
           .then((res) => {
             dispatch(actUserLogin(currentUser, token, role));
-            toast.success(
-              `Chào mừng đã vào cổng`
-            );
+            toast.success(`Chào mừng đã vào cổng`);
             navigate("/");
           })
           .catch((err) => alert("Login or password failed"));
       })
       .catch((error) => {
-        if (error.response) {
-          // toast.error("Server error:", error.response.data);
-        } else if (error.request) {
-          // toast.error("Network error:", error.request);
-        } else {
-          // toast.error("Error:", error.message);
+        console.log("aaaaa");
+        console.log("error", error);
+        if (error) {
+          alert(error?.response?.data?.message)
+          // toast.error(error?.response?.data?.message);
         }
+        // if (error) {
+        //   toast.error("Server error:", error.response.data);
+        // } else if (error.request) {
+        //   toast.error("Network error:", error.request);
+        // } else {
+        //   console.log("error", error);
+        //   toast.error("Error:", error);
+        // }
       });
   };
 
   return (
     <Container fluid>
+      {/* <ToastContainer position="top-right" autoClose={2000} /> */}
       <Row
         className="justify-content-center align-items-center"
         style={{ height: "100vh" }}

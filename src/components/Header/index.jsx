@@ -145,6 +145,34 @@ const Header = () => {
                           </div>
                         )}
                       </div>
+                    ) : (
+                      <div style={{ display: "flex" }}>
+                        <Nav.Link
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          <Link
+                            to={"/notyetauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            Danh sách công bố
+                          </Link>
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Danh sách sắp đấu giá
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Phòng đấu giá
+                        </Nav.Link>
+                      </div>
                     )}
                   </Nav>
                 </Navbar.Collapse>
