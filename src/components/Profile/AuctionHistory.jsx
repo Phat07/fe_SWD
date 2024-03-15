@@ -11,13 +11,13 @@ import {
 } from "react-bootstrap";
 import ModalConfirmDelete from "../pages/AuctionOwner/ModalConfirmDelete";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AuctionHistory = () => {
   const navigate = useNavigate();
   const data = [
     { id: 3, name: "Aution 3", status: "Chưa thanh toán" },
     { id: 4, name: "Aution 4", status: "Chưa thanh toán" },
-    // Thêm dữ liệu mẫu khác tại đây
   ];
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState({});
@@ -26,10 +26,10 @@ const AuctionHistory = () => {
     setDeleteData(auction);
     setShowDelete(true);
   };
-
+  const auctionedMember = useSelector((state) => state.AUCTION.auctinedMember);
   const handleDetailAuction = (auction) => {
-    navigate(`/auction-detail/${auction.id}`);
-    console.log("Update user at id:", auction.id);
+    navigate(`/auction-detail/${auction}`);
+    console.log("Update user at id:", auction);
   };
   return (
     <Row>
@@ -41,7 +41,6 @@ const AuctionHistory = () => {
           <Card.Body>
             <Row>
               <Col xs="auto">
-                {" "}
                 {/* Sử dụng xs="auto" để ô chỉ chiếm không gian cần thiết */}
                 <Form className="d-flex mb-3" role="search">
                   <Form.Control
@@ -58,31 +57,40 @@ const AuctionHistory = () => {
               <Table striped bordered hover responsive>
                 <thead>
                   <tr>
-                    <th>ID</th>
+                    <th>Idex</th>
                     <th>Name</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
+                  {auctionedMember?.map((item, index) => (
                     <tr key={index}>
-                      <td>{item.id}</td>
-                      <td>{item.name}</td>
+                      <td>{index + 1}</td>
+                      <td>{item?.product?.name}</td>
                       <td>
-                        {item.status === "Chưa thanh toán" ? (
+                        {/* {item.status === "Chưa thanh toán" ? (
                           <Badge bg="success">Đã kết thúc</Badge>
                         ) : (
                           <Badge bg="warning">Not Active</Badge>
-                        )}
+                        )} */}
+                        <Badge bg="danger">{item?.status}</Badge>
                       </td>
                       <td>
-                        <Button
+                        {/* <Button
                           variant="success"
-                          onClick={() => handleDetailAuction(item)}
+                          onClick={() => handleDetailAuction(item?.auction_id)}
                         >
                           Detail
-                        </Button>{" "}
+                        </Button> */}
+                        <Button
+                          variant="success"
+                          onClick={() =>
+                            navigate(`/join-room-auction/${item?.auction_id}`)
+                          }
+                        >
+                          Detail
+                        </Button>
                       </td>
                     </tr>
                   ))}

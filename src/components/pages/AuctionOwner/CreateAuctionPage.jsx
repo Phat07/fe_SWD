@@ -53,7 +53,6 @@ function CreateAuctionProductForm() {
       !startTime ||
       !endTime
     ) {
-      // alert("Vui lòng điền tất cả các trường trong form!");
       toast.error("Vui lòng điền tất cả các trường trong form!");
       return;
     }

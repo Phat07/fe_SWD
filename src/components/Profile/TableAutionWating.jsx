@@ -69,7 +69,7 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
                       }
                     }}
                   />
-                ) : item.status === "not yet auctioned" ? (
+                ) : item.status === "about to auction" ? (
                   <Countdown
                     date={new Date(item?.start_time).getTime()}
                     // startDate={new Date(item?.regitration_end_time)}
@@ -135,7 +135,7 @@ const TableAutionWating = ({ data = [], onUpdate, onDelete }) => {
               </td>
               <td>
                 {onUpdate && (
-                  <Button variant="success" onClick={() => onUpdate(item)}>
+                  <Button variant="success" onClick={() => onUpdate(item?.auction_id)}>
                     Detail
                   </Button>
                 )}{" "}

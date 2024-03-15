@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types"; // Import PropTypes
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const TableAution = ({ data = [], onUpdate, onDelete }) => {
   const formatDate = (dateString) => {
@@ -14,6 +15,7 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
+  const navigate = useNavigate()
   return (
     <Row>
       <Col xs="auto">
@@ -59,13 +61,15 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
               </td>
               <td>
                 {onUpdate && (
-                  <Button variant="success" onClick={() => onUpdate(item)}>
+                  <Button variant="warning" onClick={() => onUpdate(item)}>
                     Detail
                   </Button>
                 )}{" "}
                 {onDelete && (
-                  <Button variant="danger" onClick={() => onDelete(item)}>
-                    Delete
+                  <Button variant="success"  onClick={() =>
+                    navigate(`/join-room-auction/${item?._id}`)
+                  }>
+                    Join Auction
                   </Button>
                 )}
               </td>

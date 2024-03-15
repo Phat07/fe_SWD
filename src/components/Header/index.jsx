@@ -82,31 +82,7 @@ const Header = () => {
                     >
                       Home
                     </Nav.Link>
-                    {user?.role_id?.title === "MEMBER" ? (
-                      <div>
-                        <Nav.Link
-                          href="/notyetauction-customer"
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          Danh sách công bố
-                        </Nav.Link>
-                        <Nav.Link
-                          href="#"
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          Danh sách sắp đấu giá
-                        </Nav.Link>
-                        <Nav.Link
-                          href="#"
-                          className="md-6"
-                          style={{ marginRight: "10px" }}
-                        >
-                          Phòng đấu giá
-                        </Nav.Link>
-                      </div>
-                    ) : (
+                    {user?.role_id?.title === "HOST" ? (
                       <div
                         className="dropdown"
                         onMouseEnter={toggleDropdown}
@@ -131,6 +107,34 @@ const Header = () => {
                             <Link to="/manage-product">Product</Link>
                           </div>
                         )}
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex" }}>
+                        <Nav.Link
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          <Link
+                            to={"/notyetauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            Danh sách công bố
+                          </Link>
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Danh sách sắp đấu giá
+                        </Nav.Link>
+                        <Nav.Link
+                          href="#"
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Phòng đấu giá
+                        </Nav.Link>
                       </div>
                     )}
                   </Nav>
