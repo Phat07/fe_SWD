@@ -20,8 +20,16 @@ import HistoryTransaction from "./HistoryTransaction";
 import HistoryDeposit from "./HistoryDeposit";
 import PaidItem from "../pages/PaidItem";
 import { useDispatch, useSelector } from "react-redux";
-import { actGetWalletByUserAsync, actGetWalletHistoryByUserAsync } from "../../store/wallet/action";
-import { actAuctionAboutToMemberGetAsync, actAuctionNotYetMemberGetAsync, actAuctionedMemberGetAsync, actAuctioningMemberGetAsync } from "../../store/auction/action";
+import {
+  actGetWalletByUserAsync,
+  actGetWalletHistoryByUserAsync,
+} from "../../store/wallet/action";
+import {
+  actAuctionAboutToMemberGetAsync,
+  actAuctionNotYetMemberGetAsync,
+  actAuctionedMemberGetAsync,
+  actAuctioningMemberGetAsync,
+} from "../../store/auction/action";
 
 function Profile() {
   const [status, setStatus] = useState("account");
@@ -39,8 +47,6 @@ function Profile() {
     dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
     dispatch(actAuctioningMemberGetAsync(user?._id, token));
     dispatch(actAuctionedMemberGetAsync(user?._id, token));
-
-
   }, [user]);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
   const toggleConfirmPasswordVisibility = () =>
@@ -50,8 +56,8 @@ function Profile() {
     switch (status) {
       case "account":
         return <AccountInfo />;
-      case "cart":
-        return <CartAuction />;
+      // case "cart":
+      //   return <CartAuction />;
       case "auction":
         return <AuctionWating />;
       case "history":
@@ -103,14 +109,14 @@ function Profile() {
                         Nạp tiền
                       </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    {/* <Nav.Item>
                       <Nav.Link
                         eventKey="cart"
                         onClick={() => setStatus("cart")}
                       >
                         Giỏ hàng
                       </Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
                     <Nav.Item>
                       <Nav.Link
                         eventKey="auction"

@@ -10,7 +10,10 @@ import "../../css/detail.css";
 import { Image, Modal } from "react-bootstrap";
 import { Button, Card, Carousel, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctionGetAsync, actGetMostPriceAuctionGetAsync } from "../../store/auction/action";
+import {
+  actAuctionGetAsync,
+  actGetMostPriceAuctionGetAsync,
+} from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
 import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action";
 import { toast } from "react-toastify";
@@ -88,8 +91,8 @@ function DetailPage(props) {
   };
 
   const handleJoin = (room) => {
-    if(!user){
-      toast.error('Bạn cần đăng nhập để tham gia đấu giá')
+    if (!user) {
+      toast.error("Bạn cần đăng nhập để tham gia đấu giá");
     }
     // Mở modal xác nhận khi người dùng nhấn tham gia
     setShowConfirmationModal(true);
@@ -158,12 +161,12 @@ function DetailPage(props) {
           <div className="row high-padding">
             <div className="col-lg-5 col-md-4 sidebar-content">
               <div className="row high-padding">
-                <div className="col-lg-6 col-md-6 sidebar-content">
+                <div className="col-lg-12 col-md-12 sidebar-content">
                   {/* Hiển thị hình ảnh */}
                   <Card>
                     <Card.Body>
-                      <Card.Title>Ảnh Sản Phẩm</Card.Title>
-                      <Carousel>
+                      <Card.Title>Ảnh Video Sản Phẩm</Card.Title>
+                      {/* <Carousel>
                         {auction?.product_id?.image?.map((image, index) => (
                           <Carousel.Item key={index}>
                             <Image
@@ -174,12 +177,42 @@ function DetailPage(props) {
                             />
                           </Carousel.Item>
                         ))}
+                      </Carousel> */}
+                      <Carousel>
+                        {auction?.product_id?.image?.map((image, index) => (
+                          <Carousel.Item key={index}>
+                            <img
+                              className="d-block w-100"
+                              src={image}
+                              alt={`Slide ${index + 1}`}
+                              style={{
+                                objectFit: "cover",
+                                height: "400px",
+                                width: "100%",
+                              }}
+                            />
+                          </Carousel.Item>
+                        ))}
+                        {auction?.product_id?.video?.map((video, index) => (
+                          <Carousel.Item key={`video-${index}`}>
+                            <video
+                              controls
+                              style={{
+                                maxHeight: "400px", // Điều chỉnh kích thước tối đa cho video, giữ nguyên tỉ lệ
+                                width: "100%", // Lấp đầy toàn bộ chiều rộng của vùng hiển thị
+                                objectFit: "cover", // Giữ cho video không bị méo khi được co giãn
+                              }}
+                            >
+                              <source src={video} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          </Carousel.Item>
+                        ))}
                       </Carousel>
                     </Card.Body>
                   </Card>
                 </div>
-                <div className="col-lg-6 col-md-6">
-                  {/* Hiển thị video */}
+                {/* <div className="col-lg-6 col-md-6">
                   <Card>
                     <Card.Body>
                       <Card.Title>Video Sản Phẩm</Card.Title>
@@ -193,7 +226,7 @@ function DetailPage(props) {
                       </div>
                     </Card.Body>
                   </Card>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-lg-7 col-md-8">
@@ -282,9 +315,13 @@ function DetailPage(props) {
                   <div className="col-lg-7 col-md-8">
                     <h3>Kết quả cuộc đấu giá</h3>
                     {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>Người chiến thắng: {mostPriceDetail?.customer_id?.slice(-4)}</p>
                     <p>
-                      Giá chiến thắng: {formatCurrencyVND(mostPriceDetail?.price)}
+                      Người chiến thắng:{" "}
+                      {mostPriceDetail?.customer_id?.slice(-4)}
+                    </p>
+                    <p>
+                      Giá chiến thắng:{" "}
+                      {formatCurrencyVND(mostPriceDetail?.price)}
                     </p>
                   </div>
                 </div>

@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 
 import { format } from "date-fns";
-import { Button, Card, Carousel, Col, Form, Modal, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Carousel,
+  Col,
+  Form,
+  Modal,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Countdown from "react-countdown";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -136,24 +145,35 @@ function JoinAuctionRoom() {
           <Col>
             <Card>
               <Carousel>
-                <Carousel.Item>
-                  <img />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <video
-                    controls
-                    className="d-block w-100"
-                    style={{
-                      height: "400px",
-                      objectFit: "cover",
-                      width: "100%",
-                    }}
-                  >
-                    <source src="/path/to/video.mp4" type="video/mp4" />{" "}
-                    {/* Thay thế đường dẫn video của bạn ở đây */}
-                    Your browser does not support the video tag.
-                  </video>
-                </Carousel.Item>
+                {auctionBid?.product_id?.image?.map((image, index) => (
+                  <Carousel.Item key={index}>
+                    <img
+                      className="d-block w-100"
+                      src={image}
+                      alt={`Slide ${index + 1}`}
+                      style={{
+                        objectFit: "cover",
+                        height: "400px",
+                        width: "100%",
+                      }}
+                    />
+                  </Carousel.Item>
+                ))}
+                {auctionBid?.product_id?.video?.map((video, index) => (
+                  <Carousel.Item key={`video-${index}`}>
+                    <video
+                      controls
+                      style={{
+                        maxHeight: "400px", // Điều chỉnh kích thước tối đa cho video, giữ nguyên tỉ lệ
+                        width: "100%", // Lấp đầy toàn bộ chiều rộng của vùng hiển thị
+                        objectFit: "cover", // Giữ cho video không bị méo khi được co giãn
+                      }}
+                    >
+                      <source src={video} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </Carousel.Item>
+                ))}
               </Carousel>
               <Card.Body>
                 <Card>
