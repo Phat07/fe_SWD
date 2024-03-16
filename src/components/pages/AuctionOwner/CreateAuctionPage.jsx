@@ -27,6 +27,8 @@ function CreateAuctionProductForm() {
   const [endTime, setEndTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [startingPriceError, setStartingPriceError] = useState("");
+  const [stepPriceError, setStepPriceError] = useState("");
   const param = useParams();
   const productId = param.productID;
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -43,6 +45,37 @@ function CreateAuctionProductForm() {
   useEffect(() => {
     dispatch(actMoneyCofigGetAsync(token));
   }, []);
+  const handleStartingPriceChange = (e) => {
+    const value = e;
+    console.log("value", value);
+    setStartingPrice(value); // Cập nhật giá trị nhập vào mỗi lần thay đổi
+
+    // Kiểm tra điều kiện và cập nhật lỗi nếu có
+    const valueNumber = Number(value);
+    if (valueNumber < 1000 || valueNumber % 1000 !== 0) {
+      setStartingPriceError(
+        "Giá khởi điểm phải lớn hơn 1000 và chia hết cho 1000."
+      );
+    } else {
+      setStartingPriceError(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+    }
+  };
+
+  // Hàm xử lý thay đổi cho Bước giá tối thiểu
+  const handleStepPriceChange = (e) => {
+    const value = e;
+    setStepPrice(value); // Cập nhật giá trị nhập vào mỗi lần thay đổi
+
+    // Kiểm tra điều kiện và cập nhật lỗi nếu có
+    const valueNumber = Number(value);
+    if (valueNumber < 1000 || valueNumber % 1000 !== 0) {
+      setStepPriceError(
+        "Bước giá tối thiểu phải lớn hơn 1000 và chia hết cho 1000."
+      );
+    } else {
+      setStepPriceError(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+    }
+  };
   // Handle form submit
   const handleSubmit = (e) => {
     // e.preventDefault();
@@ -182,9 +215,13 @@ function CreateAuctionProductForm() {
                       onValueChange={(values) => {
                         const { value } = values;
                         setStartingPrice(value);
+                        handleStartingPriceChange(value);
                       }}
                       suffix=" đ"
                     />
+                    {startingPriceError && (
+                      <div className="text-danger">{startingPriceError}</div>
+                    )}
                     {/* <Form.Control
                         type="number"
                         placeholder="Giá khởi điểm"
@@ -210,9 +247,13 @@ function CreateAuctionProductForm() {
                       onValueChange={(values) => {
                         const { value } = values;
                         setStepPrice(value);
+                        handleStepPriceChange(value);
                       }}
                       suffix=" đ"
                     />
+                    {stepPriceError && (
+                      <div className="text-danger">{stepPriceError}</div>
+                    )}
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Thời gian bắt đầu dang ki</Form.Label>

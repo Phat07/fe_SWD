@@ -67,3 +67,16 @@ export function actProductPostAsync(data, token) {
     }
   };
 }
+
+export function actProductPutAsync(id, data, token) {
+  return async (dispatch) => {
+    const response = await ProductServices.putUpdateProduct(id, data, token);
+    if (response.status === 200 || response.status === 201) {
+      toast.success("New Product has been update successfully ~");
+      dispatch(actProductGetAsync());
+    } else {
+      // toast.error("Post Product to fail");
+      console.log("fail");
+    }
+  };
+}

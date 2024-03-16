@@ -1,8 +1,5 @@
 import axios from "axios";
 
-
-
 export const API = axios.create({
-  baseURL:
-    "https://be-orchid-auction.onrender.com",
+  baseURL: "http://localhost:3001",
 });
