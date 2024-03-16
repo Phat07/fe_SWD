@@ -5,6 +5,8 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { actAuctionGetAsync } from "../../../store/auction/action";
+import { format } from "date-fns";
+
 const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
   const navigate = useNavigate();
@@ -20,6 +22,11 @@ const AuctionDetail = () => {
     const item = auctions.find((i) => i._id === auctionId);
     setAuction(item);
   }, [auctions, auctionId]);
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
+  };
   console.log("auctionDetail", auction);
   return (
     <div className="app-container">
@@ -150,9 +157,9 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.regitration_start_time
-                                  ? auction.regitration_start_time.substring(
-                                      0,
-                                      16
+                                  ? format(
+                                      new Date(auction.regitration_start_time),
+                                      "yyyy-MM-dd'T'HH:mm"
                                     )
                                   : ""
                               }
@@ -166,9 +173,9 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.regitration_end_time
-                                  ? auction.regitration_end_time.substring(
-                                      0,
-                                      16
+                                  ? format(
+                                      new Date(auction.regitration_end_time),
+                                      "yyyy-MM-dd'T'HH:mm"
                                     )
                                   : ""
                               }
@@ -182,7 +189,10 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.start_time
-                                  ? auction.start_time.substring(0, 16)
+                                  ? format(
+                                      new Date(auction.start_time),
+                                      "yyyy-MM-dd'T'HH:mm"
+                                    )
                                   : ""
                               }
                             />
@@ -195,7 +205,10 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.end_time
-                                  ? auction.end_time.substring(0, 16)
+                                  ? format(
+                                      new Date(auction.end_time),
+                                      "yyyy-MM-dd'T'HH:mm"
+                                    )
                                   : ""
                               }
                             />
