@@ -29,6 +29,9 @@ const HistoryDeposit = () => {
 
   const historyMoney = useSelector((state) => state.WALLET.walletHistory);
   console.log("history", historyMoney);
+  const sortedHistory = historyMoney.slice().sort((a, b) => {
+    return new Date(b.timestamp) - new Date(a.timestamp);
+  });
   return (
     <Row>
       <Col xs={12}>
@@ -36,7 +39,7 @@ const HistoryDeposit = () => {
           <Card.Header>
             <strong>Lịch sử nạp tiền</strong>
           </Card.Header>
-          <Card.Body>
+          <Card.Body style={{ maxHeight: "400px", overflowY: "auto" }}>
             <Row>
               <Table striped bordered hover responsive>
                 <thead>
@@ -48,7 +51,7 @@ const HistoryDeposit = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {historyMoney?.map((item, index) => (
+                  {sortedHistory?.map((item, index) => (
                     <tr key={index}>
                       <td>{++index}</td>
                       {/* <td style={{color:`${item?.type==="deposit"?"green":"red"}`}}>{item?.type}</td> */}

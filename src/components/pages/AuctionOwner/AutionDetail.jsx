@@ -4,7 +4,10 @@ import { Card, Row, Col, Button, Form, Carousel } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctionGetAsync } from "../../../store/auction/action";
+import {
+  actAuctionGetAsync,
+  actGetAllMemberJoinAuctionRoomGetAsync,
+} from "../../../store/auction/action";
 import { format } from "date-fns";
 
 const AuctionDetail = () => {
@@ -27,6 +30,20 @@ const AuctionDetail = () => {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
+  const allMemberJoinInAuction = useSelector(
+    (state) => state.AUCTION.allMemberJoinInAuction
+  );
+  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
+  const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
+    (e) => e?.member_id?.role_id?.title !== "HOST"
+  );
+  console.log("number", filterNumberMemberJoinRoom);
+  useEffect(() => {
+    let data = {
+      auctionId: auctionId,
+    };
+    dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data, token));
+  }, []);
   console.log("auctionDetail", auction);
   return (
     <div className="app-container">
@@ -126,6 +143,18 @@ const AuctionDetail = () => {
                           </Form.Group>
                         </Card.Body>
                       </Card>
+                      <Card style={{ marginTop: "10px" }}>
+                        <Card.Body>
+                          <Card.Title>
+                            Số lượng người tham gia đấu giá
+                          </Card.Title>
+                          <Form.Group className="mb-3">
+                            <Form.Label>
+                              Số lượng: {filterNumberMemberJoinRoom.length}
+                            </Form.Label>
+                          </Form.Group>
+                        </Card.Body>
+                      </Card>
                     </Col>
                     <Col md={6}>
                       <Card>
@@ -217,10 +246,17 @@ const AuctionDetail = () => {
                       </Card>
                     </Col>
                     <Col xs="auto" className="mt-2">
-                      <Button variant="success" onClick={() => navigate(-1)}>
+                      <Button variant="warning" onClick={() => navigate(-1)}>
                         Back
                       </Button>
                     </Col>
+                    {filterNumberMemberJoinRoom.length === 0 && (
+                      <Col xs="auto" className="mt-2">
+                        <Button variant="success" onClick={() => navigate(-1)}>
+                         Update
+                        </Button>
+                      </Col>
+                    )}
                   </Row>
                 </Form>
               </Card.Body>
