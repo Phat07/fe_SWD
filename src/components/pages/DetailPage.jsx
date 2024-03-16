@@ -12,6 +12,7 @@ import { Button, Card, Carousel, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   actAuctionGetAsync,
+  actGetAllMemberJoinAuctionRoomGetAsync,
   actGetMostPriceAuctionGetAsync,
 } from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
@@ -40,6 +41,15 @@ function DetailPage(props) {
   );
   const mostPriceDetail = useSelector((state) => state.AUCTION.mostPrice);
   console.log("mostPriceDetail", mostPriceDetail);
+
+  const allMemberJoinInAuction = useSelector(
+    (state) => state.AUCTION.allMemberJoinInAuction
+  );
+  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
+  const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
+    (e) => e?.member_id?.role_id?.title !== "HOST"
+  );
+  console.log("number", filterNumberMemberJoinRoom);
   const token = localStorage.getItem("ACCESS_TOKEN");
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
@@ -50,6 +60,7 @@ function DetailPage(props) {
     };
     dispatch(actMoneyCofigGetAsync(token));
     dispatch(actGetMostPriceAuctionGetAsync(data, token));
+    dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data, token));
   }, []);
   useEffect(() => {
     const item = auctions.find((i) => i._id === id);
@@ -285,6 +296,42 @@ function DetailPage(props) {
                   <div className="col-6 right-info-text">
                     {formatCurrencyVND(auction?.price_step)}
                   </div>
+                  {/*  */}
+                  {renderResult <= 0 ? (
+                    <>
+                      <div className="col-6 left-infor-text">Winner </div>
+                      <div className="col-6 right-info-text">
+                        {mostPriceDetail?.customer_id?.slice(-4)}
+                      </div>
+                      <div className="col-6 left-infor-text">Win Price</div>
+                      <div className="col-6 right-info-text">
+                        {formatCurrencyVND(mostPriceDetail?.price)}
+                      </div>
+                      <div className="col-6 left-infor-text">
+                        Number people register in room auction
+                      </div>
+                      <div className="col-6 right-info-text">
+                        {filterNumberMemberJoinRoom.length}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="col-6 left-infor-text">Winner </div>
+                      <div className="col-6 right-info-text">
+                        Waiting {formatDate(auction?.end_time)}
+                      </div>
+                      <div className="col-6 left-infor-text">Win Price</div>
+                      <div className="col-6 right-info-text">
+                        Waiting {formatDate(auction?.end_time)}
+                      </div>
+                      <div className="col-6 left-infor-text">
+                        Number people register in room auction
+                      </div>
+                      <div className="col-6 right-info-text">
+                        {filterNumberMemberJoinRoom.length}
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div
                   style={{
@@ -313,31 +360,6 @@ function DetailPage(props) {
                   )}
                 </div>
               </div>
-              {renderResult <= 0 ? (
-                <div className="row">
-                  <div className="col-lg-7 col-md-8">
-                    <h3>Kết quả cuộc đấu giá</h3>
-                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>
-                      Người chiến thắng:{" "}
-                      {mostPriceDetail?.customer_id?.slice(-4)}
-                    </p>
-                    <p>
-                      Giá chiến thắng:{" "}
-                      {formatCurrencyVND(mostPriceDetail?.price)}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="row">
-                  <div className="col-lg-7 col-md-8">
-                    <h3>Kết quả cuộc đấu giá</h3>
-                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>Người chiến thắng: chưa có kết quả</p>
-                    <p>Giá chiến thắng: chưa có kết quả</p>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

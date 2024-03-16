@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import { WalletServices } from "../../services/walletServices";
+import { data } from "@tensorflow/tfjs";
+import { actGetAllMemberJoinAuctionRoomGetAsync } from "../auction/action";
 
 export const WALLET_ID = "WALLET_ID";
 export const WALLET_HISTORY_ID = "WALLET_HISTORY_ID";
@@ -69,30 +71,41 @@ export function actPostWalletUserByIdAsync(data, token) {
   };
 }
 
-
 // gọi lại các atc bên auction qua wallet
 
 export function actJoinRegisterAuctionForMemberAsync(data, token) {
   return async (dispatch) => {
     try {
-      const response = await WalletServices.postJoinRegisterAuction(data, token);
+      const response = await WalletServices.postJoinRegisterAuction(
+        data,
+        token
+      );
       if (response.status === 200 || response.status === 201) {
         toast.success("Bạn đã đăng ký thành công cho buổi đấu giá ~");
       }
+      let data1 = {
+        auctionId: data.auctionId,
+      };
       // if (response.status === 400) {
       //   toast.error("Bạn đã là thành viên của buổi đấu giá ~");
       // }
       dispatch(actGetWalletByUserAsync(data?.user_id, token));
       dispatch(actGetWalletHistoryByUserAsync(data?.user_id, token));
+      dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data1, token));
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        console.error("Failed to load resource: the server responded with a status of 400 (Bad Request)", error);
-        toast.error(error.response.data.error ||error.response.data.message);
+        console.error(
+          "Failed to load resource: the server responded with a status of 400 (Bad Request)",
+          error
+        );
+        toast.error(error.response.data.error || error.response.data.message);
       } else {
-        console.error("An error occurred while making the request:", error.response.data.message);
+        console.error(
+          "An error occurred while making the request:",
+          error.response.data.message
+        );
         toast.error("Lỗi: " + error.message);
       }
     }
   };
 }
-

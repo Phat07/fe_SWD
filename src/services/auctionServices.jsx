@@ -128,4 +128,13 @@ export const AuctionServices = {
       },
     });
   },
+
+  // get allMemberInRoom
+  getAllMemberInJoinAuctionBid(data, token) {
+    return API.get(`/auctions/getAllMemberInAuctionBid/${data.auctionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

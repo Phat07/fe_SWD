@@ -18,6 +18,7 @@ function NotYetAuctionUser() {
   const notYetCustomer = useSelector(
     (state) => state.AUCTION.notYetAuctionCustomer
   );
+  console.log("notyet", notYetCustomer);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
@@ -28,7 +29,7 @@ function NotYetAuctionUser() {
   const navigate = useNavigate();
 
   const handleDetailAuction = (auction) => {
-    navigate(`/auction-detail/${auction._id}`);
+    navigate(`/detail/${auction._id}`);
     console.log("Update user at id:", auction._id);
   };
   useEffect(() => {

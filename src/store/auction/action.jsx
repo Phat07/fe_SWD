@@ -12,6 +12,7 @@ export const ABOUT_TO_AUCTION_CUSTOMER = "ABOUT_TO_AUCTION_CUSTOMER";
 export const AUCTIONED_CUSTOMER = "AUCTIONED_CUSTOMER";
 export const GET_MOST_PRICE_AUCTIONID = "GET_MOST_PRICE_AUCTIONID";
 export const GET_MEMBER_PRICE_AUCTIONID = "GET_MEMBER_PRICE_AUCTIONID";
+export const GET_AUCTION_MEMBER_JOIN_AUCTION_ROOM = "GET_AUCTION_MEMBER_JOIN_AUCTION_ROOM";
 
 export const allAuction = (list) => {
   return {
@@ -465,6 +466,35 @@ export function actAuctionBidPost(data, token) {
           );
           toast.error("Lỗi: " + error.message);
         }
+      });
+  };
+}
+
+
+// get all member in join room auction
+export const getAllMemberInJoinAuctionRoom = (list) => {
+  return {
+    type: GET_AUCTION_MEMBER_JOIN_AUCTION_ROOM,
+    payload: list,
+  };
+};
+
+export function actGetAllMemberJoinAuctionRoomGetAsync(data, token) {
+  return (dispatch) => {
+    AuctionServices.getAllMemberInJoinAuctionBid(data, token)
+      .then((response) => {
+        console.log("mostPrice", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(getAllMemberInJoinAuctionRoom(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
       });
   };
 }

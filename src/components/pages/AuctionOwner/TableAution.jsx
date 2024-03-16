@@ -15,7 +15,7 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Row>
       <Col xs="auto">
@@ -65,13 +65,29 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
                     Detail
                   </Button>
                 )}{" "}
-                {onDelete && (
+                {item?.status === "auctioning" && (
+                  <Button
+                    variant="success"
+                    onClick={() => navigate(`/join-room-auction/${item?._id}`)}
+                  >
+                    Join Auction
+                  </Button>
+                )}
+                {item?.status === "auctioned" && (
+                  <Button
+                    variant="success"
+                    onClick={() => navigate(`/join-room-auction/${item?._id}`)}
+                  >
+                    History Auction
+                  </Button>
+                )}
+                {/* {onDelete && (
                   <Button variant="success"  onClick={() =>
                     navigate(`/join-room-auction/${item?._id}`)
                   }>
                     Join Auction
                   </Button>
-                )}
+                )} */}
               </td>
             </tr>
           ))}
