@@ -413,29 +413,29 @@ function AuctionPage(props) {
                         </Card>
                       </div>
                     ))}
-                </div>
-                <div
-                  className="row"
-                  style={{
-                    position: "absolute",
-                    bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
-                    left: "35%",
-                    // marginTop:"20px"
-                  }}
-                >
-                  <Pagination>
-                    {Array.from({
-                      length: Math.ceil(auctions.length / cardsPerPage),
-                    }).map((item, index) => (
-                      <Pagination.Item
-                        key={index}
-                        active={index + 1 === currentPage}
-                        onClick={() => paginate(index + 1)}
-                      >
-                        {index + 1}
-                      </Pagination.Item>
-                    ))}
-                  </Pagination>
+                  <div
+                    className="row"
+                    style={{
+                      position: "absolute",
+                      bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
+                      left: "35%",
+                      // marginTop:"20px"
+                    }}
+                  >
+                    <Pagination>
+                      {Array.from({
+                        length: Math.ceil(auctions.length / cardsPerPage),
+                      }).map((item, index) => (
+                        <Pagination.Item
+                          key={index}
+                          active={index + 1 === currentPage}
+                          onClick={() => paginate(index + 1)}
+                        >
+                          {index + 1}
+                        </Pagination.Item>
+                      ))}
+                    </Pagination>
+                  </div>
                 </div>
               </div>
             </div>

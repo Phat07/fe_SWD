@@ -16,6 +16,7 @@ import {
   GET_AUCTION_MEMBER_AUCTIONED,
   GET_MOST_PRICE_AUCTIONID,
   GET_MEMBER_PRICE_AUCTIONID,
+  GET_AUCTION_MEMBER_JOIN_AUCTION_ROOM,
 } from "./action";
 
 const initialState = {
@@ -37,6 +38,7 @@ const initialState = {
   auctinedMember: [],
   mostPrice: "",
   memberPriceAuction: [],
+  allMemberJoinInAuction: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -126,10 +128,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         mostPrice: action.payload,
       };
-    case GET_MEMBER_PRICE_AUCTIONID:
+    case GET_AUCTION_MEMBER_JOIN_AUCTION_ROOM:
       return {
         ...state,
-        memberPriceAuction: action.payload,
+        allMemberJoinInAuction: action.payload,
       };
 
     default:

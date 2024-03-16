@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaGavel, FaLock } from "react-icons/fa";
 import { useTimer } from "react-timer-hook";
 import { format } from "date-fns";
@@ -12,6 +12,7 @@ import { Button, Card, Carousel, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
   actAuctionGetAsync,
+  actGetAllMemberJoinAuctionRoomGetAsync,
   actGetMostPriceAuctionGetAsync,
 } from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
@@ -19,6 +20,8 @@ import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action"
 import { toast } from "react-toastify";
 
 function DetailPage(props) {
+  const navigate = useNavigate();
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [showPopup, setShowPopup] = useState(false); // State để kiểm soát hiển thị popup
 
@@ -27,6 +30,7 @@ function DetailPage(props) {
   const dispatch = useDispatch();
   const [auction, setAuction] = useState("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const auctions = useSelector((state) => state.AUCTION.auctions);
   const user = useSelector((state) => state.USER.currentUser);
   console.log("aucctionsss", auctions);
@@ -37,6 +41,15 @@ function DetailPage(props) {
   );
   const mostPriceDetail = useSelector((state) => state.AUCTION.mostPrice);
   console.log("mostPriceDetail", mostPriceDetail);
+
+  const allMemberJoinInAuction = useSelector(
+    (state) => state.AUCTION.allMemberJoinInAuction
+  );
+  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
+  const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
+    (e) => e?.member_id?.role_id?.title !== "HOST"
+  );
+  console.log("number", filterNumberMemberJoinRoom);
   const token = localStorage.getItem("ACCESS_TOKEN");
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
@@ -47,6 +60,7 @@ function DetailPage(props) {
     };
     dispatch(actMoneyCofigGetAsync(token));
     dispatch(actGetMostPriceAuctionGetAsync(data, token));
+    dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data, token));
   }, []);
   useEffect(() => {
     const item = auctions.find((i) => i._id === id);
@@ -282,6 +296,42 @@ function DetailPage(props) {
                   <div className="col-6 right-info-text">
                     {formatCurrencyVND(auction?.price_step)}
                   </div>
+                  {/*  */}
+                  {renderResult <= 0 ? (
+                    <>
+                      <div className="col-6 left-infor-text">Winner </div>
+                      <div className="col-6 right-info-text">
+                        {mostPriceDetail?.customer_id?.slice(-4)}
+                      </div>
+                      <div className="col-6 left-infor-text">Win Price</div>
+                      <div className="col-6 right-info-text">
+                        {formatCurrencyVND(mostPriceDetail?.price)}
+                      </div>
+                      <div className="col-6 left-infor-text">
+                        Number people register in room auction
+                      </div>
+                      <div className="col-6 right-info-text">
+                        {filterNumberMemberJoinRoom.length}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="col-6 left-infor-text">Winner </div>
+                      <div className="col-6 right-info-text">
+                        Waiting {formatDate(auction?.end_time)}
+                      </div>
+                      <div className="col-6 left-infor-text">Win Price</div>
+                      <div className="col-6 right-info-text">
+                        Waiting {formatDate(auction?.end_time)}
+                      </div>
+                      <div className="col-6 left-infor-text">
+                        Number people register in room auction
+                      </div>
+                      <div className="col-6 right-info-text">
+                        {filterNumberMemberJoinRoom.length}
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div
                   style={{
@@ -310,31 +360,6 @@ function DetailPage(props) {
                   )}
                 </div>
               </div>
-              {renderResult <= 0 ? (
-                <div className="row">
-                  <div className="col-lg-7 col-md-8">
-                    <h3>Kết quả cuộc đấu giá</h3>
-                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>
-                      Người chiến thắng:{" "}
-                      {mostPriceDetail?.customer_id?.slice(-4)}
-                    </p>
-                    <p>
-                      Giá chiến thắng:{" "}
-                      {formatCurrencyVND(mostPriceDetail?.price)}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="row">
-                  <div className="col-lg-7 col-md-8">
-                    <h3>Kết quả cuộc đấu giá</h3>
-                    {/* Hiển thị thông tin về người chiến thắng, ví dụ: */}
-                    <p>Người chiến thắng: chưa có kết quả</p>
-                    <p>Giá chiến thắng: chưa có kết quả</p>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -421,26 +446,43 @@ function DetailPage(props) {
         show={showConfirmationModal}
         onHide={() => setShowConfirmationModal(false)}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Xác nhận tham gia đấu giá</Modal.Title>
-        </Modal.Header>
+        {user && (
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận tham gia đấu giá</Modal.Title>
+          </Modal.Header>
+        )}
         <Modal.Body>
           <p>
-            Bạn có muốn tham gia đấu giá với mức phí là{" "}
-            {formatCurrencyVND(joinAuctionConfig?.money)}?
+            {user ? (
+              <>
+                Bạn có muốn tham gia đấu giá với mức phí là{" "}
+                {formatCurrencyVND(joinAuctionConfig?.money)}?
+              </>
+            ) : (
+              <div>
+                <Modal.Body>Bạn cần đăng nhập để đấu giá</Modal.Body>
+                <Modal.Footer>
+                  <Button variant="primary" onClick={() => navigate("/login")}>
+                    Go to Login
+                  </Button>
+                </Modal.Footer>
+              </div>
+            )}
           </p>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowConfirmationModal(false)}
-          >
-            Hủy bỏ
-          </Button>
-          <Button variant="primary" onClick={handleJoinConfirmation}>
-            Xác nhận
-          </Button>
-        </Modal.Footer>
+        {user && (
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowConfirmationModal(false)}
+            >
+              Hủy bỏ
+            </Button>
+            <Button variant="primary" onClick={handleJoinConfirmation}>
+              Xác nhận
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </div>
   );

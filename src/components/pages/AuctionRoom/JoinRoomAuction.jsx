@@ -390,7 +390,7 @@ function JoinAuctionRoom() {
               )}
             </p>
             <p>
-              Giá thầu cao nhất:
+              Giá thầu cao nhất: {" "}
               <CurrencyFormat
                 value={mostPrice?.price}
                 displayType={"text"}
