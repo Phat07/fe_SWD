@@ -15,6 +15,9 @@ const TableAution = ({ data = [], onUpdate, onDelete }) => {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
+  
+  console.log(formatDate('2024-03-16T20:57:00.000+00:00'));
+  // 2024-03-16T20:57:00.000+00:00
   const navigate = useNavigate();
   return (
     <Row>
