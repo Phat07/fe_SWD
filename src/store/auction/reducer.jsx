@@ -133,6 +133,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         allMemberJoinInAuction: action.payload,
       };
+    case GET_MEMBER_PRICE_AUCTIONID:
+      return {
+        ...state,
+        memberPriceAuction: action.payload,
+      };
 
     default:
       return state;
