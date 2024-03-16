@@ -92,6 +92,7 @@ function DetailPage(props) {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
+  console.log("test",formatDate('2024-03-16T18:10:00.000+00:00'));
 
   const handleJoinConfirmation = () => {
     let data = {

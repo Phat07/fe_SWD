@@ -7,10 +7,6 @@ import { useDropzone } from "react-dropzone";
 import { FiEye, FiEyeOff, FiMail, FiTrash2 } from "react-icons/fi"; // Import FiEye và FiEyeOff
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/signUp.css";
-import * as faceapi from "face-api.js";
-import * as tf from "@tensorflow/tfjs";
-import * as blazeface from "@tensorflow-models/blazeface";
-import { load } from "@tensorflow-models/blazeface";
 import { useDispatch, useSelector } from "react-redux";
 import { actAllRoleGetAsync, actPostUserAsync } from "../../store/user/action";
 import { FaMale, FaFemale } from "react-icons/fa";
@@ -95,18 +91,7 @@ const SignUpPage = () => {
       setValidated(true);
       return;
     }
-    // const base64Image = await convertToBase64(formData?.image);
-    // let data = {
-    //   username: formData?.username,
-    //   fullName: formData?.fullName,
-    //   email: formData?.email,
-    //   password: formData?.password,
-    //   address: formData?.address,
-    //   phone: formData?.phone,
-    //   image: base64Image,
-    //   role_id: formData?.role_id,
-    //   gender: formData?.gender,
-    // };
+    
     const formData1 = new FormData();
     formData1.append("image", formData?.image); // Giữ nguyên file hình ảnh
     formData1.append("username", formData?.username);
@@ -127,18 +112,6 @@ const SignUpPage = () => {
     setFormData({ ...formData, image: newAvatars });
   };
 
-  // const {
-  //   getRootProps: getAvatarRootProps,
-  //   getInputProps: getAvatarInputProps,
-  // } = useDropzone({
-  //   accept: "image/*",
-  //   onDrop: (acceptedFiles) => {
-  //     setFormData({
-  //       ...formData,
-  //       image: [...formData.image, ...acceptedFiles],
-  //     });
-  //   },
-  // });
 
   const {
     getRootProps: getAvatarRootProps,
@@ -371,24 +344,6 @@ const SignUpPage = () => {
                   <div {...getAvatarRootProps()} className="dropzone">
                     <input {...getAvatarInputProps()} />
                     <div className="dropzone-content">
-                      {/* {formData.image.map((image, index) => (
-                        <div key={index} className="avatar-wrapper">
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt="Avatar"
-                            className="avatar-preview"
-                          />
-                          <div className="button-wrapper">
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveAvatar(index)}
-                              className="btn-remove-avatar"
-                            >
-                              <FiTrash2 />
-                            </button>
-                          </div>
-                        </div>
-                      ))} */}
                       {formData.image && (
                         <div>
                           <img

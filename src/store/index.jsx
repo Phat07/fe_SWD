@@ -6,6 +6,7 @@ import auctionReducer from "./auction/reducer";
 import walletReducer from "./wallet/reducer";
 import moneyConfigReducer from "./moneyConfig/reducer";
 import requestReducer from "./request/reducer";
+import orderReducer from "./order/reducer";
 const rootReducer = combineReducers({
   USER: userReducer,
   PRODUCT: productReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   WALLET: walletReducer,
   MONEYCONFIG: moneyConfigReducer,
   REQUEST: requestReducer,
+  ORDER: orderReducer,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 export default store;

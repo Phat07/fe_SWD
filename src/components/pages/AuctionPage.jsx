@@ -6,9 +6,9 @@ import "../../css/auction.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, Card, Container, Pagination } from "react-bootstrap";
-// import ReactPaginate from 'react-paginate';
 import { FaCalendarAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
+
 function AuctionPage(props) {
   const location = useLocation();
   const [search] = useSearchParams();
@@ -16,159 +16,50 @@ function AuctionPage(props) {
   console.log("search", search.get("search"));
   const auctions = useSelector((state) => state.AUCTION.auctions);
   console.log("allAuction", auctions);
-  const data = [
-    {
-      id: 1,
-      title: "Card 1",
-      content: "Content of card 1",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 2,
-      title: "Card 2",
-      content: "Content of card 2",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 3,
-      title: "Card 3",
-      content: "Content of card 3",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 4,
-      title: "Card 4",
-      content: "Content of card 4",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 5,
-      title: "Card 5",
-      content: "Content of card 5",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 6,
-      title: "Card 6",
-      content: "Content of card 6",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 7,
-      title: "Card 7",
-      content: "Content of card 7",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 8,
-      title: "Card 8",
-      content: "Content of card 8",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 9,
-      title: "Card 9",
-      content: "Content of card 9",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 10,
-      title: "Card 10",
-      content: "Content of card 10",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 11,
-      title: "Card 11",
-      content: "Content of card 11",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 12,
-      title: "Card 12",
-      content: "Content of card 12",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 13,
-      title: "Card 13",
-      content: "Content of card 13",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 14,
-      title: "Card 14",
-      content: "Content of card 14",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 15,
-      title: "Card 15",
-      content: "Content of card 15",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 16,
-      title: "Card 16",
-      content: "Content of card 16",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 17,
-      title: "Card 17",
-      content: "Content of card 17",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 18,
-      title: "Card 18",
-      content: "Content of card 18",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 19,
-      title: "Card 19",
-      content: "Content of card 19",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-    {
-      id: 20,
-      title: "Card 20",
-      content: "Content of card 20",
-      image: "../../../public/assets/images/background/background3.jpg",
-    },
-  ];
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [viewMode, setViewMode] = useState("mode2"); // State để lưu trữ chế độ hiển thị
+  const [viewMode, setViewMode] = useState("mode2");
   const [selectedValue, setSelectedValue] = useState("not yet auctioned");
-  const [searchKeyword, setSearchKeyword] = useState(""); // State to manage the input value
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // State lưu trữ trang hiện tại
+  const cardsPerPage = 4;
 
   const handleSelect = (value) => {
     setSelectedValue(value);
-    // Perform additional actions as needed
   };
-  const toggleViewMode = () => {
-    setViewMode(viewMode === "mode1" ? "mode2" : "mode1"); // Chuyển đổi giữa hai chế độ hiển thị
-  };
-  // Thêm dữ liệu card khác ở đây
 
-  // State để lưu trữ trang hiện tại
-  const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 8;
-  const indexOfLastCard = currentPage * cardsPerPage;
-  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = data.slice(indexOfFirstCard, indexOfLastCard);
-  console.log("time-start", startDate);
-  console.log("time-end", endDate);
-  // Hàm chuyển trang
+  const toggleViewMode = () => {
+    setViewMode(viewMode === "mode1" ? "mode2" : "mode1");
+  };
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(
+    auctions.filter(
+      (auction) =>
+        auction.product_id.name
+          .toLowerCase()
+          .includes(searchKeyword.toLowerCase()) &&
+        ((selectedValue === "not yet auctioned" &&
+          auction.status === "not yet auctioned") ||
+          (selectedValue === "about to auction" &&
+            auction.status === "about to auction") ||
+          (selectedValue === "auctioning" &&
+            auction.status === "auctioning") ||
+          (selectedValue === "auctioned" && auction.status === "auctioned")) &&
+        (!startDate ||
+          !endDate ||
+          (startDate &&
+            endDate &&
+            new Date(auction.registration_start_time) >= startDate &&
+            new Date(auction.endTime) <= endDate))
+    ).length / cardsPerPage
+  );
+
   return (
     <Container className="mb-3">
       <div className="app-container">
-        {/* <div className="header-container">
-        <Header />
-      </div> */}
         <div className="body-container">
           <div className="container" style={{ marginBottom: "20px" }}>
             <div
@@ -206,22 +97,19 @@ function AuctionPage(props) {
                         className="input-with-icon"
                         style={{
                           marginBottom: "20px",
-                          // position: "absolute",
-                          // width: "70%",
                         }}
                       >
                         <input
                           type="text"
                           placeholder="Nhập từ khóa..."
                           value={searchKeyword}
-                          onChange={(e) => setSearchKeyword(e.target.value)} // Update the searchKeyword state
+                          onChange={(e) =>
+                            setSearchKeyword(e.target.value)
+                          }
                         />
-
-                        {/* <FaCalendarAlt className="calendar-icon" /> */}
                       </div>
                       <div className="date-range">
                         <div className="input-with-date">
-                          {/* <span>Từ ngày</span> */}
                           <DatePicker
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
@@ -245,18 +133,6 @@ function AuctionPage(props) {
                           <FaCalendarAlt className="calendar-icon" />
                         </div>
                       </div>
-                      {/* <Button
-                        style={{
-                          marginTop: "20px",
-                          backgroundColor: "#B41712",
-                          border: "none",
-                          fontWeight: "700",
-                          fontSize: "900",
-                          width: "70px",
-                        }}
-                      >
-                        LỌCs
-                      </Button> */}
                     </div>
                   </div>
                 </div>
@@ -280,7 +156,9 @@ function AuctionPage(props) {
                             type="checkbox"
                             value="not yet auctioned"
                             checked={selectedValue === "not yet auctioned"}
-                            onChange={() => handleSelect("not yet auctioned")}
+                            onChange={() =>
+                              handleSelect("not yet auctioned")
+                            }
                           />
                           Chưa diễn ra
                         </label>
@@ -367,6 +245,10 @@ function AuctionPage(props) {
                               startDate &&
                             new Date(auction.endTime) <= endDate))
                     )
+                    .slice(
+                      (currentPage - 1) * cardsPerPage,
+                      currentPage * cardsPerPage
+                    )
                     .map((card) => (
                       <div
                         key={card.id}
@@ -419,13 +301,10 @@ function AuctionPage(props) {
                       position: "absolute",
                       bottom: `${viewMode === "mode2" ? "0%" : "-12%"}`,
                       left: "35%",
-                      // marginTop:"20px"
                     }}
                   >
                     <Pagination>
-                      {Array.from({
-                        length: Math.ceil(auctions.length / cardsPerPage),
-                      }).map((item, index) => (
+                      {Array.from({ length: totalPages }).map((_, index) => (
                         <Pagination.Item
                           key={index}
                           active={index + 1 === currentPage}
@@ -441,14 +320,6 @@ function AuctionPage(props) {
             </div>
           </div>
         </div>
-        {/* <div
-        className="footer-container"
-        style={{
-          marginTop: `${viewMode === "mode2" ? "" : "75px"}`,
-        }}
-      >
-        <Footer />
-      </div> */}
       </div>
     </Container>
   );

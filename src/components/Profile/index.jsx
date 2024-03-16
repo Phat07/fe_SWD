@@ -134,22 +134,29 @@ function Profile() {
                         Các yêu cầu
                       </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link
-                        eventKey="auction"
-                        onClick={() => setStatus("auction")}
-                      >
-                        Hoa lan chờ đấu giá
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link
-                        eventKey="history"
-                        onClick={() => setStatus("history")}
-                      >
-                        Lịch sử đấu giá
-                      </Nav.Link>
-                    </Nav.Item>
+                    {user?.role_id?.title === "MEMBER" ? (
+                      <>
+                        <Nav.Item>
+                          <Nav.Link
+                            eventKey="auction"
+                            onClick={() => setStatus("auction")}
+                          >
+                            Hoa lan chờ đấu giá
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link
+                            eventKey="history"
+                            onClick={() => setStatus("history")}
+                          >
+                            Lịch sử đấu giá
+                          </Nav.Link>
+                        </Nav.Item>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+
                     <Nav.Item>
                       <Nav.Link
                         eventKey="lich su nap tien"

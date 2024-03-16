@@ -4,7 +4,12 @@ import { Card, Row, Col, Button, Form, Carousel } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { actAuctionGetAsync } from "../../../store/auction/action";
+import {
+  actAuctionGetAsync,
+  actGetAllMemberJoinAuctionRoomGetAsync,
+} from "../../../store/auction/action";
+import { format } from "date-fns";
+
 const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
   const navigate = useNavigate();
@@ -20,6 +25,25 @@ const AuctionDetail = () => {
     const item = auctions.find((i) => i._id === auctionId);
     setAuction(item);
   }, [auctions, auctionId]);
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
+  };
+  const allMemberJoinInAuction = useSelector(
+    (state) => state.AUCTION.allMemberJoinInAuction
+  );
+  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
+  const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
+    (e) => e?.member_id?.role_id?.title !== "HOST"
+  );
+  console.log("number", filterNumberMemberJoinRoom);
+  useEffect(() => {
+    let data = {
+      auctionId: auctionId,
+    };
+    dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data, token));
+  }, []);
   console.log("auctionDetail", auction);
   return (
     <div className="app-container">
@@ -119,6 +143,18 @@ const AuctionDetail = () => {
                           </Form.Group>
                         </Card.Body>
                       </Card>
+                      <Card style={{ marginTop: "10px" }}>
+                        <Card.Body>
+                          <Card.Title>
+                            Số lượng người tham gia đấu giá
+                          </Card.Title>
+                          <Form.Group className="mb-3">
+                            <Form.Label>
+                              Số lượng: {filterNumberMemberJoinRoom.length}
+                            </Form.Label>
+                          </Form.Group>
+                        </Card.Body>
+                      </Card>
                     </Col>
                     <Col md={6}>
                       <Card>
@@ -150,9 +186,9 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.regitration_start_time
-                                  ? auction.regitration_start_time.substring(
-                                      0,
-                                      16
+                                  ? format(
+                                      new Date(auction.regitration_start_time),
+                                      "yyyy-MM-dd'T'HH:mm"
                                     )
                                   : ""
                               }
@@ -166,9 +202,9 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.regitration_end_time
-                                  ? auction.regitration_end_time.substring(
-                                      0,
-                                      16
+                                  ? format(
+                                      new Date(auction.regitration_end_time),
+                                      "yyyy-MM-dd'T'HH:mm"
                                     )
                                   : ""
                               }
@@ -182,7 +218,10 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.start_time
-                                  ? auction.start_time.substring(0, 16)
+                                  ? format(
+                                      new Date(auction.start_time),
+                                      "yyyy-MM-dd'T'HH:mm"
+                                    )
                                   : ""
                               }
                             />
@@ -195,7 +234,10 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={
                                 auction?.end_time
-                                  ? auction.end_time.substring(0, 16)
+                                  ? format(
+                                      new Date(auction.end_time),
+                                      "yyyy-MM-dd'T'HH:mm"
+                                    )
                                   : ""
                               }
                             />
@@ -204,10 +246,17 @@ const AuctionDetail = () => {
                       </Card>
                     </Col>
                     <Col xs="auto" className="mt-2">
-                      <Button variant="success" onClick={() => navigate(-1)}>
+                      <Button variant="warning" onClick={() => navigate(-1)}>
                         Back
                       </Button>
                     </Col>
+                    {filterNumberMemberJoinRoom.length === 0 && (
+                      <Col xs="auto" className="mt-2">
+                        <Button variant="success" onClick={() => navigate(-1)}>
+                         Update
+                        </Button>
+                      </Col>
+                    )}
                   </Row>
                 </Form>
               </Card.Body>
