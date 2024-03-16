@@ -26,7 +26,7 @@ import {
 import Footer from "../../Footer";
 import Header from "../../Header";
 
-const socket = io("http://localhost:3001");
+const socket = io("https://be-orchid-auction.onrender.com");
 function JoinAuctionRoom() {
   const styles = useSpring({
     from: { opacity: 0, transform: "translateY(-50px)" },
