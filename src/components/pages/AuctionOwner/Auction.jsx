@@ -15,6 +15,7 @@ import {
   actAuctionedAuctionGetAsync,
   actAuctioningAuctionGetAsync,
   actNotYetAuctionGetAsync,
+  actNotAuctionGetAsync,
 } from "../../../store/auction/action";
 
 function Auction() {
@@ -24,6 +25,7 @@ function Auction() {
   const token = localStorage.getItem("ACCESS_TOKEN");
 
   const auctions = useSelector((state) => state.AUCTION.auctions);
+  const notauction = useSelector((state) => state.AUCTION.notAuction);
   const notYetAuction = useSelector((state) => state.AUCTION.notYetAuction);
   const aboutToAuction = useSelector((state) => state.AUCTION.aboutToAuction);
   const auctioning = useSelector((state) => state.AUCTION.auctioning);
@@ -38,6 +40,7 @@ function Auction() {
   console.log("user", user);
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
+    dispatch(actNotAuctionGetAsync(user?._id, token));
     dispatch(actNotYetAuctionGetAsync(user?._id, token));
     dispatch(actAboutToAuctionGetAsync(user?._id, token));
     dispatch(actAuctioningAuctionGetAsync(user?._id, token));
@@ -93,16 +96,23 @@ function Auction() {
                   <p className="text-medium-emphasis small mb-0">
                     Display auctions in the system
                   </p>
-                  <Button
+                  {/* <Button
                     variant="success"
                     onClick={() => {
                       navigate(`/create-auction`);
                     }}
                   >
                     Create New Auction
-                  </Button>
+                  </Button> */}
                 </div>
                 <ChangeTabAution
+                  chualenkeContent={
+                    <TableAution
+                      data={notauction}
+                      onUpdate={handleDetailAuction}
+                      onDelete={handleDelete}
+                    />
+                  }
                   chuaDienRaContent={
                     <TableAution
                       data={notYetAuction}

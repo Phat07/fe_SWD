@@ -22,7 +22,8 @@ function CreateAuctionProductForm() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [startingPriceError, setStartingPriceError] = useState("");
+  const [stepPriceError, setStepPriceError] = useState("");
   const param = useParams();
   const productId = param.productID;
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -39,7 +40,36 @@ function CreateAuctionProductForm() {
   // about to auction
   // auctioning
   // auctioned
+  const handleStartingPriceChange = (e) => {
+    const value = e.target.value;
+    setStartingPrice(value); // Cập nhật giá trị nhập vào mỗi lần thay đổi
 
+    // Kiểm tra điều kiện và cập nhật lỗi nếu có
+    const valueNumber = Number(value);
+    if (valueNumber < 1000 || valueNumber % 1000 !== 0) {
+      setStartingPriceError(
+        "Giá khởi điểm phải lớn hơn 1000 và chia hết cho 1000."
+      );
+    } else {
+      setStartingPriceError(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+    }
+  };
+
+  // Hàm xử lý thay đổi cho Bước giá tối thiểu
+  const handleStepPriceChange = (e) => {
+    const value = e.target.value;
+    setStepPrice(value); // Cập nhật giá trị nhập vào mỗi lần thay đổi
+
+    // Kiểm tra điều kiện và cập nhật lỗi nếu có
+    const valueNumber = Number(value);
+    if (valueNumber < 1000 || valueNumber % 1000 !== 0) {
+      setStepPriceError(
+        "Bước giá tối thiểu phải lớn hơn 1000 và chia hết cho 1000."
+      );
+    } else {
+      setStepPriceError(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+    }
+  };
   // Handle form submit
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,26 +92,47 @@ function CreateAuctionProductForm() {
     const regEnd = new Date(regitrationEndTime);
     const start = new Date(startTime);
     const end = new Date(endTime);
+    const now = new Date();
+    // Kiểm tra các điều kiện thời gian
+    // Kiểm tra các điều kiện thời gian
+    if (regStart < now) {
+      toast.error("Thời gian bắt đầu đăng ký không được trong quá khứ!");
+      return;
+    }
 
-    // Kiểm tra các điều kiện thời gian
-    // Kiểm tra các điều kiện thời gian
+    if (regEnd < now) {
+      toast.error("Thời gian kết thúc đăng ký không được trong quá khứ!");
+      return;
+    }
+
+    if (start < now) {
+      toast.error("Thời gian bắt đầu đấu giá không được trong quá khứ!");
+      return;
+    }
+
+    if (end < now) {
+      toast.error("Thời gian kết thúc đấu giá không được trong quá khứ!");
+      return;
+    }
+
+    // Tiếp tục với những kiểm tra còn lại
     if (regStart >= regEnd) {
       toast.error(
-        "Thời gian bắt đầu đăng ký phải nhỏ hơn thời gian kết thúc đăng ký!"
+        "Thời gian bắt đầu đăng ký phải trước thời gian kết thúc đăng ký!"
       );
       return;
     }
 
     if (regEnd >= start) {
       toast.error(
-        "Thời gian kết thúc đăng ký phải nhỏ hơn thời gian bắt đầu đấu giá!"
+        "Thời gian kết thúc đăng ký phải trước thời gian bắt đầu đấu giá!"
       );
       return;
     }
 
     if (start >= end) {
       toast.error(
-        "Thời gian bắt đầu đấu giá phải nhỏ hơn thời gian kết thúc đấu giá!"
+        "Thời gian bắt đầu đấu giá phải trước thời gian kết thúc đấu giá!"
       );
       return;
     }
@@ -95,7 +146,7 @@ function CreateAuctionProductForm() {
       end_time: endTime,
       regitration_start_time: regitrationStartTime,
       regitration_end_time: regitrationEndTime,
-      status: "not yet auctioned",
+      status: "not",
       host_id: user?._id,
       product_id: productId,
     };
@@ -161,21 +212,41 @@ function CreateAuctionProductForm() {
                     </Form.Group> */}
                     <Form.Group className="mb-3">
                       <Form.Label>Giá khởi điểm</Form.Label>
-                      <Form.Control
+                      {/* <Form.Control
                         type="number"
                         placeholder="Giá khởi điểm"
                         value={startingPrice}
                         onChange={(e) => setStartingPrice(e.target.value)}
+                      /> */}
+                      <Form.Control
+                        type="number"
+                        placeholder="Giá khởi điểm"
+                        value={startingPrice}
+                        onChange={handleStartingPriceChange}
                       />
+                      {/* Hiển thị thông báo lỗi dưới trường nhập liệu */}
+                      {startingPriceError && (
+                        <div className="text-danger">{startingPriceError}</div>
+                      )}
                     </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Label>Bước giá tối thiểu</Form.Label>
-                      <Form.Control
+                      {/* <Form.Control
                         type="number"
                         placeholder="Minimun Price Step"
                         value={stepPrice}
                         onChange={(e) => setStepPrice(e.target.value)}
+                      /> */}
+                      <Form.Control
+                        type="number"
+                        placeholder="Bước giá tối thiểu"
+                        value={stepPrice}
+                        onChange={handleStepPriceChange}
                       />
+                      {/* Hiển thị thông báo lỗi dưới trường nhập liệu */}
+                      {stepPriceError && (
+                        <div className="text-danger">{stepPriceError}</div>
+                      )}
                     </Form.Group>
                     <Form.Group className="mb-3">
                       <Form.Label>Thời gian bắt đầu dang ki</Form.Label>

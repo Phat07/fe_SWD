@@ -8,6 +8,7 @@ import Footer from "../Footer";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actPostWalletUserByIdAsync } from "../../store/wallet/action";
+import { toast } from "react-toastify";
 function PaidItem() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
@@ -40,17 +41,24 @@ function PaidItem() {
     }
   };
   function handleSubmit() {
-    let data = {
-      user_id: user?._id,
-      type_report: "money",
-      description: `${user?.username} - ${addMoney}`,
-      note: "",
-    };
-    dispatch(actPostWalletUserByIdAsync(data, token)).then(() => {
-      setAddMoney("");
-      setPaymentInfo({ ...paymentInfo, amount: 0 });
-    });
+    if (addMoney && parseFloat(addMoney) >= 20000) {
+      let data = {
+        user_id: user?._id,
+        type_report: "money",
+        description: `${user?.username} - ${addMoney}`,
+        note: "",
+      };
+
+      dispatch(actPostWalletUserByIdAsync(data, token)).then(() => {
+        setAddMoney("");
+        setPaymentInfo({ ...paymentInfo, amount: 0 });
+      });
+    } else {
+      // alert("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
+      toast.error("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
+    }
   }
+
   return (
     // <div className="app-container">
     //   <div className="header-container">
@@ -65,7 +73,9 @@ function PaidItem() {
                 <Card.Body>
                   <Card.Title>Nạp tiền vào Ví </Card.Title>
                   <Form.Group className="mb-3">
-                    <Form.Label>Số tiền nạp vào Ví</Form.Label>
+                    <Form.Label>
+                      Số tiền nạp vào ví phải lớn hơn 20,000đ
+                    </Form.Label>
                     {/* <Form.Control
                       type="number"
                       placeholder="Số tiền nạp vào"
@@ -74,18 +84,18 @@ function PaidItem() {
                       onChange={(e) => setAddMoney(e.target.value)}
                     /> */}
                     <Form.Control
-                        as={CurrencyFormat}
-                        thousandSeparator={true}
-                        decimalSeparator="."
-                        allowNegative={false}
-                        placeholder="Nhập số tiền đấu giá"
-                        value={addMoney}
-                        onValueChange={(values) => {
-                          const { value } = values;
-                          setAddMoney(value)
-                        }}
-                        suffix=" đ"
-                      />
+                      as={CurrencyFormat}
+                      thousandSeparator={true}
+                      decimalSeparator="."
+                      allowNegative={false}
+                      placeholder="Nhập số tiền đấu giá"
+                      value={addMoney}
+                      onValueChange={(values) => {
+                        const { value } = values;
+                        setAddMoney(value);
+                      }}
+                      suffix=" đ"
+                    />
                   </Form.Group>
                   <Button
                     color="primary"

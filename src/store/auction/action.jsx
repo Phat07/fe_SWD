@@ -2,11 +2,13 @@ import { toast } from "react-toastify";
 import { AuctionServices } from "../../services/auctionServices";
 import { data } from "@tensorflow/tfjs";
 export const ALL_AUCTION = "ALL_AUCTION";
+export const NOT_AUCTION = "NOT_AUCTION";
 export const NOT_YET_AUCTION = "NOT_YET_AUCTION";
 export const ABOUT_TO_AUCTION = "ABOUT_TO_AUCTION";
 export const AUCTIONING = "AUCTIONING";
 export const AUCTIONED = "AUCTIONED";
 export const AUCTIONING_CUSTOMER = "AUCTIONING_CUSTOMER";
+export const NOT_AUCTION_CUSTOMER = "NOT_AUCTION_CUSTOMER";
 export const NOT_YET_AUCTION_CUSTOMER = "NOT_YET_AUCTION_CUSTOMER";
 export const ABOUT_TO_AUCTION_CUSTOMER = "ABOUT_TO_AUCTION_CUSTOMER";
 export const AUCTIONED_CUSTOMER = "AUCTIONED_CUSTOMER";
@@ -16,6 +18,18 @@ export const GET_MEMBER_PRICE_AUCTIONID = "GET_MEMBER_PRICE_AUCTIONID";
 export const allAuction = (list) => {
   return {
     type: ALL_AUCTION,
+    payload: list,
+  };
+};
+export const notAuction = (list) => {
+  return {
+    type: NOT_AUCTION,
+    payload: list,
+  };
+};
+export const notAuctionCustomer = (list) => {
+  return {
+    type: NOT_AUCTION_CUSTOMER,
     payload: list,
   };
 };
@@ -82,6 +96,44 @@ export function actAuctionGetAsync(token) {
       .catch((error) => {
         // Xử lý lỗi nếu có
         console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+export function actNotAuctionGetAsync(id, token) {
+  return (dispatch) => {
+    AuctionServices.getAuctionNotAuctionedByUser(id, token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(notAuction(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all auctions:", error);
+        // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
+      });
+  };
+}
+export function actNotAuctionCustomerGetAsync(token) {
+  return (dispatch) => {
+    AuctionServices.getAuctionNotAuctionedByCustomer(token)
+      .then((response) => {
+        console.log("dataAuction", response);
+        if (response.status === 200 || response.status === 201) {
+          dispatch(notAuctionCustomer(response.data));
+        } else {
+          // toast.error("get all syllabus to fail");
+          console.log("fail");
+        }
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu có
+        console.error("Error while fetching all not yet auctions:", error);
         // Nếu bạn muốn dispatch một action để xử lý lỗi, bạn có thể thực hiện ở đây
       });
   };
@@ -375,7 +427,6 @@ export function actAuctionedMemberGetAsync(id, token) {
   };
 }
 
-
 export const getMostPriceAuctionId = (list) => {
   return {
     type: GET_MOST_PRICE_AUCTIONID,
@@ -428,8 +479,6 @@ export function actGetMemberJoinAuctionGetAsync(data, token) {
       });
   };
 }
-
-
 
 //  auctionBid
 

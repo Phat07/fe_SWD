@@ -1,10 +1,12 @@
 import {
   ALL_AUCTION,
+  NOT_AUCTION,
   NOT_YET_AUCTION,
   ABOUT_TO_AUCTION,
   AUCTIONING,
   AUCTIONED,
   AUCTIONING_CUSTOMER,
+  NOT_AUCTION_CUSTOMER,
   NOT_YET_AUCTION_CUSTOMER,
   ABOUT_TO_AUCTION_CUSTOMER,
   AUCTIONED_CUSTOMER,
@@ -13,15 +15,17 @@ import {
   GET_AUCTION_MEMBER_AUCTIONING,
   GET_AUCTION_MEMBER_AUCTIONED,
   GET_MOST_PRICE_AUCTIONID,
-  GET_MEMBER_PRICE_AUCTIONID
+  GET_MEMBER_PRICE_AUCTIONID,
 } from "./action";
 
 const initialState = {
   auctions: [],
+  notAuction: [],
   notYetAuction: [],
   aboutToAuction: [],
   auctioning: [],
   auctined: [],
+  notAuctionCustomer: [],
   notYetAuctionCustomer: [],
   aboutToAuctionCustomer: [],
   auctioningCustomer: [],
@@ -32,7 +36,7 @@ const initialState = {
   auctioningMember: [],
   auctinedMember: [],
   mostPrice: "",
-  memberPriceAuction: []
+  memberPriceAuction: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -41,6 +45,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         auctions: action.payload,
+      };
+    case NOT_AUCTION:
+      return {
+        ...state,
+        notAuction: action.payload,
       };
     case NOT_YET_AUCTION:
       return {
@@ -62,7 +71,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         auctined: action.payload,
       };
-
+    case NOT_AUCTION_CUSTOMER:
+      return {
+        ...state,
+        notAuctionCustomer: action.payload,
+      };
     case NOT_YET_AUCTION_CUSTOMER:
       return {
         ...state,
@@ -113,11 +126,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         mostPrice: action.payload,
       };
-      case GET_MEMBER_PRICE_AUCTIONID:
-        return {
-          ...state,
-          memberPriceAuction: action.payload,
-        };
+    case GET_MEMBER_PRICE_AUCTIONID:
+      return {
+        ...state,
+        memberPriceAuction: action.payload,
+      };
 
     default:
       return state;
