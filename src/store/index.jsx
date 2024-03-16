@@ -4,13 +4,15 @@ import userReducer from "./user/reducer";
 import productReducer from "./product/reducer";
 import auctionReducer from "./auction/reducer";
 import walletReducer from "./wallet/reducer";
-import moneyConfigReducer from "./moneyConfig/reducer"
+import moneyConfigReducer from "./moneyConfig/reducer";
+import requestReducer from "./request/reducer";
 const rootReducer = combineReducers({
   USER: userReducer,
   PRODUCT: productReducer,
   AUCTION: auctionReducer,
   WALLET: walletReducer,
-  MONEYCONFIG: moneyConfigReducer
+  MONEYCONFIG: moneyConfigReducer,
+  REQUEST: requestReducer,
 });
 const store = createStore(rootReducer, applyMiddleware(thunk));
 export default store;

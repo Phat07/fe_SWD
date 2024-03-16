@@ -1,19 +1,8 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Col,
-  Form,
-  Row,
-  ToggleButton,
-  Container,
-  Nav,
-} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Card, Col, Row, Container, Nav } from "react-bootstrap";
 import AccountInfo from "./AccountInfo";
 import Header from "../Header";
 import Footer from "../Footer";
-import CartAuction from "./Cart";
 import AuctionWating from "./AuctionWating";
 import AuctionHistory from "./AuctionHistory";
 import HistoryTransaction from "./HistoryTransaction";
@@ -32,11 +21,12 @@ import {
   actAuctionedMemberGetAsync,
   actAuctioningMemberGetAsync,
 } from "../../store/auction/action";
+import ReportRequest from "./ReportRequest";
 
 function Profile() {
   const [status, setStatus] = useState("account");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // const [showPassword, setShowPassword] = useState(false);
+  // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
   console.log("user", user);
@@ -75,16 +65,16 @@ function Profile() {
     dispatch(actAuctioningMemberGetAsync(user?._id, token));
     dispatch(actAuctionedMemberGetAsync(user?._id, token));
   }, [user]);
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  // const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  // const toggleConfirmPasswordVisibility = () =>
+  //   setShowConfirmPassword(!showConfirmPassword);
 
   const renderContent = () => {
     switch (status) {
       case "account":
         return <AccountInfo />;
-      // case "cart":
-      //   return <CartAuction />;
+      case "request":
+        return <ReportRequest />;
       case "auction":
         return <AuctionWating />;
       case "history":
@@ -136,14 +126,14 @@ function Profile() {
                         Nạp tiền
                       </Nav.Link>
                     </Nav.Item>
-                    {/* <Nav.Item>
+                    <Nav.Item>
                       <Nav.Link
-                        eventKey="cart"
-                        onClick={() => setStatus("cart")}
+                        eventKey="request"
+                        onClick={() => setStatus("request")}
                       >
-                        Giỏ hàng
+                        Các yêu cầu
                       </Nav.Link>
-                    </Nav.Item> */}
+                    </Nav.Item>
                     <Nav.Item>
                       <Nav.Link
                         eventKey="auction"

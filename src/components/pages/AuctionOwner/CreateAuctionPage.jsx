@@ -65,25 +65,27 @@ function CreateAuctionProductForm() {
     const regEnd = new Date(regitrationEndTime);
     const start = new Date(startTime);
     const end = new Date(endTime);
+    const now = new Date();
+    // Kiểm tra các điều kiện thời gian
 
     // Kiểm tra các điều kiện thời gian
     if (regStart >= regEnd) {
       toast.error(
-        "Thời gian bắt đầu đăng ký phải nhỏ hơn thời gian kết thúc đăng ký!"
+        "Thời gian bắt đầu đăng ký phải trước thời gian kết thúc đăng ký!"
       );
       return;
     }
 
     if (regEnd >= start) {
       toast.error(
-        "Thời gian kết thúc đăng ký phải nhỏ hơn thời gian bắt đầu đấu giá!"
+        "Thời gian kết thúc đăng ký phải trước thời gian bắt đầu đấu giá!"
       );
       return;
     }
 
     if (start >= end) {
       toast.error(
-        "Thời gian bắt đầu đấu giá phải nhỏ hơn thời gian kết thúc đấu giá!"
+        "Thời gian bắt đầu đấu giá phải trước thời gian kết thúc đấu giá!"
       );
       return;
     }
@@ -97,7 +99,7 @@ function CreateAuctionProductForm() {
       end_time: endTime,
       regitration_start_time: regitrationStartTime,
       regitration_end_time: regitrationEndTime,
-      status: "not yet auctioned",
+      status: "not",
       host_id: user?._id,
       product_id: productId,
     };

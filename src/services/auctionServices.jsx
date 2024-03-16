@@ -15,6 +15,20 @@ export const AuctionServices = {
       },
     });
   },
+  getAuctionNotAuctionedByUser(id, token) {
+    return API.get(`/auctions/not/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+  getAuctionNotAuctionedByCustomer(token) {
+    return API.get(`/auctions/not`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
   getAuctionNotYetAuctionedByUser(id, token) {
     return API.get(`/auctions/not-yet/${id}`, {
       headers: {
