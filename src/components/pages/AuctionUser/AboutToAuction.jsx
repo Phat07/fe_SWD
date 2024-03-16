@@ -33,7 +33,7 @@ function AboutToAuctionUser() {
   };
   useEffect(() => {
     // Kết nối tới Socket.IO server
-    const socket = socketIOClient("https://be-orchid-auction.onrender.com"); // Thay đổi URL và cổng tùy theo cấu hình của bạn
+    const socket = socketIOClient("http://localhost:3001"); // Thay đổi URL và cổng tùy theo cấu hình của bạn
 
     // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
     socket.on("auction_status_changed", () => {
