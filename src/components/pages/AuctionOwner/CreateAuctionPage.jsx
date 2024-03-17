@@ -100,7 +100,25 @@ function CreateAuctionProductForm() {
     const end = new Date(endTime);
     const now = new Date();
     // Kiểm tra các điều kiện thời gian
+    if (regStart < now) {
+      toast.error("Thời gian bắt đầu đăng ký không được trong quá khứ!");
+      return;
+    }
 
+    if (regEnd < now) {
+      toast.error("Thời gian kết thúc đăng ký không được trong quá khứ!");
+      return;
+    }
+
+    if (start < now) {
+      toast.error("Thời gian bắt đầu đấu giá không được trong quá khứ!");
+      return;
+    }
+
+    if (end < now) {
+      toast.error("Thời gian kết thúc đấu giá không được trong quá khứ!");
+      return;
+    }
     // Kiểm tra các điều kiện thời gian
     if (regStart >= regEnd) {
       toast.error(
