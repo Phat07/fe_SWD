@@ -109,5 +109,14 @@ input.otp:focus {
 .gender-label {
   margin-top: 5px;
 }
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #333; /* Màu nền dark mode */
+  color: #fff; /* Màu chữ dark mode */
+}
+
+.spinner {
+  color: #fff; /* Màu của biểu tượng spinner trong dark mode */
+}
 
 

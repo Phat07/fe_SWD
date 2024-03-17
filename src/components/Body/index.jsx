@@ -16,7 +16,7 @@ const Body = () => {
       <CarouselImg />
       <Banner />
       <Promotions />
-      <ProductList />
+      {/* <ProductList /> */}
       {user?.role_id?.title === "HOST" ? "" : <AuctionPage />}
     </div>
   );

@@ -131,7 +131,7 @@ const Header = () => {
                               to={"/abouttoauction-customer"}
                               style={{ textDecoration: "none", color: "black" }}
                             >
-                              Danh sách sắp đấu giá
+                              Danh sách hết hạn đăng ký
                             </Link>
                           </Nav.Link>
                           <Nav.Link

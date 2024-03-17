@@ -115,7 +115,6 @@ function CreateAuctionProductForm() {
       setRegitrationEndTime("");
       setStartTime("");
       setEndTime("");
-      navigate("/manage-auction");
     });
   };
   const handleOpenModal = () => {
@@ -286,7 +285,9 @@ function CreateAuctionProductForm() {
           <>
             <div className="overlay1"></div>
             <div className="spinner-container1">
-              <FaSpinner />
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
             </div>
           </>
         ) : (

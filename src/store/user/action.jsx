@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import { UserServices } from "../../services/userServices";
+import { useNavigate } from "react-router-dom";
+
 
 
 export const ACT_USER_LOGIN = "ACT_USER_LOGIN";
@@ -50,17 +52,25 @@ export function actAllRoleGetAsync() {
       });
   };
 }
+
+
 export function actPostUserAsync(data) {
   return async (dispatch) => {
     try {
       const response = await UserServices.register(data);
+      const navigate = useNavigate()
       if (response.status === 200 || response.status === 201) {
         toast.success("New User has been added successfully ~");
+        navigate("/login");
       }
       // dispatch(actUserGetAsync());
     } catch (error) {
-      console.error("An error occurred whiles making the request:", error);
-      toast.error("An error occurred while making the request");
+      if (error.response.status === 400) {
+        console.log("An error occurred while making the request:", error);
+        alert(error.response.data.message)
+      } else {
+        console.log("An error occurred while making the request:", error);
+      }
     }
   };
 }
