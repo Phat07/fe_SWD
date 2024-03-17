@@ -15,6 +15,13 @@ export const AuctionServices = {
       },
     });
   },
+  putUpdateAuction(id, data, token) {
+    return API.put(`/auctions/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
   getAuctionNotAuctionedByUser(id, token) {
     return API.get(`/auctions/not/${id}`, {
       headers: {

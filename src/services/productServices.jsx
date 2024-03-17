@@ -18,4 +18,11 @@ export const ProductServices = {
       },
     });
   },
+  putUpdateProduct(id, data, token) {
+    return API.put(`/products/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
 };

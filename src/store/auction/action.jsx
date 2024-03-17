@@ -103,6 +103,17 @@ export function actAuctionGetAsync(token) {
       });
   };
 }
+export function actAuctionPutAsync(id, data, token) {
+  return async () => {
+    const response = await AuctionServices.putUpdateAuction(id, data, token);
+    if (response.status === 200 || response.status === 201) {
+      toast.success("Auction has been update successfully ~");
+    } else {
+      // toast.error("Post Product to fail");
+      console.log("fail");
+    }
+  };
+}
 export function actNotAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotAuctionedByUser(id, token)

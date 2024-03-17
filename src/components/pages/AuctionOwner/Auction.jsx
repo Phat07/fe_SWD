@@ -64,6 +64,7 @@ function Auction() {
 
     // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
     socket.on("auction_status_changed", () => {
+      dispatch(actNotAuctionGetAsync(user?._id, token));
       dispatch(actNotYetAuctionGetAsync(user?._id, token));
       dispatch(actAboutToAuctionGetAsync(user?._id, token));
       dispatch(actAuctioningAuctionGetAsync(user?._id, token));
@@ -72,7 +73,11 @@ function Auction() {
       // Gọi lại các API để cập nhật danh sách các phiên đấu giá
       // fetchAuctions();
     });
-
+    dispatch(actNotAuctionGetAsync(user?._id, token));
+    dispatch(actNotYetAuctionGetAsync(user?._id, token));
+    dispatch(actAboutToAuctionGetAsync(user?._id, token));
+    dispatch(actAuctioningAuctionGetAsync(user?._id, token));
+    dispatch(actAuctionedAuctionGetAsync(user?._id, token));
     return () => {
       // Đóng kết nối Socket.IO khi component unmount
       socket.disconnect();
