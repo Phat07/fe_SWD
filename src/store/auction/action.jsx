@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { AuctionServices } from "../../services/auctionServices";
 import { data } from "@tensorflow/tfjs";
+import { useNavigate } from "react-router-dom";
 export const ALL_AUCTION = "ALL_AUCTION";
 export const NOT_AUCTION = "NOT_AUCTION";
 export const NOT_YET_AUCTION = "NOT_YET_AUCTION";
@@ -306,30 +307,33 @@ export function actAuctionedCustomerGetAsync(token) {
 
 export function actAuctionPostAsync(data, token) {
   return async (dispatch) => {
+    // const navigate = useNavigate();
     try {
       const response = await AuctionServices.addAuction(data, token);
       if (response.status === 200 || response.status === 201) {
         toast.success("New Auction has been added successfully ~");
         // dispatch(actAuctionGetAsync(token));
+        // navigate("/manage-auction");
       } else {
         // toast.error("Post Product to fail");
         console.log("fail");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        console.error(
-          "Failed to load resource: the server responded with a status of 400 (Bad Request)",
-          error
-        );
-        toast.error(error.response.data.error);
+        console.error("Bad Request Error:", error);
+        if (error.response.data && error.response.data.error) {
+          toast.error(error.response.data.error);
+        } else {
+          toast.error("Bad Request: Please check your input data");
+        }
       } else {
         console.error("An error occurred while making the request:", error);
-        toast.error("Lỗi: " + error.message);
+        toast.error("Error: " + error.message);
       }
-      // Xử lý lỗi ở đây, ví dụ hiển thị thông báo cho người dùng
     }
   };
 }
+
 
 export const GET_AUCTION_MEMBER_AUCTION_NOT_YET =
   "GET_AUCTION_MEMBER_AUCTION_NOT_YET";

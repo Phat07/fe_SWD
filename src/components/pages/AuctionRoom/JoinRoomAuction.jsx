@@ -68,22 +68,30 @@ function JoinAuctionRoom() {
   useEffect(() => {
     // Lấy thời gian kết thúc đấu giá từ state hoặc từ dữ liệu đã có
     const endTime = new Date(auctionBid?.end_time).getTime();
-    let data = {
-      winner_id: mostPrice?.customer_id,
-      auction_id: auctionID,
-      host_id: user?._id,
-      price: mostPrice?.price,
-    };
     // Tạo một interval để kiểm tra thời gian hiện tại so với endTime
-    const interval = setInterval(() => {
+    let data1 = {
+      auctionId: auctionID,
+    };
+    const interval = setInterval(async () => {
       const currentTime = new Date().getTime();
       if (currentTime >= endTime) {
-        // Nếu thời gian hiện tại vượt qua thời gian kết thúc, gửi sự kiện thông báo đấu giá kết thúc
+        await dispatch(actGetMostPriceAuctionGetAsync(data1, token));
+        if (mostPrice?.customer_id === user?._id) {
+          let data = {
+            winner_id: mostPrice?.customer_id,
+            auction_id: auctionID,
+            host_id: user?._id,
+            price: mostPrice?.price,
+          };
+          // Nếu thời gian hiện tại vượt qua thời gian kết thúc, gửi sự kiện thông báo đấu giá kết thúc
+           // Hiển thị modal khi thời gian kết thúc
+          // setWinnerInfo(data);
+          socket.emit("auctionEnded", data);
+          // Xóa interval để ngăn việc kiểm tra tiếp
+          
+        }
         setStatusSubmit(false);
-        setShowWinnerModal(true); // Hiển thị modal khi thời gian kết thúc
-        // setWinnerInfo(data);
-        socket.emit("auctionEnded", data);
-        // Xóa interval để ngăn việc kiểm tra tiếp
+        setShowWinnerModal(true);
         clearInterval(interval);
       }
     }, 1000); // Kiểm tra mỗi giây
@@ -390,7 +398,7 @@ function JoinAuctionRoom() {
               )}
             </p>
             <p>
-              Giá thầu cao nhất: {" "}
+              Giá thầu cao nhất:{" "}
               <CurrencyFormat
                 value={mostPrice?.price}
                 displayType={"text"}

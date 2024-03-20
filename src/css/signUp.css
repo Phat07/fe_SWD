@@ -109,5 +109,32 @@ input.otp:focus {
 .gender-label {
   margin-top: 5px;
 }
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #333; /* Màu nền dark mode */
+  color: #fff; /* Màu chữ dark mode */
+}
 
+.spinner {
+  color: #fff; /* Màu của biểu tượng spinner trong dark mode */
+}
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu đen với độ trong suốt là 50% */
+  z-index: 9999; /* Sắp xếp lớp để nằm trên mọi thứ */
+}
+
+.spinner-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000; /* Đảm bảo spinner nằm trên overlay */
+}
 

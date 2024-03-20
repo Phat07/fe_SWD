@@ -128,13 +128,13 @@ const Header = () => {
                             style={{ marginRight: "10px" }}
                           >
                             <Link
-                              to={"/abouttoauction-customer"}
+                              to={"/notauction-customer"}
                               style={{ textDecoration: "none", color: "black" }}
                             >
-                              Danh sách sắp đấu giá
+                              Danh sách sắp công bố
                             </Link>
                           </Nav.Link>
-                          <Nav.Link
+                          {/* <Nav.Link
                             className="md-6"
                             style={{ marginRight: "10px" }}
                           >
@@ -144,7 +144,7 @@ const Header = () => {
                             >
                               Phòng đấu giá
                             </Link>
-                          </Nav.Link>
+                          </Nav.Link> */}
                         </>
                       )
                       // : (

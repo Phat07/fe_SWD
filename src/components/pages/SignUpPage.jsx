@@ -9,8 +9,11 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../css/signUp.css";
 import { useDispatch, useSelector } from "react-redux";
 import { actAllRoleGetAsync, actPostUserAsync } from "../../store/user/action";
-import { FaMale, FaFemale } from "react-icons/fa";
+import { FaMale, FaFemale, FaSpinner } from "react-icons/fa";
 import { BsFillPersonFill } from "react-icons/bs";
+import { Spinner } from "react-bootstrap";
+
+import axios from "axios";
 
 const SignUpPage = () => {
   const [validated, setValidated] = useState(false);
@@ -39,7 +42,7 @@ const SignUpPage = () => {
   const [emailVerified, setEmailVerified] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để điều khiển hiển thị/masquerade password
-
+  const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState("");
   console.log("otp", otp);
   // kiểm tra email trước khi truyền lên be
@@ -72,15 +75,68 @@ const SignUpPage = () => {
       setPasswordMatch(value === formData.password);
     }
   };
-  const convertToBase64 = async (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+  const handleOTPVerification = () => {
+    axios
+      .post("http://localhost:3001/users/CheckOTP", {
+        user_mail: formData.email,
+        otp_code: otp, // Giả sử biến otpCode chứa mã OTP đã được tạo ra trước đó
+      })
+      .then((verifyResponse) => {
+        setEmailVerified(true);
+        setShowOTPModal(false);
+        document.getElementById("signUpButton").style.backgroundColor =
+          "#007bff";
+        document.getElementById("signUpButton").style.color = "#fff";
+        // Xử lý kết quả trả về từ việc xác minh OTP (nếu cần)
+        alert("Chúc mừng bạn đã xác minh thành công.");
+        console.log("Verify OTP response:", verifyResponse.data);
+      })
+      .catch((verifyError) => {
+        // Xử lý lỗi nếu có khi xác minh OTP
+        console.error("There was a problem verifying OTP:", verifyError);
+        alert("Có lỗi xảy ra khi xác minh mã OTP.");
+      });
+  };
+
+  const handleEmailVerification = () => {
+    const isEmailValid = validateEmail(formData?.email);
+
+    if (isEmailValid) {
+      // Nếu địa chỉ email hợp lệ, gọi API POST
+      setIsLoading(true);
+      axios
+        .post("http://localhost:3001/users/SendMailOTP", {
+          UserMail: formData.email,
+        })
+        .then((response) => {
+          // Xử lý kết quả trả về từ server (nếu cần)
+          console.log("Server response:", response.data);
+          if (
+            response.data.message == "Verification email sent successfully."
+          ) {
+            setShowOTPModal(true);
+            // gọi thêm cho tui một api post gửi user_mail và otp_code
+          }
+        })
+        .catch((error) => {
+          // Xử lý lỗi nếu có
+          console.error("There was a problem with the axios request:", error);
+          alert(error.response.data.error);
+        })
+        .finally(() => {
+          // Kết thúc loading sau khi nhận được phản hồi từ API
+          setIsLoading(false);
+        });
+    } else {
+      // Nếu địa chỉ email không hợp lệ, thực hiện các hành động phù hợp (ở đây là log ra console và thiết lập trạng thái email)
+      alert("Email không hợp lệ");
+      // setStatusEmail(false);
+    }
+
+    // Hiển thị modal
+
+    // Log ra giá trị của hàm validateEmail
+    console.log("bbb", isEmailValid);
   };
 
   const handleSubmit = async (e) => {
@@ -91,7 +147,17 @@ const SignUpPage = () => {
       setValidated(true);
       return;
     }
-    
+    if (!formData.image) {
+      // Nếu không có avatar được chọn, hiển thị thông báo và ngăn chặn submit
+      alert("Please upload an avatar.");
+      return;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      // Nếu mật khẩu và mật khẩu xác nhận không trùng khớp, hiển thị thông báo và ngăn chặn submit
+      alert("Passwords do not match.");
+      return;
+    }
+    setIsLoading(true);
     const formData1 = new FormData();
     formData1.append("image", formData?.image); // Giữ nguyên file hình ảnh
     formData1.append("username", formData?.username);
@@ -102,8 +168,17 @@ const SignUpPage = () => {
     formData1.append("phone", formData?.phone);
     formData1.append("role_id", formData?.role_id);
     formData1.append("gender", formData?.gender);
-    dispatch(actPostUserAsync(formData1));
-    navigate("/login");
+    // dispatch(actPostUserAsync(formData1));
+    try {
+      await dispatch(actPostUserAsync(formData1)); // Gửi request API và đợi phản hồi
+      // Nếu request thành công, có thể thực hiện các hành động khác ở đây
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error("Error:", error);
+      // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác tương ứng
+    } finally {
+      setIsLoading(false); // Ẩn spinner/loading sau khi nhận được phản hồi từ API (hoặc xảy ra lỗi)
+    }
   };
 
   const handleRemoveAvatar = (index) => {
@@ -111,7 +186,6 @@ const SignUpPage = () => {
     newAvatars.splice(index, 1);
     setFormData({ ...formData, image: newAvatars });
   };
-
 
   const {
     getRootProps: getAvatarRootProps,
@@ -134,7 +208,10 @@ const SignUpPage = () => {
   const handleGenderSelect = (selectedGender) => {
     setFormData({ ...formData, gender: selectedGender });
   };
-
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    setOtp(value.replace(/\D/, "")); // Loại bỏ tất cả các ký tự không phải là số
+  };
   console.log("test", formData);
   return (
     <>
@@ -170,7 +247,7 @@ const SignUpPage = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    // disabled={!emailVerified}
+                    disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a username.
@@ -184,7 +261,7 @@ const SignUpPage = () => {
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    // disabled={!emailVerified}
+                    disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a fullName.
@@ -193,7 +270,11 @@ const SignUpPage = () => {
                 {/* tạo một select option chọn gender giúp tui gồm male và female */}
                 <Form.Group controlId="gender">
                   <Form.Label>Gender</Form.Label>
-                  <div className="gender-icons">
+                  <div
+                    className="gender-icons"
+                    disabled={!emailVerified}
+                    style={{ pointerEvents: emailVerified ? "auto" : "none" }}
+                  >
                     <div
                       className={`gender-icon ${
                         formData.gender === "male" ? "selected" : ""
@@ -233,13 +314,42 @@ const SignUpPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     style={{ marginRight: "10px" }}
-                    // disabled={emailVerified}
+                    disabled={emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter a valid email.
                   </Form.Control.Feedback>
                 </Form.Group>
-
+                <Button
+                  className="verify-email-button"
+                  variant="primary"
+                  onClick={handleEmailVerification}
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "#fff",
+                    color: "#007bff",
+                    border: "solid #007bff 1px",
+                    borderRadius: "5px",
+                    padding: "10px 20px",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    display: "block",
+                    width: "100%",
+                    position: "relative",
+                    fontWeight: "500",
+                  }}
+                  disabled={emailVerified}
+                >
+                  Verify Email{" "}
+                  <FiMail
+                    style={{
+                      fontSize: "20",
+                      position: "absolute",
+                      top: "12px",
+                      marginLeft: "5px",
+                    }}
+                  />
+                </Button>
                 <Row className="align-items-center">
                   <Col xs={10}>
                     <Form.Group controlId="password" className="mb-0">
@@ -250,7 +360,7 @@ const SignUpPage = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        // disabled={!emailVerified}
+                        disabled={!emailVerified}
                       />
                       <Form.Control.Feedback type="invalid">
                         Please enter a password.
@@ -282,7 +392,7 @@ const SignUpPage = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     isInvalid={!passwordMatch}
-                    // disabled={!emailVerified}
+                    disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Passwords do not match.
@@ -297,7 +407,7 @@ const SignUpPage = () => {
                     name="role"
                     value={formData?.role_id}
                     onChange={handleChange}
-                    // disabled={!emailVerified}
+                    disabled={!emailVerified}
                   >
                     <option value="">Select Role</option>
                     {rolePage.map((roleOption) => (
@@ -317,7 +427,7 @@ const SignUpPage = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    // disabled={!emailVerified}
+                    disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
                     Please enter your address.
@@ -332,16 +442,22 @@ const SignUpPage = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    // disabled={!emailVerified}
+                    pattern="[0-9]{10}" // Bắt buộc nhập 10 chữ số
+                    maxLength={10}
+                    disabled={!emailVerified}
                   />
                   <Form.Control.Feedback type="invalid">
-                    Please enter your phone number.
+                    Please enter the phone number and it must be 10 digits.
                   </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group controlId="image">
                   <Form.Label>Avatar</Form.Label>
-                  <div {...getAvatarRootProps()} className="dropzone">
+                  <div
+                    {...getAvatarRootProps()}
+                    className="dropzone"
+                    style={{ pointerEvents: emailVerified ? "auto" : "none" }}
+                  >
                     <input {...getAvatarInputProps()} />
                     <div className="dropzone-content">
                       {formData.image && (
@@ -376,10 +492,11 @@ const SignUpPage = () => {
                     type="submit"
                     style={{
                       marginTop: "20px",
-                      backgroundColor: "#007bff",
-                      color: "#fff",
+                      backgroundColor: "#E5E8EB",
+                      color: "#A2ACB8",
                       border: "none",
                     }}
+                    disabled={!emailVerified}
                   >
                     Sign Up <FontAwesomeIcon icon={faUserPlus} />
                   </Button>
@@ -389,6 +506,57 @@ const SignUpPage = () => {
           </Col>
         </Row>
       </Container>
+      <Modal show={showOTPModal} onHide={() => setShowOTPModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Email Verification</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {/* {statusEmail === false ? (
+            <p>Email invalidate</p>
+          ) : */}
+          <p>
+            An OTP has been sent to your email. Please verify your email
+            address.
+            <br />
+            <input
+              type="text"
+              className="otp"
+              placeholder="Nhập OTP"
+              value={otp}
+              onChange={handleInputChange}
+            />
+          </p>
+          {/* Your OTP verification input and logic can be implemented here */}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowOTPModal(false)}>
+            Cancel
+          </Button>
+          {/* {statusEmail === false ? (
+            <></>
+          ) : ( */}
+          <Button variant="primary" onClick={handleOTPVerification}>
+            Verify
+          </Button>
+          {/* )} */}
+        </Modal.Footer>
+      </Modal>
+      <div>
+        {/* {isLoading && <FaSpinner className="spinner" />} */}
+        {isLoading ? (
+          <>
+            <div className="overlay"></div>
+            <div className="spinner-container">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
+        {/* Các thành phần khác của giao diện */}
+      </div>
     </>
   );
 };

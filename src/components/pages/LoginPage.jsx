@@ -109,7 +109,7 @@ const LoginPage = () => {
                     name="username"
                     placeholder="Enter username"
                     style={{ width: "500px" }}
-                    value={formData.userName}
+                    value={formData.username}
                     onChange={handleChange}
                   />
                 </Form.Group>
