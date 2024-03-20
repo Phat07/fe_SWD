@@ -9,11 +9,14 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { actPostWalletUserByIdAsync } from "../../store/wallet/action";
 import { toast } from "react-toastify";
+import Modal from "react-bootstrap/Modal";
+import { QRCodeSVG } from "qrcode.react";
 function PaidItem() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
   console.log("userPaid", user);
   const [addMoney, setAddMoney] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -23,7 +26,7 @@ function PaidItem() {
     amount: 0, // Lưu trữ dưới dạng số để dễ dàng thực hiện các phép toán
     // transferContent: "Thanh toan don hang 1234",
   });
-
+  const qrData = "https://me.momo.vn/MRIBTQtPfesBuWuEi7i5TE";
   const handleAddToCard = (money) => {
     // Chuyển đổi chuỗi sang số trước khi format
     const amountNumber = parseFloat(money);
@@ -40,6 +43,24 @@ function PaidItem() {
       console.error("Giá trị nhập không phải là số.");
     }
   };
+  // function handleSubmit() {
+  //   if (addMoney && parseFloat(addMoney) >= 20000) {
+  //     let data = {
+  //       user_id: user?._id,
+  //       type_report: "money",
+  //       description: `${user?.username} - ${addMoney}`,
+  //       note: "",
+  //     };
+
+  //     dispatch(actPostWalletUserByIdAsync(data, token)).then(() => {
+  //       setAddMoney("");
+  //       setPaymentInfo({ ...paymentInfo, amount: 0 });
+  //     });
+  //   } else {
+  //     // alert("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
+  //     toast.error("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
+  //   }
+  // }
   function handleSubmit() {
     if (addMoney && parseFloat(addMoney) >= 20000) {
       let data = {
@@ -51,10 +72,10 @@ function PaidItem() {
 
       dispatch(actPostWalletUserByIdAsync(data, token)).then(() => {
         setAddMoney("");
-        setPaymentInfo({ ...paymentInfo, amount: 0 });
+        // setPaymentInfo({ ...paymentInfo, amount: 0 });
+        setShowModal(true); // Show the modal after successful submission
       });
     } else {
-      // alert("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
       toast.error("Vui lòng nhập số tiền hợp lệ để nạp vào ví.");
     }
   }
@@ -132,6 +153,56 @@ function PaidItem() {
           </Row>
         </Container>
       </div>
+      {/* Modal for QR Code and Payment Info */}
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          // Reset thông tin thanh toán khi đóng Modal
+          setPaymentInfo({ ...paymentInfo, amount: 0 });
+        }}
+        size="xl"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Mã QR Thanh Toán</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row className="justify-content-md-center">
+              <Col xs={12} md={3}>
+                <Card>
+                  <Card.Body>
+                    <div className="text-center">
+                      <QRCodeSVG value={qrData} size={200} />
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col xs={12} md={9}>
+                <Card>
+                  <Card.Body>
+                    <Card.Title>Thông Tin Thanh Toán</Card.Title>
+                    <Card.Text>Tên khách hàng: {user.fullName}</Card.Text>
+                    <Card.Text>Số tiền: {paymentInfo.amount}</Card.Text>
+                    <Card.Text>
+                      Nội dung chuyển khoản: <strong>{user.username}</strong> -{" "}
+                      <strong>{paymentInfo.amount}</strong>
+                    </Card.Text>
+                    {/* <Button
+                      color="primary"
+                      onClick={() => setShowModal(false)}
+                      md={2}
+                    >
+                      Quay Lại
+                    </Button> */}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
     </div>
     //   <div className="footer-container">
     //     <Footer />

@@ -61,7 +61,7 @@ export function actPostWalletUserByIdAsync(data, token) {
     try {
       const response = await WalletServices.addWallet(data, token);
       if (response.status === 200 || response.status === 201) {
-        toast.success("New Wallets has been added successfully ~");
+        toast.warning("Hãy đợi Admin xác nhận tiền của bạn ~");
       }
       dispatch(actGetWalletByUserAsync(data?.user_id, token));
     } catch (error) {
