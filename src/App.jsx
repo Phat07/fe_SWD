@@ -141,7 +141,7 @@ function App() {
           }
         />
         <Route
-          path="/abouttoauction-customer"
+          path="/notauction-customer"
           element={
             user?.role_id?.title === "HOST" ? (
               <Navigate to="/" replace />

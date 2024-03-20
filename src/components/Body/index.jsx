@@ -2,7 +2,6 @@
 import React from "react";
 import Banner from "../banner";
 import Promotions from "../promotions";
-import ProductList from "../ProductList";
 import AuctionPage from "../pages/AuctionPage";
 import { useSelector } from "react-redux";
 import CarouselImg from "../Carousel";

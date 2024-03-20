@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { actAllRoleGetAsync, actPostUserAsync } from "../../store/user/action";
 import { FaMale, FaFemale, FaSpinner } from "react-icons/fa";
 import { BsFillPersonFill } from "react-icons/bs";
+import { Spinner } from "react-bootstrap";
+
 import axios from "axios";
 
 const SignUpPage = () => {
@@ -119,7 +121,7 @@ const SignUpPage = () => {
         .catch((error) => {
           // Xử lý lỗi nếu có
           console.error("There was a problem with the axios request:", error);
-          alert("");
+          alert(error.response.data.error);
         })
         .finally(() => {
           // Kết thúc loading sau khi nhận được phản hồi từ API
@@ -127,8 +129,8 @@ const SignUpPage = () => {
         });
     } else {
       // Nếu địa chỉ email không hợp lệ, thực hiện các hành động phù hợp (ở đây là log ra console và thiết lập trạng thái email)
-      console.log("Email không hợp lệ");
-      setStatusEmail(false);
+      alert("Email không hợp lệ");
+      // setStatusEmail(false);
     }
 
     // Hiển thị modal
@@ -155,6 +157,7 @@ const SignUpPage = () => {
       alert("Passwords do not match.");
       return;
     }
+    setIsLoading(true);
     const formData1 = new FormData();
     formData1.append("image", formData?.image); // Giữ nguyên file hình ảnh
     formData1.append("username", formData?.username);
@@ -165,7 +168,17 @@ const SignUpPage = () => {
     formData1.append("phone", formData?.phone);
     formData1.append("role_id", formData?.role_id);
     formData1.append("gender", formData?.gender);
-    dispatch(actPostUserAsync(formData1));
+    // dispatch(actPostUserAsync(formData1));
+    try {
+      await dispatch(actPostUserAsync(formData1)); // Gửi request API và đợi phản hồi
+      // Nếu request thành công, có thể thực hiện các hành động khác ở đây
+    } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error("Error:", error);
+      // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác tương ứng
+    } finally {
+      setIsLoading(false); // Ẩn spinner/loading sau khi nhận được phản hồi từ API (hoặc xảy ra lỗi)
+    }
   };
 
   const handleRemoveAvatar = (index) => {
@@ -197,7 +210,7 @@ const SignUpPage = () => {
   };
   const handleInputChange = (e) => {
     const { value } = e.target;
-    setOtp(value.replace(/\D/, '')); // Loại bỏ tất cả các ký tự không phải là số
+    setOtp(value.replace(/\D/, "")); // Loại bỏ tất cả các ký tự không phải là số
   };
   console.log("test", formData);
   return (
@@ -498,40 +511,50 @@ const SignUpPage = () => {
           <Modal.Title>Email Verification</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {statusEmail === false ? (
+          {/* {statusEmail === false ? (
             <p>Email invalidate</p>
-          ) : (
-            <p>
-              An OTP has been sent to your email. Please verify your email
-              address.
-              <br />
-              <input
-                type="text"
-                className="otp"
-                placeholder="Nhập OTP"
-                value={otp}
-                onChange={handleInputChange}
-              />
-            </p>
-          )}
-
+          ) : */}
+          <p>
+            An OTP has been sent to your email. Please verify your email
+            address.
+            <br />
+            <input
+              type="text"
+              className="otp"
+              placeholder="Nhập OTP"
+              value={otp}
+              onChange={handleInputChange}
+            />
+          </p>
           {/* Your OTP verification input and logic can be implemented here */}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowOTPModal(false)}>
             Cancel
           </Button>
-          {statusEmail === false ? (
+          {/* {statusEmail === false ? (
             <></>
-          ) : (
-            <Button variant="primary" onClick={handleOTPVerification}>
-              Verify
-            </Button>
-          )}
+          ) : ( */}
+          <Button variant="primary" onClick={handleOTPVerification}>
+            Verify
+          </Button>
+          {/* )} */}
         </Modal.Footer>
       </Modal>
       <div>
-        {isLoading && <FaSpinner className="spinner" />}
+        {/* {isLoading && <FaSpinner className="spinner" />} */}
+        {isLoading ? (
+          <>
+            <div className="overlay"></div>
+            <div className="spinner-container">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          </>
+        ) : (
+          ""
+        )}
         {/* Các thành phần khác của giao diện */}
       </div>
     </>

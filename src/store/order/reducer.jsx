@@ -1,16 +1,22 @@
-import { ORDER } from "./action";
+import { ORDER_BY_MEMBER, ORDER_BY_HOST } from "./action";
 
 const initialState = {
-  orders: [],
+  ordersByMember: [],
+  ordersByHost: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case ORDER:
+    case ORDER_BY_MEMBER:
       return {
         ...state,
-        orders: action.payload,
-      }
+        ordersByMember: action.payload,
+      };
+    case ORDER_BY_HOST:
+      return {
+        ...state,
+        ordersByHost: action.payload,
+      };
     default:
       return state;
   }

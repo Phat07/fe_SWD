@@ -92,7 +92,7 @@ function DetailPage(props) {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
-  console.log("test",formatDate('2024-03-16T18:10:00.000+00:00'));
+  console.log("test", formatDate("2024-03-16T18:10:00.000+00:00"));
 
   const handleJoinConfirmation = () => {
     let data = {
@@ -227,21 +227,6 @@ function DetailPage(props) {
                     </Card.Body>
                   </Card>
                 </div>
-                {/* <div className="col-lg-6 col-md-6">
-                  <Card>
-                    <Card.Body>
-                      <Card.Title>Video Sản Phẩm</Card.Title>
-                      <div style={{ position: "relative", marginTop: "20px" }}>
-                        <video controls style={{ maxWidth: "100%" }}>
-                          {auction?.product_id?.video?.map((video, index) => (
-                            <source key={index} src={video} type="video/mp4" />
-                          ))}
-                          Your browser does not support the video tag.
-                        </video>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </div> */}
               </div>
             </div>
             <div className="col-lg-7 col-md-8">
@@ -343,7 +328,9 @@ function DetailPage(props) {
                     margin: "15px",
                   }}
                 >
-                  {timeDiff > 0 ? (
+                  {auction?.status === "not" ? (
+                    <h5>Thời gian đăng ký đấu giá chưa mở</h5>
+                  ) : timeDiff > 0 ? (
                     <>
                       <FaGavel />
                       <Button
@@ -369,7 +356,6 @@ function DetailPage(props) {
           style={{ marginTop: "20px" }}
         >
           <div className="col-lg-12 row ul">
-            {/* Render các div và xác định trạng thái active bằng className */}
             <div
               className={`col-lg-4 ${activeDiv === 1 ? "active" : ""}`}
               onClick={() => handleDivClick(1)}
@@ -399,45 +385,7 @@ function DetailPage(props) {
           <h3 style={{ marginBottom: "25px", fontWeight: "800" }}>
             Tài sản khác
           </h3>
-          <div className="row d-flex g-4">
-            {/* {auctionRooms.map((room) => (
-              <Col key={room.id} sm={12} md={3} className="mb-4">
-                <Card>
-                  <Carousel>
-                    {room.images.map((image, index) => (
-                      <Carousel.Item key={index}>
-                        <img
-                          className="d-block w-100"
-                          src={image}
-                          alt={`Slide ${index + 1}`}
-                          style={{
-                            height: "200px",
-                            objectFit: "cover",
-                            width: "100%",
-                          }}
-                        />
-                      </Carousel.Item>
-                    ))}
-                  </Carousel>
-                  <Card.Body>
-                    <Card.Title>{room.title}</Card.Title>
-                    <Card.Text>{room.description}</Card.Text>
-                    <Card.Text>Mã sản phẩm: {room.productCode}</Card.Text>
-                    <Card.Text>
-                      Số người tham gia: {room.currentParticipants}
-                    </Card.Text>
-                    <Card.Text>
-                      Thời gian: {room.startTime} - {room.endTime} (
-                      {room.duration})
-                    </Card.Text>
-                    <Button variant="primary" onClick={() => handleJoin(room)}>
-                      Tham gia
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))} */}
-          </div>
+          <div className="row d-flex g-4"></div>
         </div>
       </div>
       <div className="footer-container">

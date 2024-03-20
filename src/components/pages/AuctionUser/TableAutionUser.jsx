@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
@@ -12,6 +12,7 @@ import Countdown from "react-countdown";
 
 const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
   const auctionRegisEndTime = new Date(data?.regitration_end_time).getTime();
+  const [searchTerm, setSearchTerm] = useState("");
   console.log("End time", auctionRegisEndTime);
   const currentTime = new Date().getTime();
   const timeDiff = auctionRegisEndTime - currentTime;
@@ -20,6 +21,11 @@ const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
+  const filteredData = searchTerm
+    ? data.filter((item) =>
+        item.product_id.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : data;
   return (
     <Row>
       <Col xs="12">
@@ -31,13 +37,12 @@ const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
             type="search"
             placeholder="Search Name Auction"
             aria-label="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button variant="outline-success" type="submit">
-            Search
-          </Button>
         </Form>
       </Col>
-      {data?.map((item, index) => (
+      {filteredData?.map((item, index) => (
         <Col key={index} sm={12} md={4} className="mb-4">
           <Card>
             <Carousel>
@@ -60,35 +65,76 @@ const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
               <Card.Title>{item?.product_id?.name}</Card.Title>
               <Card.Text>Người tổ chức: {item?.host_id?.fullName}</Card.Text>
               {item?.status === "not yet auctioned" ? (
-                <Card.Text>Thời gian còn lại đến khi hết đang kí</Card.Text>
+                <Card.Text>Thời gian còn lại đến khi hết đăng kí</Card.Text>
+              ) : item?.status === "not" ? (
+                <Card.Text>Thời gian còn lại để mở đăng ký đấu giá</Card.Text>
+              ) : (
+                <Card.Text>Thời gian còn lại đến khi đấu giá</Card.Text>
+              )}
+              {item?.status === "not yet auctioned" ? (
+                <Card.Text>
+                  {/* <div className="timestamp-div"> */}
+                  <div className="countdown-container">
+                    <Countdown
+                      date={new Date(item?.regitration_end_time)}
+                      renderer={({
+                        days,
+                        hours,
+                        minutes,
+                        seconds,
+                        completed,
+                      }) => {
+                        if (completed) {
+                          return "Expired";
+                        } else {
+                          return (
+                            <>
+                              {days} days {hours} hours {minutes} minutes{" "}
+                              {seconds} seconds{" "}
+                              {/* <FaAngleDoubleRight style={{ color: "blue" }} />{" "}
+                              kết thúc đấu giá */}
+                            </>
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* </div> */}
+                </Card.Text>
+              ) : item?.status === "not" ? (
+                <Card.Text>
+                  {/* <div className="timestamp-div"> */}
+                  <div className="countdown-container">
+                    <Countdown
+                      date={new Date(item?.regitration_start_time)}
+                      renderer={({
+                        days,
+                        hours,
+                        minutes,
+                        seconds,
+                        completed,
+                      }) => {
+                        if (completed) {
+                          return "Expired";
+                        } else {
+                          return (
+                            <>
+                              {days} days {hours} hours {minutes} minutes{" "}
+                              {seconds} seconds{" "}
+                              {/* <FaAngleDoubleRight style={{ color: "blue" }} />{" "}
+                              kết thúc đấu giá */}
+                            </>
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                  {/* </div> */}
+                </Card.Text>
               ) : (
                 <Card.Text>Thời gian còn lại đến khi đấu giá</Card.Text>
               )}
 
-              <Card.Text>
-                {" "}
-                {/* <div className="timestamp-div"> */}
-                <div className="countdown-container">
-                  {timeDiff > 0 ? (
-                    <div className="countdown-container">
-                      <Countdown
-                        date={Date.now() + timeDiff}
-                        renderer={({ days, hours, minutes, seconds }) => (
-                          <div>
-                            <span>{days} days</span> -{" "}
-                            <span>{hours} hours</span> -{" "}
-                            <span>{minutes} minutes</span> -{" "}
-                            <span>{seconds} seconds</span>
-                          </div>
-                        )}
-                      />
-                    </div>
-                  ) : (
-                    <p>0 days - 0 hours - 0 minutes - 0 seconds</p>
-                  )}
-                </div>
-                {/* </div> */}
-              </Card.Text>
               <Button variant="primary" onClick={() => onUpdate(item)}>
                 Chi tiết
               </Button>

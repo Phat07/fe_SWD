@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Card, Row, Col, Button, Form, Table, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { actOrderGetAsync } from "../../store/order/action";
+import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { actOrderByMemberGetAsync } from "../../store/order/action";
 
 const HistoryTransaction = () => {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -12,13 +13,23 @@ const HistoryTransaction = () => {
   const navigate = useNavigate();
   const orders = useSelector((state) => state.ORDER.orders);
   const dispatch = useDispatch();
+  const orderMember = useSelector((state) => state.ORDER.ordersByMember);
+  const orderHost = useSelector((state) => state.ORDER.ordersByHost);
+
+  console.log("member", orderMember);
+  console.log("host", orderHost);
   useEffect(() => {
-    dispatch(actOrderGetAsync(token));
-  }, []);
+    // dispatch(actOrderGetAsync(token));
+    if (user?.user_id?.title === "MEMBER") {
+      dispatch(actOrderByMemberGetAsync(user?._id, token));
+    } else {
+      dispatch(actOrderByMemberGetAsync(user?._id, token));
+    }
+  }, [user]);
 
   const host = orders?.filter((e) => e?.auction_id?.host_id?._id === user?._id);
   const winner = orders?.filter((e) => e?.winner_id?._id === user?._id);
-  console.log("host",host);
+  console.log("host", host);
   function formatCurrencyVND(amount) {
     return amount?.toLocaleString("vi-VN", {
       style: "currency",
@@ -32,6 +43,11 @@ const HistoryTransaction = () => {
 
   const handleCloseWinnerModal = () => {
     setShowWinnerModal(false);
+  };
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return format(date, "dd/MM/yyyy - HH:mm");
   };
   return (
     <Row>
@@ -54,14 +70,16 @@ const HistoryTransaction = () => {
                 <tbody>
                   {user?.role_id?.title === "HOST" ? (
                     <>
-                      {host.map((item, index) => (
+                      {orderHost?.map((item, index) => (
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>{formatCurrencyVND(item.price)}</td>
                           <td>
                             <Button
                               variant="success"
-                              onClick={() => handleOpenWinnerModal(item?.winner_id)}
+                              onClick={() =>
+                                handleOpenWinnerModal(item?.winner_id)
+                              }
                             >
                               Show winner
                             </Button>
@@ -83,17 +101,17 @@ const HistoryTransaction = () => {
                     </>
                   ) : (
                     <>
-                      {winner.map((item, index) => (
+                      {orderMember?.map((item, index) => (
                         <tr key={index}>
-                          <td>{item.id}</td>
-                          <td>{formatCurrencyVND(item.money)}</td>
+                          <td>{index + 1}</td>
+                          <td>{formatCurrencyVND(item.price)}</td>
                           <td>You are winner</td>
                           <td>
                             <Button
                               variant="success"
                               onClick={() =>
                                 navigate(
-                                  `/join-room-auction/${item?.auction_id?._id}`
+                                  `/join-room-auction/${item?.auction_id}`
                                 )
                               }
                             >

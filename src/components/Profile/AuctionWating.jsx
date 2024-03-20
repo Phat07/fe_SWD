@@ -4,7 +4,7 @@ import ModalConfirmDeleteWating from "./ModalConfirmDeleteWating"; // Make sure 
 import TableAutionWating from "./TableAutionWating";
 import ChangeTabAutionWating from "./ChangeTabAutionWating";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import socketIOClient from "socket.io-client";
 
 import {
@@ -20,7 +20,7 @@ function AuctionWating() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.USER.currentUser);
   const token = localStorage.getItem("ACCESS_TOKEN");
-
+const dispatch = useDispatch()
   // Define other data arrays similarly
 
   const auctionNotYetMember = useSelector(

@@ -10,13 +10,14 @@ import { useSelector } from "react-redux";
 import {
   actAuctionGetAsync,
   actAboutToAuctionCustomerGetAsync,
+  actNotAuctionCustomerGetAsync,
 } from "../../../store/auction/action";
 
 function AboutToAuctionUser() {
   // Define other data arrays similarly
   const token = localStorage.getItem("ACCESS_TOKEN");
   const aboutToCustomer = useSelector(
-    (state) => state.AUCTION.aboutToAuctionCustomer
+    (state) => state.AUCTION.notAuctionCustomer
   );
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
@@ -24,11 +25,12 @@ function AboutToAuctionUser() {
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
     dispatch(actAboutToAuctionCustomerGetAsync(token));
+    dispatch(actNotAuctionCustomerGetAsync(token));
   }, [user]);
   const navigate = useNavigate();
 
   const handleDetailAuction = (auction) => {
-    navigate(`/auction-detail/${auction._id}`);
+    navigate(`/detail/${auction._id}`);
     console.log("Update user at id:", auction._id);
   };
   useEffect(() => {
