@@ -3,7 +3,7 @@ import { Card, Row, Col, Button, Form, Table, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { actOrderByMemberGetAsync } from "../../store/order/action";
+import { actOrderByHostGetAsync, actOrderByMemberGetAsync } from "../../store/order/action";
 
 const HistoryTransaction = () => {
   const token = localStorage.getItem("ACCESS_TOKEN");
@@ -16,20 +16,15 @@ const HistoryTransaction = () => {
   const orderMember = useSelector((state) => state.ORDER.ordersByMember);
   const orderHost = useSelector((state) => state.ORDER.ordersByHost);
 
-  console.log("member", orderMember);
-  console.log("host", orderHost);
   useEffect(() => {
     // dispatch(actOrderGetAsync(token));
     if (user?.user_id?.title === "MEMBER") {
       dispatch(actOrderByMemberGetAsync(user?._id, token));
     } else {
-      dispatch(actOrderByMemberGetAsync(user?._id, token));
+      dispatch(actOrderByHostGetAsync(user?._id, token));
     }
   }, [user]);
 
-  const host = orders?.filter((e) => e?.auction_id?.host_id?._id === user?._id);
-  const winner = orders?.filter((e) => e?.winner_id?._id === user?._id);
-  console.log("host", host);
   function formatCurrencyVND(amount) {
     return amount?.toLocaleString("vi-VN", {
       style: "currency",
@@ -40,7 +35,7 @@ const HistoryTransaction = () => {
     setWinnerInfo(winnerInfo);
     setShowWinnerModal(true);
   };
-
+  console.log("orderHost", orderHost);
   const handleCloseWinnerModal = () => {
     setShowWinnerModal(false);
   };

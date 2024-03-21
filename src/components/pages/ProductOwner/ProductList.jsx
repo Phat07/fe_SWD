@@ -21,14 +21,12 @@ function Product() {
   // ]);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
   const products = useSelector((state) => state.PRODUCT.products);
-  console.log("products", products);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actProductGetByUserIdAsync(user?._id, token));
@@ -36,7 +34,6 @@ function Product() {
   const navigate = useNavigate();
 
   const handleDelete = (product) => {
-    console.log("Delete item with id:", product.name);
     setDeleteData(product);
     setShowDelete(true);
   };

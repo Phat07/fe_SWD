@@ -22,14 +22,12 @@ const AuctionHistory = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [deleteData, setDeleteData] = useState({});
   const handleDelete = (auction) => {
-    console.log("Delete item with id:", auction.id);
     setDeleteData(auction);
     setShowDelete(true);
   };
   const auctionedMember = useSelector((state) => state.AUCTION.auctinedMember);
   const handleDetailAuction = (auction) => {
     navigate(`/auction-detail/${auction}`);
-    console.log("Update user at id:", auction);
   };
   return (
     <Row>

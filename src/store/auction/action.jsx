@@ -88,12 +88,10 @@ export function actAuctionGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAllAuction(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(allAuction(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -110,7 +108,6 @@ export function actAuctionPutAsync(id, data, token) {
       toast.success("Auction has been update successfully ~");
     } else {
       // toast.error("Post Product to fail");
-      console.log("fail");
     }
   };
 }
@@ -118,12 +115,10 @@ export function actNotAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotAuctionedByUser(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(notAuction(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -137,12 +132,10 @@ export function actNotAuctionCustomerGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotAuctionedByCustomer(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(notAuctionCustomer(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -156,12 +149,10 @@ export function actNotYetAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotYetAuctionedByUser(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(notYetAuction(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -175,12 +166,10 @@ export function actNotYetAuctionCustomerGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotYetAuctionedByCustomer(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(notYetAuctionCustomer(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -194,12 +183,10 @@ export function actAboutToAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionAboutToAuctionByUser(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(aboutToAuction(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -213,12 +200,10 @@ export function actAboutToAuctionCustomerGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAuctionAboutToAuctionByCustomer(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(aboutToAuctionCustomer(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -232,12 +217,10 @@ export function actAuctioningAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctioningByUser(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(Auctioning(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -251,12 +234,10 @@ export function actAuctioningCustomerGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAuctioningByCustomer(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(AuctioningCustomer(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -270,12 +251,10 @@ export function actAuctionedAuctionGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionedByUser(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(Auctioned(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -289,12 +268,10 @@ export function actAuctionedCustomerGetAsync(token) {
   return (dispatch) => {
     AuctionServices.getAuctionedByCustomer(token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(AuctionedCustomer(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -316,7 +293,6 @@ export function actAuctionPostAsync(data, token) {
         // navigate("/manage-auction");
       } else {
         // toast.error("Post Product to fail");
-        console.log("fail");
       }
     } catch (error) {
       if (error.response && error.response.status === 400) {
@@ -371,12 +347,10 @@ export function actAuctionNotYetMemberGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionNotYetByMember(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMemberAuctionNotYet(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -390,12 +364,10 @@ export function actAuctionAboutToMemberGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionAboutToByMember(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMemberAuctionAboutTo(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -409,12 +381,10 @@ export function actAuctioningMemberGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctioningByMember(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMemberAuctioning(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -428,12 +398,10 @@ export function actAuctionedMemberGetAsync(id, token) {
   return (dispatch) => {
     AuctionServices.getAuctionedByMember(id, token)
       .then((response) => {
-        console.log("dataAuction", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMemberAuctioned(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -455,12 +423,10 @@ export function actGetMostPriceAuctionGetAsync(data, token) {
   return (dispatch) => {
     AuctionServices.getMostAuctionBid(data, token)
       .then((response) => {
-        console.log("mostPrice", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMostPriceAuctionId(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -481,12 +447,10 @@ export function actGetMemberJoinAuctionGetAsync(data, token) {
   return (dispatch) => {
     AuctionServices.getMemberJoinAuctionBid(data, token)
       .then((response) => {
-        console.log("mostPrice", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getMemberPriceAuctionId(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -504,8 +468,6 @@ export function actAuctionBidPost(data, token) {
     AuctionServices.postAuctionBid(data, token)
       .then((response) => {
         if (response.status === 200 || response.status === 201) {
-          // dispatch(allAuction(response.data));
-          console.log("successAuction", response);
           let dataMost = {
             auctionId: data?.auctionId,
           };
@@ -514,7 +476,6 @@ export function actAuctionBidPost(data, token) {
           toast.success(`Bạn đã đấu giá thành công với số tiền ${data?.price}`);
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -547,12 +508,10 @@ export function actGetAllMemberJoinAuctionRoomGetAsync(data, token) {
   return (dispatch) => {
     AuctionServices.getAllMemberInJoinAuctionBid(data, token)
       .then((response) => {
-        console.log("mostPrice", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getAllMemberInJoinAuctionRoom(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {

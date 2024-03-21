@@ -18,10 +18,8 @@ function NotYetAuctionUser() {
   const notYetCustomer = useSelector(
     (state) => state.AUCTION.notYetAuctionCustomer
   );
-  console.log("notyet", notYetCustomer);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
     dispatch(actNotYetAuctionCustomerGetAsync(token));
@@ -30,7 +28,6 @@ function NotYetAuctionUser() {
 
   const handleDetailAuction = (auction) => {
     navigate(`/detail/${auction._id}`);
-    console.log("Update user at id:", auction._id);
   };
   useEffect(() => {
     // Kết nối tới Socket.IO server
@@ -39,7 +36,6 @@ function NotYetAuctionUser() {
     // Lắng nghe thông báo từ server khi trạng thái của phiên đấu giá thay đổi
     socket.on("auction_status_changed", () => {
       dispatch(actNotYetAuctionCustomerGetAsync(token));
-      console.log("Auction status changed");
       // Gọi lại các API để cập nhật danh sách các phiên đấu giá
       // fetchAuctions();
     });

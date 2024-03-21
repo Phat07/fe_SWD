@@ -22,12 +22,10 @@ export function actOrderByMemberGetAsync(id, token) {
   return (dispatch) => {
     OrderServices.getAllOrderMember(id, token)
       .then((response) => {
-        console.log("moneyConFig", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(orderByMember(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -42,12 +40,10 @@ export function actOrderByHostGetAsync(id, token) {
   return (dispatch) => {
     OrderServices.getAllOrderHost(id, token)
       .then((response) => {
-        console.log("moneyConFig", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(orderByHost(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {

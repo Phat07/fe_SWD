@@ -13,12 +13,10 @@ export function actRequestGetByUserIdAsync(id, token) {
   return (dispatch) => {
     RequestServices.getAllRequestByUserId(id, token)
       .then((response) => {
-        console.log("Request data: ", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(allRequestById(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {

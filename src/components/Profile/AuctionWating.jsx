@@ -34,19 +34,14 @@ const dispatch = useDispatch()
   );
   const auctionedMember = useSelector((state) => state.AUCTION.auctinedMember);
 
-  console.log("not yet", auctionNotYetMember);
-  console.log("about to", auctionAboutToMember);
-  console.log("aucting", auctioningMember);
-  console.log("auctioned", auctionedMember);
+
   const handleDelete = (auction) => {
-    console.log("Delete item with id:", auction.id);
     setDeleteData(auction);
     setShowDelete(true);
   };
 
   const handleDetailAuction = (auction) => {
     navigate(`/auction-detail/${auction}`);
-    console.log("Update user at id:", auction.id);
   };
   useEffect(() => {
     // Kết nối tới Socket.IO server
@@ -63,7 +58,6 @@ const dispatch = useDispatch()
       dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
       dispatch(actAuctioningMemberGetAsync(user?._id, token));
       dispatch(actAuctionedMemberGetAsync(user?._id, token));
-      console.log("Auction status changed");
       // Gọi lại các API để cập nhật danh sách các phiên đấu giá
       // fetchAuctions();
     });

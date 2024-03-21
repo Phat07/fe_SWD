@@ -14,12 +14,10 @@ export function actMoneyCofigGetAsync(token) {
   return (dispatch) => {
     MoneyConfigServices.getConfigMoney(token)
       .then((response) => {
-        console.log("moneyConFig", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(conFigMoney(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {

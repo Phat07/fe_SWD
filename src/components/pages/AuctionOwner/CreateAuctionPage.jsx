@@ -32,13 +32,10 @@ function CreateAuctionProductForm() {
   const param = useParams();
   const productId = param.productID;
   const token = localStorage.getItem("ACCESS_TOKEN");
-  console.log("productId", productId);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   const navigate = useNavigate();
   const conFigMoney = useSelector((state) => state.MONEYCONFIG.configMoney);
-  console.log("configMoney", conFigMoney);
   const joinAuctionConfig = conFigMoney?.find(
     (config) => config.type_config === "Create auction"
   );
@@ -47,7 +44,6 @@ function CreateAuctionProductForm() {
   }, []);
   const handleStartingPriceChange = (e) => {
     const value = e;
-    console.log("value", value);
     setStartingPrice(value); // Cập nhật giá trị nhập vào mỗi lần thay đổi
 
     // Kiểm tra điều kiện và cập nhật lỗi nếu có

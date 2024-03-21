@@ -14,7 +14,7 @@ import { QRCodeSVG } from "qrcode.react";
 function PaidItem() {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("userPaid", user);
+ 
   const [addMoney, setAddMoney] = useState("");
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();

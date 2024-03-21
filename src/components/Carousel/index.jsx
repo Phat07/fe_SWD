@@ -20,7 +20,6 @@ function CarouselImg(props) {
     "../../../public/assets/images/background/5.jpg",
   ];
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   return (
     <Container
     //   style={{

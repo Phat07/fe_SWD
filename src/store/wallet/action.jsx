@@ -22,12 +22,10 @@ export function actGetWalletByUserAsync(data, token) {
   return (dispatch) => {
     WalletServices.getWallet(data, token)
       .then((response) => {
-        console.log("wallets", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getWalletById(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {
@@ -41,12 +39,10 @@ export function actGetWalletHistoryByUserAsync(data, token) {
   return (dispatch) => {
     WalletServices.getWalletHistory(data, token)
       .then((response) => {
-        console.log("wallets", response);
         if (response.status === 200 || response.status === 201) {
           dispatch(getWalletHistoryById(response.data));
         } else {
           // toast.error("get all syllabus to fail");
-          console.log("fail");
         }
       })
       .catch((error) => {

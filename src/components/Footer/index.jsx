@@ -22,7 +22,7 @@ function Footer() {
           <h5>Tài khoản của tôi</h5>
           <ul className="list-unstyled">
             <li><a href="/login" className="text-white">Đăng Nhập</a></li>
-            <li><a href="/shoppingcart" className="text-white">Giỏ Hàng</a></li>
+            {/* <li><a href="/shoppingcart" className="text-white">Giỏ Hàng</a></li> */}
             <li><a href="/profile" className="text-white">Tài Khoản Của Tôi</a></li>
           </ul>
         </Col>

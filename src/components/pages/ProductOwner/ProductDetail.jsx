@@ -22,7 +22,6 @@ const ProductDetail = () => {
   const { productId } = useParams(); // Lấy ID từ URL
   const navigate = useNavigate();
   const products = useSelector((state) => state.PRODUCT.productsALL);
-  console.log("Product: ", products);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const dispatch = useDispatch();
   const [product, setProduct] = useState("");
@@ -54,7 +53,6 @@ const ProductDetail = () => {
       setProductVideos(initialVideos);
     }
   }, [productId, products]);
-  console.log("product Detail", product);
   const user = useSelector((state) => state.USER.currentUser);
 
   // Create refs for file inputs
@@ -97,9 +95,6 @@ const ProductDetail = () => {
     productVideos.forEach((video) => {
       formData.append("video", video.file);
     });
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
     setIsSubmitting(true);
     if (productId) {
       dispatch(actProductPutAsync(productId, formData, token)).then(() => {

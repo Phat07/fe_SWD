@@ -20,7 +20,6 @@ function Banner(props) {
     "../../../public/assets/images/background/background5.jpg",
   ];
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   return (
     <Container
       fluid
@@ -43,22 +42,22 @@ function Banner(props) {
         </Col>
         <Col xs={10} md={11} lg={11}>
           <h1 style={{ color: "#fff", textAlign: "center" }}>
-            Welcome to Orchid Auction!
+            Chào mừng đến với cuộc đấu giá hoa lan!
           </h1>
-          <p style={{ color: "#fff" }}>
-            As one of the auction houses in Vietnam, Orchid Auction is the unit
-            pioneering the application of information technology in auction
-            activities. Orchid Auction is the official online auction organizer
-            in Vietnam, on February 15, 2024.
+          <p style={{ color: "#fff", textAlign:"center" }}>
+            Là một trong những nhà đấu giá tại Việt Nam, Orchid Auction là đơn
+            vị tiên phong ứng dụng công nghệ thông tin trong đấu giá các hoạt
+            động. Orchid Auction là nhà tổ chức đấu giá trực tuyến chính thức
+            tại Việt Nam, ngày 15 tháng 2 năm 2024.
           </p>
         </Col>
         {user?.role_id?.title === "HOST" ? (
           ""
         ) : (
           <div style={{ textAlign: "left" }}>
-            <Link to="/room-auction">
+            {/* <Link to="/room-auction">
               <Button variant="danger">Join the Auction</Button>
-            </Link>
+            </Link> */}
           </div>
         )}
       </Row>
