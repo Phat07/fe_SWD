@@ -7,14 +7,12 @@ import { format } from "date-fns";
 const ReportRequest = () => {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
   const allRequestId = useSelector((state) => state.REQUEST.allRequestId);
-  console.log("allRequestId: ", allRequestId);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actRequestGetByUserIdAsync(user?._id, token));

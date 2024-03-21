@@ -34,13 +34,11 @@ const AccountInfo = () => {
 
   const token = localStorage.getItem("ACCESS_TOKEN");
   const userInfor = useSelector((state) => state.USER.currentUser);
-  console.log("user", userInfor);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actGetWalletByUserAsync(userInfor?._id, token));
   }, [userInfor]);
   const cart = useSelector((state) => state.WALLET.wallet);
-  console.log("cart", cart);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
@@ -48,7 +46,6 @@ const AccountInfo = () => {
 
   const handleUpdate = () => {
     // Gửi thông tin cập nhật tới API hoặc xử lý thông tin cập nhật ở đây
-    console.log("Updated user info", user);
   };
   function formatCurrencyVND(amount) {
     // Sử dụng hàm toLocaleString() để định dạng số

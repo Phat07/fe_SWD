@@ -27,9 +27,6 @@ function AuctionPage() {
     (state) => state.AUCTION.auctions
   );
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
-  console.log("aucting", auctioningCustomer);
-  console.log("auctionHosting",auctioningHosting);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,7 +35,6 @@ function AuctionPage() {
   }, []);
 
   const handleJoin = (aution) => {
-    console.log("Delete item with id:", aution.id);
     setActionData(aution);
     setShow(true);
   };

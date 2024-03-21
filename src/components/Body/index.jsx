@@ -8,7 +8,6 @@ import CarouselImg from "../Carousel";
 
 const Body = () => {
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
 
   return (
     <div className="body-container">

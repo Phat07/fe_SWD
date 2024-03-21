@@ -16,7 +16,7 @@ const LoginPage = () => {
   });
   const navigate = useNavigate();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,7 +28,6 @@ const LoginPage = () => {
     e.preventDefault();
     UserServices.loginUser(formData)
       .then((resFetchMe) => {
-        console.log("resFetchMe", resFetchMe);
         const token = resFetchMe.data.token;
         const currentUser = resFetchMe.data.user;
         const role = resFetchMe.data.user.title;
@@ -41,8 +40,6 @@ const LoginPage = () => {
           .catch((err) => alert("Login or password failed"));
       })
       .catch((error) => {
-        console.log("aaaaa");
-        console.log("error", error);
         if (error) {
           alert(error?.response?.data?.message)
           // toast.error(error?.response?.data?.message);

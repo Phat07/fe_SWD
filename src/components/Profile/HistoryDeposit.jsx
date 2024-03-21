@@ -28,7 +28,7 @@ const HistoryDeposit = () => {
   }
 
   const historyMoney = useSelector((state) => state.WALLET.walletHistory);
-  console.log("history", historyMoney);
+
   const sortedHistory = historyMoney.slice().sort((a, b) => {
     return new Date(b.timestamp) - new Date(a.timestamp);
   });

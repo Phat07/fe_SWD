@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import Header from "../Header";
-import Footer from "../Footer";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { FaGavel, FaLock } from "react-icons/fa";
-import { useTimer } from "react-timer-hook";
 import { format } from "date-fns";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Carousel, Modal } from "react-bootstrap";
 import Countdown from "react-countdown";
-import "../../css/detail.css";
-import { Image, Modal } from "react-bootstrap";
-import { Button, Card, Carousel, Col } from "react-bootstrap";
+import { FaGavel, FaLock } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "../../css/detail.css";
 import {
   actAuctionGetAsync,
   actGetAllMemberJoinAuctionRoomGetAsync,
@@ -17,13 +14,12 @@ import {
 } from "../../store/auction/action";
 import { actMoneyCofigGetAsync } from "../../store/moneyConfig/action";
 import { actJoinRegisterAuctionForMemberAsync } from "../../store/wallet/action";
-import { toast } from "react-toastify";
+import Footer from "../Footer";
+import Header from "../Header";
 
 function DetailPage(props) {
   const navigate = useNavigate();
 
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [showPopup, setShowPopup] = useState(false); // State để kiểm soát hiển thị popup
 
   const [activeDiv, setActiveDiv] = useState(1); // State để theo dõi div đang active
   const { id } = useParams(); // Lấy ID từ URL
@@ -33,23 +29,23 @@ function DetailPage(props) {
 
   const auctions = useSelector((state) => state.AUCTION.auctions);
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("aucctionsss", auctions);
+ 
   const conFigMoney = useSelector((state) => state.MONEYCONFIG.configMoney);
-  console.log("configMoney", conFigMoney);
+
   const joinAuctionConfig = conFigMoney?.find(
     (config) => config.type_config === "Join in auction"
   );
   const mostPriceDetail = useSelector((state) => state.AUCTION.mostPrice);
-  console.log("mostPriceDetail", mostPriceDetail);
+
 
   const allMemberJoinInAuction = useSelector(
     (state) => state.AUCTION.allMemberJoinInAuction
   );
-  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
+
   const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
     (e) => e?.member_id?.role_id?.title !== "HOST"
   );
-  console.log("number", filterNumberMemberJoinRoom);
+
   const token = localStorage.getItem("ACCESS_TOKEN");
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
@@ -66,7 +62,6 @@ function DetailPage(props) {
     const item = auctions.find((i) => i._id === id);
     setAuction(item);
   }, [auctions, id]);
-  console.log("detailAuction", auction);
   const auctionStartTime = new Date(auction?.regitration_end_time).getTime();
   const currentTime = new Date().getTime();
   const timeDiff = auctionStartTime - currentTime;
@@ -78,21 +73,11 @@ function DetailPage(props) {
     setActiveDiv(divIndex); // Set active div bằng index của div được click
   };
 
-  const handleImageClick = (index) => {
-    setSelectedImage(index);
-    setShowPopup(true); // Khi click vào hình ảnh, hiển thị popup
-  };
-
-  const handleClosePopup = (index) => {
-    setSelectedImage(index);
-    setShowPopup(false); // Đóng popup khi nhấn nút đóng
-  };
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     return format(date, "dd/MM/yyyy - HH:mm");
   };
-  console.log("test", formatDate("2024-03-16T18:10:00.000+00:00"));
 
   const handleJoinConfirmation = () => {
     let data = {
@@ -181,18 +166,6 @@ function DetailPage(props) {
                   <Card>
                     <Card.Body>
                       <Card.Title>Ảnh Video Sản Phẩm</Card.Title>
-                      {/* <Carousel>
-                        {auction?.product_id?.image?.map((image, index) => (
-                          <Carousel.Item key={index}>
-                            <Image
-                              className="d-block w-100"
-                              src={image}
-                              alt={`Slide ${index + 1}`}
-                              fluid
-                            />
-                          </Carousel.Item>
-                        ))}
-                      </Carousel> */}
                       <Carousel>
                         {auction?.product_id?.image?.map((image, index) => (
                           <Carousel.Item key={index}>

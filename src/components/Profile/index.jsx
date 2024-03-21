@@ -29,7 +29,6 @@ function Profile() {
   // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   const dispatch = useDispatch();
   useEffect(() => {
     // Kết nối tới Socket.IO server
@@ -46,7 +45,6 @@ function Profile() {
       dispatch(actAuctionAboutToMemberGetAsync(user?._id, token));
       dispatch(actAuctioningMemberGetAsync(user?._id, token));
       dispatch(actAuctionedMemberGetAsync(user?._id, token));
-      console.log("Auction status changed");
       // Gọi lại các API để cập nhật danh sách các phiên đấu giá
       // fetchAuctions();
     });

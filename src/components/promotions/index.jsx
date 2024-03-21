@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 const messages = [
-  "We are proud to be one of the largest auction houses in Vietnam",
-  "Online Bids has always been a pioneer in applying information technology to auction activities.",
-  "With the operating motto: “Bringing outstanding economic efficiency”",
-  "We hope to satisfy you and look forward to accompanying you in the development process.",
+  "Chúng tôi tự hào là một trong những nhà đấu giá lớn nhất Việt Nam",
+  "Đấu giá trực tuyến luôn là đơn vị tiên phong ứng dụng công nghệ thông tin vào hoạt động đấu giá.",
+  "Với phương châm hoạt động: “Mang lại hiệu quả kinh tế vượt trội”",
+  "Chúng tôi hy vọng sẽ làm bạn hài lòng và mong muốn được đồng hành cùng bạn trong quá trình phát triển.",
 ];
 
 function Promotions() {

@@ -17,7 +17,6 @@ const AuctionDetail = () => {
   const { auctionId } = useParams(); // Lấy ID từ URL
   const navigate = useNavigate();
   const auctions = useSelector((state) => state.AUCTION.auctions);
-  console.log("aucctionsss", auctions);
   const token = localStorage.getItem("ACCESS_TOKEN");
   const dispatch = useDispatch();
   const [auction, setAuction] = useState("");
@@ -51,18 +50,15 @@ const AuctionDetail = () => {
   const allMemberJoinInAuction = useSelector(
     (state) => state.AUCTION.allMemberJoinInAuction
   );
-  console.log("allMemberJoinInAuction", allMemberJoinInAuction);
   const filterNumberMemberJoinRoom = allMemberJoinInAuction?.filter(
     (e) => e?.member_id?.role_id?.title !== "HOST"
   );
-  console.log("number", filterNumberMemberJoinRoom);
   useEffect(() => {
     let data = {
       auctionId: auctionId,
     };
     dispatch(actGetAllMemberJoinAuctionRoomGetAsync(data, token));
   }, []);
-  console.log("auctionDetail", auction);
   const handleSubmit = (e) => {
     e.preventDefault();
 

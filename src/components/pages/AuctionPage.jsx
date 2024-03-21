@@ -12,10 +12,9 @@ import { useSelector } from "react-redux";
 function AuctionPage(props) {
   const location = useLocation();
   const [search] = useSearchParams();
-  console.log("location", location.search);
-  console.log("search", search.get("search"));
+
   const auctions = useSelector((state) => state.AUCTION.auctions);
-  console.log("allAuction", auctions);
+
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);

@@ -24,26 +24,24 @@ const Header = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   const navigate = useNavigate();
 
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
+  // const toggleDropdown = () => {
+  //   setShowDropdown(!showDropdown);
+  // };
 
   // const changeBackground = () => {
   //   setBackgroundIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
   // };
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  // const togglePopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
   const [show, setShow] = useState(false);
   const toggleShow = () => setShow(!show);
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       // Xử lý tìm kiếm khi nhấn phím "Enter" ở đây
-      console.log("Searching for:", searchValue);
       setShowPopup(false);
       navigate(`/auction?search=${searchValue}`);
     }
@@ -70,141 +68,71 @@ const Header = () => {
             </Col>
 
             {/* Navbar */}
-            <Col md={6}>
+            <Col md={3}>
               <Navbar bg="#ffff" style={{ fontWeight: "500" }} expand="md">
                 <Navbar.Toggle aria-controls="navbarNav" />
                 <Navbar.Collapse id="navbarNav">
                   <Nav className="mr-auto">
-                    {/* <Nav.Link
-                      href="#"
-                      className="mr-md-6"
-                      style={{ marginRight: "100px" }}
-                    >
-                      Home
-                    </Nav.Link> */}
-                    {
-                      user?.role_id?.title === "HOST" ? (
-                        <div
-                          className="dropdown"
-                          onMouseEnter={toggleDropdown}
-                          onMouseLeave={toggleDropdown}
+                    {user?.role_id?.title === "HOST" ? (
+                      <div style={{ marginTop: "10px" }}>
+                        <Link
+                          to="/manage-auction"
+                          style={{
+                            textDecoration: "none",
+                            color: "black",
+                            marginRight: "50px",
+                            paddingTop: "200px",
+                          }}
                         >
-                          <Nav.Link
-                            href="#"
-                            className="products-link"
-                            style={{
-                              color: showDropdown ? "#3A43A7" : "black",
-                              // backgroundColor: showDropdown
-                              //   ? "#F6F7F8"
-                              //   : "transparent",
-                              width: "160px",
-                            }}
+                          Cuộc đấu giá
+                        </Link>
+                        <Link
+                          to="/manage-product"
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
+                          Sản phẩm cho đấu giá
+                        </Link>
+                      </div>
+                    ) : (
+                      <>
+                        <Nav.Link
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          <Link
+                            to={"/notyetauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
                           >
-                            Products
-                          </Nav.Link>
-                          {showDropdown && (
-                            <div className="dropdown-content">
-                              <Link to="/manage-auction">Auction</Link>
-                              <Link to="/manage-product">Product</Link>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <>
-                          <Nav.Link
-                            // href="/notyetauction-customer"
-                            className="md-6"
-                            style={{ marginRight: "10px" }}
+                            Danh sách công bố
+                          </Link>
+                        </Nav.Link>
+                        <Nav.Link
+                          className="md-6"
+                          style={{ marginRight: "10px" }}
+                        >
+                          <Link
+                            to={"/notauction-customer"}
+                            style={{ textDecoration: "none", color: "black" }}
                           >
-                            <Link
-                              to={"/notyetauction-customer"}
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              Danh sách công bố
-                            </Link>
-                          </Nav.Link>
-                          <Nav.Link
-                            className="md-6"
-                            style={{ marginRight: "10px" }}
-                          >
-                            <Link
-                              to={"/notauction-customer"}
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              Danh sách sắp công bố
-                            </Link>
-                          </Nav.Link>
-                          {/* <Nav.Link
-                            className="md-6"
-                            style={{ marginRight: "10px" }}
-                          >
-                            <Link
-                              to={"/room-auction"}
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              Phòng đấu giá
-                            </Link>
-                          </Nav.Link> */}
-                        </>
-                      )
-                      // : (
-                      //   <div style={{ display: "flex" }}>
-                      //     <Nav.Link
-                      //       className="md-6"
-                      //       style={{ marginRight: "10px" }}
-                      //     >
-                      //       <Link
-                      //         to={"/notyetauction-customer"}
-                      //         style={{ textDecoration: "none", color: "black" }}
-                      //       >
-                      //         Danh sách công bố
-                      //       </Link>
-                      //     </Nav.Link>
-                      //     <Nav.Link
-                      //       href="#"
-                      //       className="md-6"
-                      //       style={{ marginRight: "10px" }}
-                      //     >
-                      //       Danh sách sắp đấu giá
-                      //     </Nav.Link>
-                      //     <Nav.Link
-                      //       href="#"
-                      //       className="md-6"
-                      //       style={{ marginRight: "10px" }}
-                      //     >
-                      //       Phòng đấu giá
-                      //     </Nav.Link>
-                      //   </div>
-                      // )
-                    }
+                            Danh sách sắp công bố
+                          </Link>
+                        </Nav.Link>
+                      </>
+                    )}
                   </Nav>
                 </Navbar.Collapse>
               </Navbar>
             </Col>
-
             <Col
-              md={2}
+              md={4}
               className="d-flex justify-content-end align-items-center"
             >
               <CurrentTime />
             </Col>
-            {/* Login Section */}
-            {/* <Col md={1}>
-              <div className="search-btn" onClick={togglePopup}>
-                <p>
-                  <FaSearch />
-                </p>
-              </div>
-            </Col> */}
             <Col
               md={1}
               className="d-flex justify-content-center align-items-center"
             >
-              {/* <Link to={"/login"}>
-                <Button variant="outline-primary" style={{ color: "black" }}>
-                  Login
-                </Button>
-              </Link> */}
               {user ? (
                 <Dropdown
                   show={show}
@@ -229,14 +157,6 @@ const Header = () => {
                       <FaUser style={{ marginRight: "5px" }} />
                       Profile
                     </Dropdown.Item>
-                    {/* <Dropdown.Item
-                      href="/paid-item"
-                      eventKey="2"
-                      className="d-flex justify-content-left align-items-center"
-                    >
-                      <FaMoneyBill style={{ marginRight: "5px" }} />
-                      Money recharge
-                    </Dropdown.Item> */}
                     <Dropdown.Divider />
                     <Dropdown.Item
                       href="#"

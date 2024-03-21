@@ -33,7 +33,7 @@ const SignUpPage = () => {
     gender: "",
   });
   const role = useSelector((state) => state.USER.roles);
-  console.log("role", role);
+
   const rolePage = role?.filter((i) => i?.title !== "ADMIN");
   useEffect(() => {
     dispatch(actAllRoleGetAsync());
@@ -44,9 +44,6 @@ const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false); // Trạng thái để điều khiển hiển thị/masquerade password
   const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState("");
-  console.log("otp", otp);
-  // kiểm tra email trước khi truyền lên be
-  const [statusEmail, setStatusEmail] = useState("");
 
   const validateEmail = (email) => {
     // Sử dụng biểu thức chính quy để kiểm tra định dạng email
@@ -55,7 +52,6 @@ const SignUpPage = () => {
   };
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    console.log("form", formData);
     if (name === "image") {
       setFormData({
         ...formData,
@@ -89,7 +85,6 @@ const SignUpPage = () => {
         document.getElementById("signUpButton").style.color = "#fff";
         // Xử lý kết quả trả về từ việc xác minh OTP (nếu cần)
         alert("Chúc mừng bạn đã xác minh thành công.");
-        console.log("Verify OTP response:", verifyResponse.data);
       })
       .catch((verifyError) => {
         // Xử lý lỗi nếu có khi xác minh OTP
@@ -110,7 +105,6 @@ const SignUpPage = () => {
         })
         .then((response) => {
           // Xử lý kết quả trả về từ server (nếu cần)
-          console.log("Server response:", response.data);
           if (
             response.data.message == "Verification email sent successfully."
           ) {
@@ -136,7 +130,6 @@ const SignUpPage = () => {
     // Hiển thị modal
 
     // Log ra giá trị của hàm validateEmail
-    console.log("bbb", isEmailValid);
   };
 
   const handleSubmit = async (e) => {
@@ -174,18 +167,12 @@ const SignUpPage = () => {
       // Nếu request thành công, có thể thực hiện các hành động khác ở đây
     } catch (error) {
       // Xử lý lỗi nếu có
-      console.error("Error:", error);
       // Hiển thị thông báo lỗi hoặc thực hiện các hành động khác tương ứng
     } finally {
       setIsLoading(false); // Ẩn spinner/loading sau khi nhận được phản hồi từ API (hoặc xảy ra lỗi)
     }
   };
 
-  const handleRemoveAvatar = (index) => {
-    const newAvatars = [...formData.image];
-    newAvatars.splice(index, 1);
-    setFormData({ ...formData, image: newAvatars });
-  };
 
   const {
     getRootProps: getAvatarRootProps,
@@ -212,10 +199,9 @@ const SignUpPage = () => {
     const { value } = e.target;
     setOtp(value.replace(/\D/, "")); // Loại bỏ tất cả các ký tự không phải là số
   };
-  console.log("test", formData);
+
   return (
     <>
-      {/* <Header /> */}
       <Container className="mt-5">
         <Row className="justify-content-center text-center">
           <Col xs={12} md={8}>

@@ -13,7 +13,6 @@ function AutionComfirm() {
   const handleUpdateUser = (aution) => {
     // Chuyển hướng đến trang UpdateUser và truyền dữ liệu userEditData
     navigate(`/aution-detail/${aution.id}`);
-    console.log("Update user at id:", aution.id);
   };
 
   return (

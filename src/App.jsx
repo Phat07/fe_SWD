@@ -64,19 +64,7 @@ function App() {
   }, []);
   return (
     <>
-      <ToastContainer position="top-right" autoClose={2000} />
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      /> */}
+      {/* <ToastContainer position="top-right" autoClose={2000} /> */}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -84,7 +72,6 @@ function App() {
         <Route path="/auction" element={<AuctionPage />} />
         <Route path="/detail/:id" element={<DetailPage />} />
         <Route path="/payment" element={<Payment />} />
-        {/* <Route path="/room-auction" element={<RoomAuctionPage />} /> */}
         <Route
           path="/room-auction"
           element={
@@ -124,8 +111,6 @@ function App() {
             )
           }
         />
-        {/* <Route path="/manage-auction" element={<Auction />} /> */}
-        {/* <Route path="/manage-product" element={<Product />} /> */}
         <Route path="/auction-detail/:auctionId" element={<AuctionDetail />} />
         <Route path="/product-detail/:productId" element={<ProductDetail />} />
         <Route path="/paid-item" element={<PaidItem />} />

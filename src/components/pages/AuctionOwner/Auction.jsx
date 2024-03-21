@@ -30,14 +30,8 @@ function Auction() {
   const aboutToAuction = useSelector((state) => state.AUCTION.aboutToAuction);
   const auctioning = useSelector((state) => state.AUCTION.auctioning);
   const auctined = useSelector((state) => state.AUCTION.auctined);
-  console.log("auctions", auctions);
-  console.log("notYetAuction", notYetAuction);
-  console.log("aboutToAuction", aboutToAuction);
-  console.log("auctioning", auctioning);
-  console.log("auctined", auctined);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.USER.currentUser);
-  console.log("user", user);
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
     dispatch(actNotAuctionGetAsync(user?._id, token));
@@ -49,14 +43,12 @@ function Auction() {
   const navigate = useNavigate();
 
   const handleDelete = (auction) => {
-    console.log("Delete item with id:", auction._id);
     setDeleteData(auction);
     setShowDelete(true);
   };
 
   const handleDetailAuction = (auction) => {
     navigate(`/auction-detail/${auction._id}`);
-    console.log("Update user at id:", auction._id);
   };
   useEffect(() => {
     // Kết nối tới Socket.IO server
@@ -69,7 +61,6 @@ function Auction() {
       dispatch(actAboutToAuctionGetAsync(user?._id, token));
       dispatch(actAuctioningAuctionGetAsync(user?._id, token));
       dispatch(actAuctionedAuctionGetAsync(user?._id, token));
-      console.log("Auction status changed");
       // Gọi lại các API để cập nhật danh sách các phiên đấu giá
       // fetchAuctions();
     });

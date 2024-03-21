@@ -13,7 +13,6 @@ import Countdown from "react-countdown";
 const TableAutionUser = ({ data = [], onUpdate, onDelete }) => {
   const auctionRegisEndTime = new Date(data?.regitration_end_time).getTime();
   const [searchTerm, setSearchTerm] = useState("");
-  console.log("End time", auctionRegisEndTime);
   const currentTime = new Date().getTime();
   const timeDiff = auctionRegisEndTime - currentTime;
   const formatDate = (dateString) => {

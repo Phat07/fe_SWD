@@ -43,20 +43,16 @@ function JoinAuctionRoom() {
   const [winnerInfo, setWinnerInfo] = useState(null);
   const { auctionID } = useParams();
   const dispatch = useDispatch();
-  console.log("id", auctionID);
+
   const token = localStorage.getItem("ACCESS_TOKEN");
 
   const user = useSelector((state) => state.USER.currentUser);
   const mostPrice = useSelector((state) => state.AUCTION.mostPrice);
-  console.log("mostPrice", mostPrice);
+
   const auctions = useSelector((state) => state.AUCTION.auctions);
   const memberPriceAuction = useSelector(
     (state) => state.AUCTION.memberPriceAuction
   );
-
-  console.log("memberJoin", auctions);
-  console.log("aucctionsssBid", auctionBid);
-  console.log("memberPriceAuction", memberPriceAuction);
 
   useEffect(() => {
     const item = auctions.find((i) => i._id === auctionID);
@@ -75,21 +71,22 @@ function JoinAuctionRoom() {
     const interval = setInterval(async () => {
       const currentTime = new Date().getTime();
       if (currentTime >= endTime) {
-        await dispatch(actGetMostPriceAuctionGetAsync(data1, token));
-        if (mostPrice?.customer_id === user?._id) {
-          let data = {
-            winner_id: mostPrice?.customer_id,
-            auction_id: auctionID,
-            host_id: user?._id,
-            price: mostPrice?.price,
-          };
-          // Nếu thời gian hiện tại vượt qua thời gian kết thúc, gửi sự kiện thông báo đấu giá kết thúc
-           // Hiển thị modal khi thời gian kết thúc
-          // setWinnerInfo(data);
-          socket.emit("auctionEnded", data);
-          // Xóa interval để ngăn việc kiểm tra tiếp
-          
-        }
+        // await dispatch(actGetMostPriceAuctionGetAsync(data1, token));
+        // if (mostPrice?.customer_id === user?._id) {
+        let data = {
+          // winner_id: mostPrice?.customer_id,
+          auction_id: auctionID,
+          host_id: user?._id,
+          // price: mostPrice?.price,
+          date: new Date()
+        };
+        // Nếu thời gian hiện tại vượt qua thời gian kết thúc, gửi sự kiện thông báo đấu giá kết thúc
+        // Hiển thị modal khi thời gian kết thúc
+        // setWinnerInfo(data);
+        socket.emit("auctionEnded", data);
+        // Xóa interval để ngăn việc kiểm tra tiếp
+
+        // }
         setStatusSubmit(false);
         setShowWinnerModal(true);
         clearInterval(interval);
@@ -117,8 +114,7 @@ function JoinAuctionRoom() {
       socket.off("bidAccepted");
     };
   }, []);
-  console.log("newBid", newBid);
-  console.log("dataBID", data);
+
   const submitBid = () => {
     let data = {
       auctionId: auctionBid?._id,
