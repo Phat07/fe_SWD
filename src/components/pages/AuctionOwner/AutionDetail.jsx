@@ -21,6 +21,10 @@ const AuctionDetail = () => {
   const token = localStorage.getItem("ACCESS_TOKEN");
   const dispatch = useDispatch();
   const [auction, setAuction] = useState("");
+  const [auctionInfo, setAuctionInfo] = useState("");
+  const [stepPrice, setStepPrice] = useState("");
+  const [startingPrice, setStartingPrice] = useState("");
+  const [regitrationStartTime, setRegitrationStartTime] = useState("");
   const [regitrationEndTime, setRegitrationEndTime] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -31,6 +35,10 @@ const AuctionDetail = () => {
   useEffect(() => {
     const item = auctions.find((i) => i._id === auctionId);
     setAuction(item);
+    setAuctionInfo(item?.auctionInfo);
+    setStepPrice(item?.price_step);
+    setStartingPrice(item?.starting_price);
+    setRegitrationStartTime(item?.regitration_start_time);
     setRegitrationEndTime(item?.regitration_end_time);
     setStartTime(item?.start_time);
     setEndTime(item?.end_time);
@@ -106,6 +114,89 @@ const AuctionDetail = () => {
       end_time: endTime,
       regitration_end_time: regitrationEndTime,
       status: "not yet auctioned",
+    };
+    setIsSubmitting(true);
+    // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
+    dispatch(actAuctionPutAsync(auctionId, data, token)).then(() => {
+      setIsSubmitting(false);
+      setRegitrationEndTime("");
+      setStartTime("");
+      setEndTime("");
+      navigate("/manage-auction");
+    });
+  };
+
+  const handleSubmitNotStatus = (e) => {
+    e.preventDefault();
+    if (
+      !auctionInfo ||
+      !stepPrice ||
+      !startingPrice ||
+      !regitrationStartTime ||
+      !regitrationEndTime ||
+      !startTime ||
+      !endTime
+    ) {
+      toast.error("Vui lòng điền tất cả các trường trong form!");
+      return;
+    }
+
+    // Chuyển đổi chuỗi thời gian thành đối tượng Date để so sánh
+    const regStart = new Date(regitrationStartTime);
+    const regEnd = new Date(regitrationEndTime);
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    const now = new Date();
+    // Kiểm tra các điều kiện thời gian
+    if (regStart < now) {
+      toast.error("Thời gian bắt đầu đăng ký không được trong quá khứ!");
+      return;
+    }
+    if (regEnd < now) {
+      toast.error("Thời gian kết thúc đăng ký không được trong quá khứ!");
+      return;
+    }
+
+    if (start < now) {
+      toast.error("Thời gian bắt đầu đấu giá không được trong quá khứ!");
+      return;
+    }
+
+    if (end < now) {
+      toast.error("Thời gian kết thúc đấu giá không được trong quá khứ!");
+      return;
+    }
+    // Kiểm tra các điều kiện thời gian
+    if (regStart >= regEnd) {
+      toast.error(
+        "Thời gian bắt đầu đăng ký phải trước thời gian kết thúc đăng ký!"
+      );
+      return;
+    }
+    if (regEnd >= start) {
+      toast.error(
+        "Thời gian kết thúc đăng ký phải trước thời gian bắt đầu đấu giá!"
+      );
+      return;
+    }
+
+    if (start >= end) {
+      toast.error(
+        "Thời gian bắt đầu đấu giá phải trước thời gian kết thúc đấu giá!"
+      );
+      return;
+    }
+
+    let data = {
+      // Khai báo và sử dụng data như trước
+      starting_price: startingPrice,
+      price_step: stepPrice,
+      auctionInfo: auctionInfo,
+      start_time: startTime,
+      end_time: endTime,
+      regitration_end_time: regitrationEndTime,
+      regitration_start_time: regitrationStartTime,
+      status: "not",
     };
     setIsSubmitting(true);
     // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
@@ -206,12 +297,31 @@ const AuctionDetail = () => {
                           </Form.Group>
                           <Form.Group className="mb-3">
                             <Form.Label>Giá khởi điểm</Form.Label>
-                            <Form.Control
+                            {/* <Form.Control
                               type="number"
                               placeholder="Giá khởi điểm"
                               readOnly={auctionId}
                               value={auction?.starting_price}
-                            />
+                            /> */}
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
+                              <Form.Control
+                                type="number"
+                                placeholder="Giá khởi điểm"
+                                value={startingPrice}
+                                onChange={(e) =>
+                                  setStartingPrice(e.target.value)
+                                }
+                              />
+                            ) : (
+                              <Form.Control
+                                type="number"
+                                placeholder="Giá khởi điểm"
+                                readOnly={auctionId}
+                                value={auction?.starting_price}
+                              />
+                            )}
                           </Form.Group>
                         </Card.Body>
                       </Card>
@@ -234,26 +344,62 @@ const AuctionDetail = () => {
                           <Card.Title>Thông Tin Auction</Card.Title>
                           <Form.Group className="mb-3">
                             <Form.Label>Thong tin dau gia</Form.Label>
-                            <Form.Control
+                            {/* <Form.Control
                               as="textarea"
                               readOnly={auctionId}
                               rows={3}
                               placeholder="Thông tin đấu giá"
                               value={auction?.auctionInfo}
-                            />
+                            /> */}
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Thông tin đấu giá"
+                                value={auctionInfo}
+                                onChange={(e) => setAuctionInfo(e.target.value)}
+                              />
+                            ) : (
+                              <Form.Control
+                                as="textarea"
+                                readOnly={auctionId}
+                                rows={3}
+                                placeholder="Thông tin đấu giá"
+                                value={auction?.auctionInfo}
+                              />
+                            )}
                           </Form.Group>
                           <Form.Group className="mb-3">
                             <Form.Label>Bước giá tối thiểu</Form.Label>
-                            <Form.Control
+                            {/* <Form.Control
                               type="number"
                               readOnly={auctionId}
                               placeholder="Minimun Price Step"
                               value={auction?.price_step}
-                            />
+                            /> */}
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
+                              <Form.Control
+                                type="number"
+                                placeholder="Minimun Price Step"
+                                value={stepPrice}
+                                onChange={(e) => setStepPrice(e.target.value)}
+                              />
+                            ) : (
+                              <Form.Control
+                                type="number"
+                                readOnly={auctionId}
+                                placeholder="Minimun Price Step"
+                                value={auction?.price_step}
+                              />
+                            )}
                           </Form.Group>
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian bắt đầu đăng kí</Form.Label>
-                            <Form.Control
+                            {/* <Form.Control
                               type="datetime-local"
                               readOnly={auctionId}
                               value={
@@ -264,13 +410,47 @@ const AuctionDetail = () => {
                                     )
                                   : ""
                               }
-                            />
+                            /> */}
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
+                              <Form.Control
+                                type="datetime-local"
+                                value={
+                                  regitrationStartTime
+                                    ? format(
+                                        new Date(regitrationStartTime),
+                                        "yyyy-MM-dd'T'HH:mm"
+                                      )
+                                    : ""
+                                }
+                                onChange={(e) =>
+                                  setRegitrationStartTime(e.target.value)
+                                }
+                              />
+                            ) : (
+                              <Form.Control
+                                type="datetime-local"
+                                readOnly={auctionId}
+                                value={
+                                  auction?.regitration_start_time
+                                    ? format(
+                                        new Date(
+                                          auction.regitration_start_time
+                                        ),
+                                        "yyyy-MM-dd'T'HH:mm"
+                                      )
+                                    : ""
+                                }
+                              />
+                            )}
                           </Form.Group>
 
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian kết thúc đăng kí</Form.Label>
-                            {filterNumberMemberJoinRoom.length === 0 &&
-                            auction?.status === "about to auction" ? (
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
                               <Form.Control
                                 type="datetime-local"
                                 // defaultValue={defaultRegisterEndTime}
@@ -304,8 +484,9 @@ const AuctionDetail = () => {
 
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian bắt đầu</Form.Label>
-                            {filterNumberMemberJoinRoom.length === 0 &&
-                            auction?.status === "about to auction" ? (
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
                               <Form.Control
                                 type="datetime-local"
                                 // defaultValue={defaultStartTime}
@@ -337,8 +518,9 @@ const AuctionDetail = () => {
 
                           <Form.Group className="mb-3">
                             <Form.Label>Thời gian kết thúc</Form.Label>
-                            {filterNumberMemberJoinRoom.length === 0 &&
-                            auction?.status === "about to auction" ? (
+                            {(filterNumberMemberJoinRoom.length === 0 &&
+                              auction?.status === "about to auction") ||
+                            auction?.status === "not" ? (
                               <Form.Control
                                 type="datetime-local"
                                 value={
@@ -382,10 +564,20 @@ const AuctionDetail = () => {
                             variant="success"
                             onClick={(e) => handleSubmit(e)}
                           >
-                            Update
+                            Update Time
                           </Button>
                         </Col>
                       )}
+                    {auction?.status === "not" && (
+                      <Col xs="auto" className="mt-2">
+                        <Button
+                          variant="success"
+                          onClick={(e) => handleSubmitNotStatus(e)}
+                        >
+                          Update Auction
+                        </Button>
+                      </Col>
+                    )}
                   </Row>
                 </Form>
               </Card.Body>
