@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Card, Row, Col, Button, Form, Carousel } from "react-bootstrap";
+import { Card, Row, Col, Button, Form, Carousel, Modal } from "react-bootstrap";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,8 @@ const AuctionDetail = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalNotStatus, setShowModalNotStatus] = useState(false);
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
   }, [auctionId]);
@@ -68,12 +70,19 @@ const AuctionDetail = () => {
     }
 
     // Chuyển đổi chuỗi thời gian thành đối tượng Date để so sánh
+    const startAuction = new Date(auction?.start_time);
     const regEnd = new Date(regitrationEndTime);
     const start = new Date(startTime);
     const end = new Date(endTime);
     const now = new Date();
     // Kiểm tra các điều kiện thời gian
-
+    if (startAuction < now) {
+      // toast.error(
+      //   "Thời gian bắt đầu đăng kí cho buổi đấu giá đã diễn ra! Cập nhật thất bại"
+      // );
+      setShowModal(true);
+      return;
+    }
     if (regEnd < now) {
       toast.error("Thời gian kết thúc đăng ký không được trong quá khứ!");
       return;
@@ -118,6 +127,7 @@ const AuctionDetail = () => {
       setRegitrationEndTime("");
       setStartTime("");
       setEndTime("");
+      toast.success("Cập nhật thành công");
       navigate("/manage-auction");
     });
   };
@@ -138,12 +148,21 @@ const AuctionDetail = () => {
     }
 
     // Chuyển đổi chuỗi thời gian thành đối tượng Date để so sánh
+    const regStartAuction = new Date(auction?.regitration_start_time);
     const regStart = new Date(regitrationStartTime);
     const regEnd = new Date(regitrationEndTime);
     const start = new Date(startTime);
     const end = new Date(endTime);
     const now = new Date();
     // Kiểm tra các điều kiện thời gian
+    if (regStartAuction < now) {
+      // toast.error(
+      //   "Thời gian bắt đầu đăng kí cho buổi đấu giá đã diễn ra! Cập nhật thất bại"
+      // );
+      setShowModalNotStatus(true);
+      return;
+    }
+
     if (regStart < now) {
       toast.error("Thời gian bắt đầu đăng ký không được trong quá khứ!");
       return;
@@ -201,6 +220,7 @@ const AuctionDetail = () => {
       setRegitrationEndTime("");
       setStartTime("");
       setEndTime("");
+      toast.success("Cập nhật thành công");
       navigate("/manage-auction");
     });
   };
@@ -299,9 +319,7 @@ const AuctionDetail = () => {
                               readOnly={auctionId}
                               value={auction?.starting_price}
                             /> */}
-                            {(filterNumberMemberJoinRoom.length === 0 &&
-                              auction?.status === "about to auction") ||
-                            auction?.status === "not" ? (
+                            {auction?.status === "not" ? (
                               <Form.Control
                                 type="number"
                                 placeholder="Giá khởi điểm"
@@ -347,9 +365,7 @@ const AuctionDetail = () => {
                               placeholder="Thông tin đấu giá"
                               value={auction?.auctionInfo}
                             /> */}
-                            {(filterNumberMemberJoinRoom.length === 0 &&
-                              auction?.status === "about to auction") ||
-                            auction?.status === "not" ? (
+                            {auction?.status === "not" ? (
                               <Form.Control
                                 as="textarea"
                                 rows={3}
@@ -375,9 +391,7 @@ const AuctionDetail = () => {
                               placeholder="Minimun Price Step"
                               value={auction?.price_step}
                             /> */}
-                            {(filterNumberMemberJoinRoom.length === 0 &&
-                              auction?.status === "about to auction") ||
-                            auction?.status === "not" ? (
+                            {auction?.status === "not" ? (
                               <Form.Control
                                 type="number"
                                 placeholder="Minimun Price Step"
@@ -407,9 +421,7 @@ const AuctionDetail = () => {
                                   : ""
                               }
                             /> */}
-                            {(filterNumberMemberJoinRoom.length === 0 &&
-                              auction?.status === "about to auction") ||
-                            auction?.status === "not" ? (
+                            {auction?.status === "not" ? (
                               <Form.Control
                                 type="datetime-local"
                                 value={
@@ -580,6 +592,40 @@ const AuctionDetail = () => {
             </Card>
           </Col>
         </Row>
+        <Modal
+          show={showModalNotStatus}
+          onHide={() => navigate("/manage-auction")}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận lỗi cập nhật đấu giá</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Thời gian bắt đầu đăng kí cho buổi đấu giá đã diễn ra! Cập nhật thất
+            bại
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => navigate("/manage-auction")}
+            >
+              Trở về
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal show={showModal} onHide={() => navigate("/manage-auction")}>
+          <Modal.Header closeButton>
+            <Modal.Title>Xác nhận lỗi cập nhật thời gian đấu giá</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Buổi đấu giá đang diễn ra! Cập nhật thất bại</Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => navigate("/manage-auction")}
+            >
+              Trở về
+            </Button>
+          </Modal.Footer>
+        </Modal>
         {isSubmitting ? (
           <>
             <div className="overlay1"></div>
