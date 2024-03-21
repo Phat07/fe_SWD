@@ -30,6 +30,8 @@ const AuctionDetail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showModalNotStatus, setShowModalNotStatus] = useState(false);
+  const user = useSelector((state) => state.USER.currentUser);
+
   useEffect(() => {
     dispatch(actAuctionGetAsync(token));
   }, [auctionId]);
@@ -119,6 +121,7 @@ const AuctionDetail = () => {
       end_time: endTime,
       regitration_end_time: regitrationEndTime,
       status: "not yet auctioned",
+      host_id: user?._id,
     };
     setIsSubmitting(true);
     // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
@@ -212,6 +215,7 @@ const AuctionDetail = () => {
       regitration_end_time: regitrationEndTime,
       regitration_start_time: regitrationStartTime,
       status: "not",
+      host_id: user?._id,
     };
     setIsSubmitting(true);
     // Gửi dữ liệu đi như bình thường sau khi tất cả các điều kiện kiểm tra đã được thông qua
