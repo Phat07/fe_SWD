@@ -12,8 +12,69 @@
   animation: bounce 2s linear infinite; /* Continuous animation */
 }
 
+/* Style cho phần tổng thể */
+.custom-container {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style cho tiêu đề */
+.custom-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Style cho thông tin người chiến thắng */
+.winner-info {
+  background-color: #e1f7e7;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+/* Style cho tên người chiến thắng */
+.winner-name {
+  font-weight: bold;
+  color: #27ae60;
+  margin-bottom: 5px;
+}
+
+/* Style cho giá thầu cao nhất */
+.highest-bid {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Style cho thông tin người tạo buổi đấu giá */
+.host-info {
+  background-color: #eaeffa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+}
+
+/* Style cho tên người tạo buổi đấu giá */
+.host-name {
+  font-weight: bold;
+  color: #2980b9;
+  margin-bottom: 5px;
+}
+
+/* Style cho số điện thoại người tạo buổi đấu giá */
+.host-phone {
+  color: #333;
+  margin-bottom: 5px;
+}
+
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

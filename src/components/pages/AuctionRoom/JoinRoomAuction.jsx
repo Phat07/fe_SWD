@@ -58,6 +58,7 @@ function JoinAuctionRoom() {
     const item = auctions.find((i) => i._id === auctionID);
     setAuctionBid(item);
   }, [auctions, auctionID]);
+  console.log("Người tạo auction", auctionBid);
   const handleBidChange = (e) => {
     setNewBid(e);
   };
@@ -78,7 +79,7 @@ function JoinAuctionRoom() {
           auction_id: auctionID,
           host_id: user?._id,
           // price: mostPrice?.price,
-          date: new Date()
+          date: new Date(),
         };
         // Nếu thời gian hiện tại vượt qua thời gian kết thúc, gửi sự kiện thông báo đấu giá kết thúc
         // Hiển thị modal khi thời gian kết thúc
@@ -388,20 +389,37 @@ function JoinAuctionRoom() {
           <Modal.Body>
             <p>
               {user?._id === mostPrice?.customer_id ? (
-                <>Chúc mừng bạn là người chiến thắng</>
+                <>
+                  <>Chúc mừng bạn là người chiến thắng</>
+                  <p>
+                    Giá thầu cao nhất:{" "}
+                    <CurrencyFormat
+                      value={mostPrice?.price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={""}
+                    />
+                    đ
+                  </p>
+                  <>Thông tin người tạo buổi đấu giá:</>
+                  <>{auctionBid?.host_id?.username}</>
+                  <>{auctionBid?.host_id?.phone}</>
+                </>
               ) : (
-                <>Người chiến thắng: {mostPrice?.customer_id?.slice(-4)}</>
+                <>
+                  <>Người chiến thắng: {mostPrice?.customer_id?.slice(-4)}</>
+                  <p>
+                    Giá thầu cao nhất:{" "}
+                    <CurrencyFormat
+                      value={mostPrice?.price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={""}
+                    />
+                    đ
+                  </p>
+                </>
               )}
-            </p>
-            <p>
-              Giá thầu cao nhất:{" "}
-              <CurrencyFormat
-                value={mostPrice?.price}
-                displayType={"text"}
-                thousandSeparator={true}
-                prefix={""}
-              />
-              đ
             </p>
           </Modal.Body>
           <Modal.Footer>
